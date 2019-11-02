@@ -17,4 +17,9 @@ namespace scalapackpp {
     Transpose,
     ConjTranspose
   };
+
+  enum SideFlag {
+    Right,
+    Left
+  };
 }

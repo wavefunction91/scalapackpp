@@ -8,4 +8,9 @@ std::string type_string( TransposeFlag trans ) {
   else                           return std::string( "C" );
 }
 
+std::string type_string( SideFlag side ) {
+  if( side == Right ) return std::string( "R" );
+  else                return std::string( "L" );
+}
+
 }
