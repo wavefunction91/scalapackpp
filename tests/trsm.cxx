@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 #include <scalapackpp/scatter_gather.hpp>
+#include <scalapackpp/information.hpp>
 #include <scalapackpp/trsm.hpp>
-#include <scalapackpp/gemm.hpp>
 #include <vector>
 
 #include <scalapackpp/util/type_conversions.hpp>
@@ -63,8 +63,11 @@ SCALAPACKPP_TEMPLATE_TEST_CASE( "Trsm", "[trsm]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  const scalapackpp::scalapack_int MB = 4, NB = 4;
-  const scalapackpp::scalapack_int M = MB * grid.npr(), N = NB * grid.npr();
+  const scalapackpp::scalapack_int MB = 2, NB = 4;
+  const scalapackpp::scalapack_int M = 100, N = 200;
+
+  auto [M_loc1, N_loc1] = scalapackpp::get_local_dims( grid, M, M, MB, MB, 0, 0 );
+  auto [M_loc2, N_loc2] = scalapackpp::get_local_dims( grid, M, N, MB, NB, 0, 0 );
 
 
   std::vector< TestType > A_root, B_ref_root;
@@ -74,7 +77,7 @@ SCALAPACKPP_TEMPLATE_TEST_CASE( "Trsm", "[trsm]" ) {
 
     for( auto j = 0; j < M; ++j )
     for( auto i = 0; i < M; ++i )
-      if( j > i ) A_root[ i + j*N ] = 0;
+      if( j > i ) A_root[ i + j*M ] = 0;
 
     scalapackpp::trsm(    
       scalapackpp::SideFlag::Left,
@@ -85,22 +88,22 @@ SCALAPACKPP_TEMPLATE_TEST_CASE( "Trsm", "[trsm]" ) {
     );
   }
 
-  std::vector< TestType > A_local( MB*MB );
-  std::vector< TestType > B_local( MB*NB, TestType(2) );
-  std::vector< TestType > B_ref_local( MB*NB );
+  std::vector< TestType > A_local( M_loc1*N_loc1 );
+  std::vector< TestType > B_local( M_loc2*N_loc2, TestType(2) );
+  std::vector< TestType > B_ref_local( M_loc2*N_loc2 );
 
   // Scatter triangular matrix and reference
   scalapackpp::scatter( grid, M, M, MB, MB, A_root.data(), M, 0, 0,
-                        A_local.data(), MB, 0, 0 );
+                        A_local.data(), M_loc1, 0, 0 );
   scalapackpp::scatter( grid, M, N, MB, NB, B_ref_root.data(), M, 0, 0,
-                        B_ref_local.data(), MB, 0, 0 );
+                        B_ref_local.data(), M_loc2, 0, 0 );
 
 
   // Compute reference solution with GEMM
   using namespace scalapackpp;
   auto context = grid.context();
-  auto [desc_a, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, MB );
-  auto [desc_b, i2] = wrappers::descinit( M, N, MB, NB, 0, 0, context, MB );
+  auto [desc_a, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, M_loc1 );
+  auto [desc_b, i2] = wrappers::descinit( M, N, MB, NB, 0, 0, context, M_loc2 );
 
   // Compute with trsm ( B <- A**-1*B )
   scalapackpp::ptrsm(
