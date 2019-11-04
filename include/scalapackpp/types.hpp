@@ -30,4 +30,9 @@ namespace scalapackpp {
     Right,
     Left
   };
+
+  enum VectorFlag {
+    Vectors,
+    NoVectors
+  };
 }

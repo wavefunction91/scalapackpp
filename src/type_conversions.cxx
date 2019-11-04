@@ -13,4 +13,9 @@ std::string type_string( SideFlag side ) {
   else                return std::string( "L" );
 }
 
+std::string type_string( VectorFlag jobv ) {
+  if( jobv == Vectors ) return std::string( "V" );
+  else                  return std::string( "N" );
+}
+
 }
