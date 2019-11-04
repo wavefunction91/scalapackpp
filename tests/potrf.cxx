@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 #include <scalapackpp/scatter_gather.hpp>
 #include <scalapackpp/information.hpp>
+#include <scalapackpp/descinit.hpp>
 #include <scalapackpp/trsm.hpp>
 #include <scalapackpp/gemm.hpp>
 #include <scalapackpp/potrf.hpp>
@@ -47,8 +48,7 @@ SCALAPACKPP_TEMPLATE_TEST_CASE( "Potrf", "[potrf]" ) {
     }
   }
 
-  auto context = grid.context();
-  auto [desc, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, M_loc );
+  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
 
   // Make A SPD
   scalapackpp::pgemm(

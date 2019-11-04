@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 #include <scalapackpp/scatter_gather.hpp>
 #include <scalapackpp/information.hpp>
+#include <scalapackpp/descinit.hpp>
 #include <scalapackpp/gemm.hpp>
 #include <scalapackpp/sevp.hpp>
 
@@ -57,8 +58,7 @@ SCALAPACKPP_REAL_TEST_CASE( "Syev", "[sevp]" ){
 
   std::vector< TestType > A_copy( A_local );
 
-  auto context = grid.context();
-  auto [desc, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, M_loc );
+  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
   auto info = psyev(
     VectorFlag::Vectors,
     blacspp::Triangle::Lower,
@@ -117,8 +117,7 @@ SCALAPACKPP_REAL_TEST_CASE( "Syevd", "[sevp]" ){
 
   std::vector< TestType > A_copy( A_local );
 
-  auto context = grid.context();
-  auto [desc, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, M_loc );
+  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
   auto info = psyevd(
     VectorFlag::Vectors,
     blacspp::Triangle::Lower,
@@ -180,8 +179,7 @@ SCALAPACKPP_COMPLEX_TEST_CASE( "Heev", "[sevp]" ){
 
   std::vector< TestType > A_copy( A_local );
 
-  auto context = grid.context();
-  auto [desc, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, M_loc );
+  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
   auto info = pheev(
     VectorFlag::Vectors,
     blacspp::Triangle::Lower,
@@ -241,8 +239,7 @@ SCALAPACKPP_COMPLEX_TEST_CASE( "Heevd", "[sevp]" ){
 
   std::vector< TestType > A_copy( A_local );
 
-  auto context = grid.context();
-  auto [desc, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, M_loc );
+  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
   auto info = pheevd(
     VectorFlag::Vectors,
     blacspp::Triangle::Lower,
@@ -316,8 +313,7 @@ SCALAPACKPP_TEST_CASE( "Hereig", "[sevp]" ){
 
   std::vector< TestType > A_copy( A_local );
 
-  auto context = grid.context();
-  auto [desc, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, M_loc );
+  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
   auto info = hereig(
     VectorFlag::Vectors,
     blacspp::Triangle::Lower,
@@ -377,8 +373,7 @@ SCALAPACKPP_TEST_CASE( "Hereigd", "[sevp]" ){
 
   std::vector< TestType > A_copy( A_local );
 
-  auto context = grid.context();
-  auto [desc, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, M_loc );
+  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
   auto info = hereigd(
     VectorFlag::Vectors,
     blacspp::Triangle::Lower,

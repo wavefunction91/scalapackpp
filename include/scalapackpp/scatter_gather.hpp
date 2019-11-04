@@ -1,7 +1,7 @@
 #pragma once
 #include <scalapackpp/types.hpp>
+#include <scalapackpp/descinit.hpp>
 #include <scalapackpp/wrappers/gemr2d.hpp>
-#include <scalapackpp/wrappers/descinit.hpp>
 #include <blacspp/grid.hpp>
 #include <tuple>
 
@@ -14,10 +14,10 @@ detail::enable_if_scalapack_supported_t<T>
     const T* A, scalapack_int LDA, scalapack_int ILOC, scalapack_int JLOC,  
     T* A_local, scalapack_int LDLOCA, scalapack_int ISRC, scalapack_int JSRC ) {
 
-  auto context = grid.context();
-  auto [desc_a    ,i1] = wrappers::descinit( M, N, M,  N,  ILOC, JLOC, context, LDA    );
-  auto [desc_loc_a,i2] = wrappers::descinit( M, N, MB, NB, ISRC, JSRC, context, LDLOCA );
+  auto desc_a     = descinit_noerror( grid, M, N, M,  N,  ILOC, JLOC, LDA    );
+  auto desc_loc_a = descinit_noerror( grid, M, N, MB, NB, ISRC, JSRC, LDLOCA );
 
+  auto context = grid.context();
   wrappers::pgemr2d( M, N, A, 1, 1, desc_a, A_local, 1, 1, desc_loc_a, context );
 
 }
@@ -30,10 +30,10 @@ detail::enable_if_scalapack_supported_t<T>
     const T* A_local, scalapack_int LDLOCA, scalapack_int ISRC, scalapack_int JSRC 
   ) {
 
-  auto context = grid.context();
-  auto [desc_a    ,i1] = wrappers::descinit( M, N, M,  N,  ILOC, JLOC, context, LDA    );
-  auto [desc_loc_a,i2] = wrappers::descinit( M, N, MB, NB, ISRC, JSRC, context, LDLOCA );
+  auto desc_a     = descinit_noerror( grid, M, N, M,  N,  ILOC, JLOC, LDA    );
+  auto desc_loc_a = descinit_noerror( grid, M, N, MB, NB, ISRC, JSRC, LDLOCA );
 
+  auto context = grid.context();
   wrappers::pgemr2d( M, N, A_local, 1, 1, desc_loc_a, A, 1, 1, desc_a, context );
 
 }

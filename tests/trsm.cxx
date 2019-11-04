@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 #include <scalapackpp/scatter_gather.hpp>
 #include <scalapackpp/information.hpp>
+#include <scalapackpp/descinit.hpp>
 #include <scalapackpp/trsm.hpp>
 #include <vector>
 
@@ -102,8 +103,8 @@ SCALAPACKPP_TEMPLATE_TEST_CASE( "Trsm", "[trsm]" ) {
   // Compute reference solution with GEMM
   using namespace scalapackpp;
   auto context = grid.context();
-  auto [desc_a, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, M_loc1 );
-  auto [desc_b, i2] = wrappers::descinit( M, N, MB, NB, 0, 0, context, M_loc2 );
+  auto desc_a = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc1 );
+  auto desc_b = descinit_noerror( grid, M, N, MB, NB, 0, 0, M_loc2 );
 
   // Compute with trsm ( B <- A**-1*B )
   scalapackpp::ptrsm(

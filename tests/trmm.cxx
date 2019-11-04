@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 #include <scalapackpp/scatter_gather.hpp>
 #include <scalapackpp/information.hpp>
+#include <scalapackpp/descinit.hpp>
 #include <scalapackpp/trmm.hpp>
 #include <scalapackpp/gemm.hpp>
 #include <vector>
@@ -40,16 +41,15 @@ SCALAPACKPP_TEMPLATE_TEST_CASE( "Trmm", "[trmm]" ) {
   // Compute reference solution with GEMM
   using namespace scalapackpp;
   auto context = grid.context();
-  auto [desc_a, i1] = wrappers::descinit( M, M, MB, MB, 0, 0, context, M_loc1 );
-  auto [desc_b, i2] = wrappers::descinit( M, N, MB, NB, 0, 0, context, M_loc2 );
-  auto [desc_c, i3] = wrappers::descinit( M, N, MB, NB, 0, 0, context, M_loc2 );
+  auto desc_a = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc1 );
+  auto desc_b = descinit_noerror( grid, M, N, MB, NB, 0, 0, M_loc2 );
 
   // C <- A*B
   scalapackpp::pgemm( 
     scalapackpp::TransposeFlag::NoTranspose,
     scalapackpp::TransposeFlag::NoTranspose,
     M, N, M, TestType(1), A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b,
-    TestType(0), C_local.data(), 1, 1, desc_c 
+    TestType(0), C_local.data(), 1, 1, desc_b
   );
 
   // Compute with trmm ( B <- A*B )
