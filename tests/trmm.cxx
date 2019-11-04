@@ -1,24 +1,22 @@
-#include <catch2/catch.hpp>
-#include <scalapackpp/scatter_gather.hpp>
-#include <scalapackpp/information.hpp>
-#include <scalapackpp/descinit.hpp>
+#include "ut.hpp"
+#include <scalapackpp/block_cyclic.hpp>
 #include <scalapackpp/trmm.hpp>
 #include <scalapackpp/gemm.hpp>
-#include <vector>
 
-#define SCALAPACKPP_TEMPLATE_TEST_CASE(NAME, CAT)\
-TEMPLATE_TEST_CASE(NAME,CAT, float, double, scalapackpp::scomplex, scalapackpp::dcomplex)
 
-SCALAPACKPP_TEMPLATE_TEST_CASE( "Trmm", "[trmm]" ) {
+SCALAPACKPP_TEST_CASE( "Trmm", "[trmm]" ) {
+
+  using namespace scalapackpp;
 
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  const scalapackpp::scalapack_int MB = 2, NB = 4;
-  const scalapackpp::scalapack_int M = 100, N = 200;
+  const scalapack_int M = 100, N = 200;
 
-  auto [M_loc1, N_loc1] = scalapackpp::get_local_dims( grid, M, M, MB, MB, 0, 0 );
-  auto [M_loc2, N_loc2] = scalapackpp::get_local_dims( grid, M, N, MB, NB, 0, 0 );
+  BlockCyclicDist2D mat_dist( grid, 2, 4 );
+
+  auto [M_loc1, N_loc1] = mat_dist.get_local_dims( M, M );
+  auto [M_loc2, N_loc2] = mat_dist.get_local_dims( M, N );
 
 
   std::vector< TestType > A_root;
@@ -34,30 +32,24 @@ SCALAPACKPP_TEMPLATE_TEST_CASE( "Trmm", "[trmm]" ) {
   std::vector< TestType > C_local( M_loc2 * N_loc2 );
 
   // Scatter triangular matrix
-  scalapackpp::scatter( grid, M, M, MB, MB, A_root.data(), M, 0, 0,
-                        A_local.data(), M_loc1, 0, 0 );
+  mat_dist.scatter( M, M, A_root.data(), M, A_local.data(), M_loc1, 0, 0 );
 
 
   // Compute reference solution with GEMM
-  using namespace scalapackpp;
-  auto context = grid.context();
-  auto desc_a = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc1 );
-  auto desc_b = descinit_noerror( grid, M, N, MB, NB, 0, 0, M_loc2 );
+  auto desc_a = mat_dist.descinit_noerror( M, M, M_loc1 );
+  auto desc_b = mat_dist.descinit_noerror( M, N, M_loc2 );
 
   // C <- A*B
-  scalapackpp::pgemm( 
-    scalapackpp::TransposeFlag::NoTranspose,
-    scalapackpp::TransposeFlag::NoTranspose,
-    M, N, M, TestType(1), A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b,
-    TestType(0), C_local.data(), 1, 1, desc_b
+  pgemm( 
+    TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, M, N, M, 
+    1, A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b,
+    0, C_local.data(), 1, 1, desc_b
   );
 
   // Compute with trmm ( B <- A*B )
-  scalapackpp::ptrmm(
-    scalapackpp::SideFlag::Left,
-    blacspp::Triangle::Lower,
-    scalapackpp::TransposeFlag::NoTranspose,
-    blacspp::Diagonal::Unit,
+  ptrmm(
+    SideFlag::Left, blacspp::Triangle::Lower,
+    TransposeFlag::NoTranspose, blacspp::Diagonal::Unit,
     M, N, TestType(1), A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b 
   );
 

@@ -1,11 +1,7 @@
-#include <catch2/catch.hpp>
-#include <scalapackpp/scatter_gather.hpp>
-#include <scalapackpp/information.hpp>
-#include <scalapackpp/descinit.hpp>
+#include "ut.hpp"
+#include <scalapackpp/block_cyclic.hpp>
 #include <scalapackpp/gemm.hpp>
 #include <scalapackpp/sevp.hpp>
-
-#include <random>
 
 template <typename T>
 T smart_conj( T x ) {
@@ -14,25 +10,19 @@ T smart_conj( T x ) {
   else return std::conj(x);
 }
 
-#define SCALAPACKPP_REAL_TEST_CASE(NAME, CAT)\
-TEMPLATE_TEST_CASE(NAME,CAT, float, double )
-
-#define SCALAPACKPP_COMPLEX_TEST_CASE(NAME, CAT)\
-TEMPLATE_TEST_CASE(NAME,CAT, scalapackpp::scomplex, scalapackpp::dcomplex)
-
-#define SCALAPACKPP_TEST_CASE(NAME, CAT)\
-TEMPLATE_TEST_CASE(NAME,CAT, float, double, scalapackpp::scomplex, scalapackpp::dcomplex)
 
 
 SCALAPACKPP_REAL_TEST_CASE( "Syev", "[sevp]" ){
 
   using namespace scalapackpp;
+
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int MB = 4, M = 100;
+  scalapack_int M = 100;
+  BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
-  auto [M_loc, N_loc] = get_local_dims( grid, M, M, MB, MB, 0, 0);
+  auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
 
   std::default_random_engine gen;
   std::normal_distribution<detail::real_t<TestType>> dist( 5., 0.25 );
@@ -54,14 +44,13 @@ SCALAPACKPP_REAL_TEST_CASE( "Syev", "[sevp]" ){
     }
   }
 
-  scatter( grid, M, M, MB, MB, A.data(), M, 0, 0, A_local.data(), M_loc, 0, 0 );
+  mat_dist.scatter( M, M, A.data(), M, A_local.data(), M_loc, 0, 0 );
 
   std::vector< TestType > A_copy( A_local );
 
-  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
+  auto desc = mat_dist.descinit_noerror( M, M, M_loc );
   auto info = psyev(
-    VectorFlag::Vectors,
-    blacspp::Triangle::Lower,
+    VectorFlag::Vectors, blacspp::Triangle::Lower,
     M, A_local.data(), 1, 1, desc, W.data(), Z_local.data(), 1, 1, desc
   );
 
@@ -86,12 +75,14 @@ SCALAPACKPP_REAL_TEST_CASE( "Syev", "[sevp]" ){
 SCALAPACKPP_REAL_TEST_CASE( "Syevd", "[sevp]" ){
 
   using namespace scalapackpp;
+
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int MB = 4, M = 100;
+  scalapack_int M = 100;
+  BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
-  auto [M_loc, N_loc] = get_local_dims( grid, M, M, MB, MB, 0, 0);
+  auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
 
   std::default_random_engine gen;
   std::normal_distribution<detail::real_t<TestType>> dist( 5., 0.25 );
@@ -113,14 +104,13 @@ SCALAPACKPP_REAL_TEST_CASE( "Syevd", "[sevp]" ){
     }
   }
 
-  scatter( grid, M, M, MB, MB, A.data(), M, 0, 0, A_local.data(), M_loc, 0, 0 );
+  mat_dist.scatter( M, M, A.data(), M, A_local.data(), M_loc, 0, 0 );
 
   std::vector< TestType > A_copy( A_local );
 
-  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
+  auto desc = mat_dist.descinit_noerror( M, M, M_loc );
   auto info = psyevd(
-    VectorFlag::Vectors,
-    blacspp::Triangle::Lower,
+    VectorFlag::Vectors, blacspp::Triangle::Lower,
     M, A_local.data(), 1, 1, desc, W.data(), Z_local.data(), 1, 1, desc
   );
 
@@ -147,13 +137,15 @@ SCALAPACKPP_REAL_TEST_CASE( "Syevd", "[sevp]" ){
 SCALAPACKPP_COMPLEX_TEST_CASE( "Heev", "[sevp]" ){
 
   using namespace scalapackpp;
+
   using real_t = detail::real_t<TestType>;
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int MB = 4, M = 100;
+  scalapack_int M = 100;
+  BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
-  auto [M_loc, N_loc] = get_local_dims( grid, M, M, MB, MB, 0, 0);
+  auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
 
   std::default_random_engine gen;
   std::normal_distribution<real_t> dist( 5., 0.25 );
@@ -175,11 +167,11 @@ SCALAPACKPP_COMPLEX_TEST_CASE( "Heev", "[sevp]" ){
     }
   }
 
-  scatter( grid, M, M, MB, MB, A.data(), M, 0, 0, A_local.data(), M_loc, 0, 0 );
+  mat_dist.scatter( M, M, A.data(), M, A_local.data(), M_loc, 0, 0 );
 
   std::vector< TestType > A_copy( A_local );
 
-  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
+  auto desc = mat_dist.descinit_noerror( M, M, M_loc );
   auto info = pheev(
     VectorFlag::Vectors,
     blacspp::Triangle::Lower,
@@ -207,13 +199,15 @@ SCALAPACKPP_COMPLEX_TEST_CASE( "Heev", "[sevp]" ){
 SCALAPACKPP_COMPLEX_TEST_CASE( "Heevd", "[sevp]" ){
 
   using namespace scalapackpp;
+
   using real_t = detail::real_t<TestType>;
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int MB = 4, M = 100;
+  scalapack_int M = 100;
+  BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
-  auto [M_loc, N_loc] = get_local_dims( grid, M, M, MB, MB, 0, 0);
+  auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
 
   std::default_random_engine gen;
   std::normal_distribution<real_t> dist( 5., 0.25 );
@@ -235,11 +229,11 @@ SCALAPACKPP_COMPLEX_TEST_CASE( "Heevd", "[sevp]" ){
     }
   }
 
-  scatter( grid, M, M, MB, MB, A.data(), M, 0, 0, A_local.data(), M_loc, 0, 0 );
+  mat_dist.scatter( M, M, A.data(), M, A_local.data(), M_loc, 0, 0 );
 
   std::vector< TestType > A_copy( A_local );
 
-  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
+  auto desc = mat_dist.descinit_noerror( M, M, M_loc );
   auto info = pheevd(
     VectorFlag::Vectors,
     blacspp::Triangle::Lower,
@@ -281,13 +275,15 @@ SCALAPACKPP_COMPLEX_TEST_CASE( "Heevd", "[sevp]" ){
 SCALAPACKPP_TEST_CASE( "Hereig", "[sevp]" ){
 
   using namespace scalapackpp;
+
   using real_t = detail::real_t<TestType>;
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int MB = 4, M = 100;
+  scalapack_int M = 100;
+  BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
-  auto [M_loc, N_loc] = get_local_dims( grid, M, M, MB, MB, 0, 0);
+  auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
 
   std::default_random_engine gen;
   std::normal_distribution<real_t> dist( 5., 0.25 );
@@ -309,11 +305,11 @@ SCALAPACKPP_TEST_CASE( "Hereig", "[sevp]" ){
     }
   }
 
-  scatter( grid, M, M, MB, MB, A.data(), M, 0, 0, A_local.data(), M_loc, 0, 0 );
+  mat_dist.scatter( M, M, A.data(), M, A_local.data(), M_loc, 0, 0 );
 
   std::vector< TestType > A_copy( A_local );
 
-  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
+  auto desc = mat_dist.descinit_noerror( M, M, M_loc );
   auto info = hereig(
     VectorFlag::Vectors,
     blacspp::Triangle::Lower,
@@ -341,13 +337,15 @@ SCALAPACKPP_TEST_CASE( "Hereig", "[sevp]" ){
 SCALAPACKPP_TEST_CASE( "Hereigd", "[sevp]" ){
 
   using namespace scalapackpp;
+
   using real_t = detail::real_t<TestType>;
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int MB = 4, M = 100;
+  scalapack_int M = 100;
+  BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
-  auto [M_loc, N_loc] = get_local_dims( grid, M, M, MB, MB, 0, 0);
+  auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
 
   std::default_random_engine gen;
   std::normal_distribution<real_t> dist( 5., 0.25 );
@@ -369,11 +367,11 @@ SCALAPACKPP_TEST_CASE( "Hereigd", "[sevp]" ){
     }
   }
 
-  scatter( grid, M, M, MB, MB, A.data(), M, 0, 0, A_local.data(), M_loc, 0, 0 );
+  mat_dist.scatter( M, M, A.data(), M, A_local.data(), M_loc, 0, 0 );
 
   std::vector< TestType > A_copy( A_local );
 
-  auto desc = descinit_noerror( grid, M, M, MB, MB, 0, 0, M_loc );
+  auto desc = mat_dist.descinit_noerror( M, M, M_loc );
   auto info = hereigd(
     VectorFlag::Vectors,
     blacspp::Triangle::Lower,
