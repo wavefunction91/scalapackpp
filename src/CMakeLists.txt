@@ -1,4 +1,5 @@
 find_package( blacspp REQUIRED )
+find_package( ScaLAPACK REQUIRED )
 
 
 

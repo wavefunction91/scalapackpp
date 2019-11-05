@@ -7,6 +7,7 @@ if( CMAKE_MODULE_PATH )
 else()
   set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 endif()
+list( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
 
 add_subdirectory( src )
 add_subdirectory( tests )
