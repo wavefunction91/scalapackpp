@@ -1,6 +1,7 @@
 #pragma once
 #include <scalapackpp/types.hpp>
 #include <type_traits>
+#include <cassert>
 
 namespace scalapackpp::detail {
 

@@ -15,6 +15,8 @@ std::enable_if_t<
         BETAT BETA, 
         T* C, scalapack_int IC, scalapack_int JC, const scalapack_desc& DESCC ) {
 
+  assert( A != C );
+
   auto TRANS = detail::type_string( trans );
 
   const T ALPHA_t = T(ALPHA);
