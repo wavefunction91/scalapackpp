@@ -28,7 +28,7 @@ SCALAPACKPP_TEST_CASE( "Trmm", "[trmm]" ) {
   }
 
   std::vector< TestType > A_local( M_loc1 * N_loc1 );
-  std::vector< TestType > B_local( M_loc2 * N_loc2, TestType(2) );
+  std::vector< TestType > B_local( M_loc2 * N_loc2, 2 );
   std::vector< TestType > C_local( M_loc2 * N_loc2 );
 
   // Scatter triangular matrix
@@ -50,7 +50,7 @@ SCALAPACKPP_TEST_CASE( "Trmm", "[trmm]" ) {
   ptrmm(
     SideFlag::Left, blacspp::Triangle::Lower,
     TransposeFlag::NoTranspose, blacspp::Diagonal::Unit,
-    M, N, TestType(1), A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b 
+    M, N, 1, A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b 
   );
 
   // Check B = C

@@ -60,7 +60,7 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
   ptrsm(
     SideFlag::Left, blacspp::Triangle::Lower,
     TransposeFlag::NoTranspose, blacspp::Diagonal::NonUnit,
-    M, M, TestType(1.), A_SPD_local.data(), 1, 1, desc, 
+    M, M, 1., A_SPD_local.data(), 1, 1, desc, 
     A_SPD_copy.data(), 1, 1, desc
   );
 
@@ -69,7 +69,7 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
   ptrsm(
     SideFlag::Right, blacspp::Triangle::Lower,
     TransposeFlag::ConjTranspose, blacspp::Diagonal::NonUnit,
-    M, M, TestType(1.), A_SPD_local.data(), 1, 1, desc, 
+    M, M, 1., A_SPD_local.data(), 1, 1, desc, 
     A_SPD_copy.data(), 1, 1, desc
   );
 

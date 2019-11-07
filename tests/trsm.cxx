@@ -27,9 +27,9 @@ void ztrsm_( const char*, const char*, const char*, const char*,
 
 namespace scalapackpp {
 
-template <typename T>
+template <typename T, typename ALPHAT>
 void trsm( SideFlag side, blacspp::Triangle uplo, TransposeFlag trans, blacspp::Diagonal diag,
-         scalapack_int M, scalapack_int N, T ALPHA, 
+         scalapack_int M, scalapack_int N, ALPHAT ALPHA, 
          const T* A, scalapack_int LDA, T* B, scalapack_int LDB ) {
 
   auto SIDE = detail::type_string( side );
@@ -37,18 +37,20 @@ void trsm( SideFlag side, blacspp::Triangle uplo, TransposeFlag trans, blacspp::
   auto TRANS = detail::type_string( trans );
   auto DIAG  = blacspp::detail::type_string( diag );
 
+  T ALPHA_t = ALPHA;
+
   if constexpr ( std::is_same_v< T, float > )
   strsm_( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
-          &M, &N, &ALPHA, A, &LDA, B, &LDB );
+          &M, &N, &ALPHA_t, A, &LDA, B, &LDB );
   if constexpr ( std::is_same_v< T, double > )
   dtrsm_( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
-          &M, &N, &ALPHA, A, &LDA, B, &LDB );
+          &M, &N, &ALPHA_t, A, &LDA, B, &LDB );
   if constexpr ( std::is_same_v< T, scomplex > )
   ctrsm_( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
-          &M, &N, &ALPHA, A, &LDA, B, &LDB );
+          &M, &N, &ALPHA_t, A, &LDA, B, &LDB );
   if constexpr ( std::is_same_v< T, dcomplex > )
   ztrsm_( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
-          &M, &N, &ALPHA, A, &LDA, B, &LDB );
+          &M, &N, &ALPHA_t, A, &LDA, B, &LDB );
 
 }
 
@@ -81,12 +83,12 @@ SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
     scalapackpp::trsm(    
       SideFlag::Left, blacspp::Triangle::Lower,
       TransposeFlag::NoTranspose, blacspp::Diagonal::Unit,
-      M, N, TestType(1), A_root.data(), M, B_ref_root.data(), M
+      M, N, 1, A_root.data(), M, B_ref_root.data(), M
     );
   }
 
   std::vector< TestType > A_local( M_loc1*N_loc1 );
-  std::vector< TestType > B_local( M_loc2*N_loc2, TestType(2) );
+  std::vector< TestType > B_local( M_loc2*N_loc2, 2 );
   std::vector< TestType > B_ref_local( M_loc2*N_loc2 );
 
   // Scatter triangular matrix and reference
@@ -102,7 +104,7 @@ SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
   ptrsm(
     SideFlag::Left, blacspp::Triangle::Lower,
     TransposeFlag::NoTranspose, blacspp::Diagonal::Unit,
-    M, N, TestType(1), A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b 
+    M, N, 1, A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b 
   );
 
   // Check B = C

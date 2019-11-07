@@ -5,10 +5,14 @@
 
 namespace scalapackpp {
 
-template <typename T>
-detail::enable_if_scalapack_supported_t<T>
-  ptrmm( SideFlag side, blacspp::Triangle uplo, TransposeFlag trans, blacspp::Diagonal diag,
-         scalapack_int M, scalapack_int N, T ALPHA, 
+template <typename T, typename ALPHAT>
+std::enable_if_t<
+  detail::scalapack_supported_v<T> and 
+  std::is_convertible_v<ALPHAT,T>
+>
+  ptrmm( SideFlag side, blacspp::Triangle uplo, TransposeFlag trans, 
+         blacspp::Diagonal diag,
+         scalapack_int M, scalapack_int N, ALPHAT ALPHA, 
          const T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
          T* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
 
@@ -17,8 +21,10 @@ detail::enable_if_scalapack_supported_t<T>
   auto TRANS = detail::type_string( trans );
   auto DIAG  = blacspp::detail::type_string( diag );
 
+  const T ALPHA_t = T(ALPHA);
+
   wrappers::ptrmm( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
-                   M, N, ALPHA, A, IA, JA, DESCA, B, IB, JB, DESCB );
+                   M, N, ALPHA_t, A, IA, JA, DESCA, B, IB, JB, DESCB );
 
 }
 
