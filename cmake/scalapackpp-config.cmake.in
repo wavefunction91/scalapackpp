@@ -1,0 +1,17 @@
+cmake_minimum_required( VERSION 3.13 FATAL_ERROR )
+
+get_filename_component( scalapackpp_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH )
+
+list( APPEND CMAKE_MODULE_PATH ${scalapackpp_CMAKE_DIR} )
+include( CMakeFindDependencyMacro )
+find_dependency( blacspp )
+find_dependency( ScaLAPACK )
+
+
+list(REMOVE_AT CMAKE_MODULE_PATH -1)
+
+if(NOT TARGET scalapackpp::scalapackpp)
+    include("${scalapackpp_CMAKE_DIR}/scalapackpp-targets.cmake")
+endif()
+
+set(scalapackpp_LIBRARIES scalapackpp::scalapackpp)
