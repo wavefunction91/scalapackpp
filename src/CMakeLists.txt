@@ -12,6 +12,7 @@ set( ScaLAPACKPP_SRC
      trsm.cxx 
      information.cxx 
      potrf.cxx 
+     potrs.cxx
      block_cyclic.cxx
      geadd.cxx
 )
@@ -21,9 +22,11 @@ set( ScaLAPACK_HEADERS
      descinit.hpp
      geadd.hpp
      gemm.hpp
+     gevp.hpp
      heev.hpp
      information.hpp
      potrf.hpp
+     potrs.hpp
      scatter_gather.hpp
      sevp.hpp
      syev.hpp
@@ -46,6 +49,7 @@ set( ScaLAPACK_WRAPPER_HEADERS
      wrappers/gemr2d.hpp
      wrappers/heev.hpp
      wrappers/potrf.hpp
+     wrappers/potrs.hpp
      wrappers/syev.hpp
      wrappers/trmm.hpp
      wrappers/trsm.hpp
