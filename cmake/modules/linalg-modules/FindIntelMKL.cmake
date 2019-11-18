@@ -105,14 +105,14 @@ endif()
 
 # MKL MPI for BLACS
 if( intelmkl_PREFERED_MPI_LIBRARY MATCHES "openmpi" )
-  set( intelmkl_LP64_BLACS_LIBRARY_NAME  ${intelmkl_LP64_OPENMPI_LIBRARY_NAME}  )
-  set( intelmkl_ILP64_BLACS_LIBRARY_NAME ${intelmkl_ILP64_OPENMPI_LIBRARY_NAME} )
+  set( intelmkl_LP64_BLACS_LIBRARY_NAME  ${intelmkl_LP64_OPENMPI_BLACS_LIBRARY_NAME}  )
+  set( intelmkl_ILP64_BLACS_LIBRARY_NAME ${intelmkl_ILP64_OPENMPI_BLACS_LIBRARY_NAME} )
 elseif( intelmkl_PREFERED_MPI_LIBRARY MATCHES "sgimpt" )
-  set( intelmkl_LP64_BLACS_LIBRARY_NAME  ${intelmkl_LP64_SGIMPT_LIBRARY_NAME}  )
-  set( intelmkl_ILP64_BLACS_LIBRARY_NAME ${intelmkl_ILP64_SGIMPT_LIBRARY_NAME} )
+  set( intelmkl_LP64_BLACS_LIBRARY_NAME  ${intelmkl_LP64_SGIMPT_BLACS_LIBRARY_NAME}  )
+  set( intelmkl_ILP64_BLACS_LIBRARY_NAME ${intelmkl_ILP64_SGIMPT_BLACS_LIBRARY_NAME} )
 else() # Intel MPI
-  set( intelmkl_LP64_BLACS_LIBRARY_NAME  ${intelmkl_LP64_INTELMPI_LIBRARY_NAME}  )
-  set( intelmkl_ILP64_BLACS_LIBRARY_NAME ${intelmkl_ILP64_INTELMPI_LIBRARY_NAME} )
+  set( intelmkl_LP64_BLACS_LIBRARY_NAME  ${intelmkl_LP64_INTELMPI_BLACS_LIBRARY_NAME}  )
+  set( intelmkl_ILP64_BLACS_LIBRARY_NAME ${intelmkl_ILP64_INTELMPI_BLACS_LIBRARY_NAME} )
 endif()
 
 
@@ -240,11 +240,6 @@ find_library( intelmkl_LP64_SCALAPACK_LIBRARY
 
 
 
-
-
-
-
-
 # Default to LP64
 if( "ilp64" IN_LIST IntelMKL_FIND_COMPONENTS )
   set( IntelMKL_COMPILE_DEFINITIONS "MKL_ILP64" )
@@ -280,6 +275,18 @@ else()
   endif()
 endif()
 
+
+
+
+
+# Check if found library is actually static
+if( intelmkl_CORE_LIBRARY MATCHES ".+libmkl_core.a" )
+  set( intelmkl_PREFERS_STATIC TRUE )
+endif()
+
+
+
+
 if( intelmkl_LIBRARY AND intelmkl_THREAD_LIBRARY AND intelmkl_CORE_LIBRARY )
   #if( intelmkl_PREFERS_STATIC )
   #  set( IntelMKL_LIBRARIES "-Wl,--start-group" ${intelmkl_LIBRARY} ${intelmkl_THREAD_LIBRARY} ${intelmkl_CORE_LIBRARY} "-Wl,--end-group" )
@@ -288,7 +295,7 @@ if( intelmkl_LIBRARY AND intelmkl_THREAD_LIBRARY AND intelmkl_CORE_LIBRARY )
   #endif()
 
 
-  if( intel_PREFERS_STATIC )
+  if( intelmkl_PREFERS_STATIC )
 
     if( "scalapack" IN_LIST IntelMKL_FIND_COMPONENTS )
       set( IntelMKL_LIBRARIES ${intelmkl_SCALAPACK_LIBRARY} )
@@ -326,6 +333,16 @@ if( intelmkl_LIBRARY AND intelmkl_THREAD_LIBRARY AND intelmkl_CORE_LIBRARY )
     set( IntelMKL_LIBRARIES ${IntelMKL_LIBRARIES} tbb )
   endif() 
   set( IntelMKL_LIBRARIES ${IntelMKL_LIBRARIES} "m" "dl" )
+
+  if( "scalapack" IN_LIST IntelMKL_FIND_COMPONENTS OR
+      "blacs"     IN_LIST IntelMKL_FIND_COMPONENTS )
+
+    if( NOT TARGET MPI::MPI_C )
+      find_dependency( MPI )
+    endif()
+    list( APPEND IntelMKL_LIBRARIES MPI::MPI_C )
+
+  endif()
 endif()
 
 include(FindPackageHandleStandardArgs)

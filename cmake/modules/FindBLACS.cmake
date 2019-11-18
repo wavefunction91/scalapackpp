@@ -25,6 +25,7 @@ endif()
 
 if( NOT blacs_LIBRARIES )
 
+  message( STATUS "SEARCHING FOR BLACS_LIBRARIES" )
   find_library( BLACS_LIBRARIES
     NAMES blacs
     HINTS ${blacs_PREFIX}
@@ -34,6 +35,7 @@ if( NOT blacs_LIBRARIES )
 
 else()
 
+  message( STATUS "BLACS LIBRARY WAS SET BY USER: ${blacs_LIBRARIES}" )
   set( BLACS_LIBRARIES ${blacs_LIBRARIES} )
 
 endif()
@@ -64,6 +66,8 @@ mark_as_advanced( BLACS_FOUND BLACS_LIBRARIES BLACS_LINK_OK )
 find_package_handle_standard_args( BLACS REQUIRED_VARS BLACS_LINK_OK )
 
 if( BLACS_FOUND AND NOT TARGET BLACS::BLACS )
+
+  message( STATUS "BLACS LIBRARIES: ${BLACS_LIBRARIES};MPI::MPI_C" )
 
   add_library( BLACS::BLACS INTERFACE IMPORTED )
   set_target_properties( BLACS::BLACS PROPERTIES 

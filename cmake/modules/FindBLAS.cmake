@@ -35,10 +35,6 @@ if( NOT blas_LIBRARIES )
   foreach( blas_type ${BLAS_PREFERENCE_LIST} )
 
     string( TOLOWER ${blas_type} blas_lower_case )
-    #set( ${blas_lower_case}_PREFIX         ${blas_PREFIX}         )
-    #set( ${blas_lower_case}_INCLUDE_DIR    ${blas_INCLUDE_DIR}    )
-    #set( ${blas_lower_case}_LIBRARY_DIR    ${blas_LIBRARY_DIR}    )
-    #set( ${blas_lower_case}_PREFERS_STATIC ${blas_PREFERS_STATIC} )
     copy_meta_data( blas ${blas_lower_case} )
 
 
@@ -69,6 +65,15 @@ if( NOT blas_LIBRARIES )
       else()
         set( BLAS_lp64_FOUND ${${blas_type}_lp64_FOUND} )
       endif()
+
+      # Propagate BLACS / ScaLAPACK
+      if( "blacs" IN_LIST BLAS_FIND_COMPONENTS )
+        set( BLAS_blacs_FOUND ${${blas_type}_blacs_FOUND} )
+      endif()
+      if( "scalapack" IN_LIST BLAS_FIND_COMPONENTS )
+        set( BLAS_scalapack_FOUND ${${blas_type}_scalapack_FOUND} )
+      endif()
+
 
       break()
 

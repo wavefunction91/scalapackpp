@@ -155,6 +155,8 @@ find_package_handle_standard_args( ScaLAPACK
 # Export target
 if( ScaLAPACK_FOUND AND NOT TARGET ScaLAPACK::scalapack )
 
+  message( STATUS "ScaLAPACK LIBRARIES: ${ScaLAPACK_LIBRARIES};BLACS::BLACS;LAPACK::lapack" )
+
   add_library( ScaLAPACK::scalapack INTERFACE IMPORTED )
   set_target_properties( ScaLAPACK::scalapack PROPERTIES
     INTERFACE_LINK_LIBRARIES      "${ScaLAPACK_LIBRARIES};BLACS::BLACS;LAPACK::lapack" 

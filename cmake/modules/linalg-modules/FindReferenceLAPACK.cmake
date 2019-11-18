@@ -12,12 +12,18 @@ find_library( referencelapack_LIBRARY
   DOC "ReferenceLAPACK Library"
 )
 
+find_library( gfortran_LIBRARY 
+  NAMES gfortran 
+  PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES} 
+  DOC "GFortran Library" 
+)
+
 #if( referencelapack_INCLUDE_DIR )
 #  set( ReferenceLAPACK_INCLUDE_DIR ${referencelapack_INCLUDE_DIR} )
 #endif()
 
-if( referencelapack_LIBRARY )
-  set( ReferenceLAPACK_LIBRARIES ${referencelapack_LIBRARY} )
+if( referencelapack_LIBRARY AND gfortran_LIBRARY )
+  set( ReferenceLAPACK_LIBRARIES ${referencelapack_LIBRARY} ${gfortran_LIBRARY} )
 endif()
 
 
