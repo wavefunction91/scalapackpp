@@ -1,4 +1,4 @@
-#include <scalapackpp/wrappers/potrf.hpp>
+#include <scalapackpp/wrappers/factorizations/potrf.hpp>
 
 using scalapackpp::scalapack_int;
 using scalapackpp::dcomplex;

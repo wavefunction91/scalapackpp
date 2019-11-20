@@ -1,6 +1,6 @@
 #pragma once
-#include <scalapackpp/syev.hpp>
-#include <scalapackpp/heev.hpp>
+#include <scalapackpp/eigenvalue_problem/syev.hpp>
+#include <scalapackpp/eigenvalue_problem/heev.hpp>
 
 namespace scalapackpp {
 

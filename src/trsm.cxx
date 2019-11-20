@@ -1,4 +1,4 @@
-#include <scalapackpp/wrappers/trsm.hpp>
+#include <scalapackpp/wrappers/pblas/trsm.hpp>
 
 using scalapackpp::scalapack_int;
 using scalapackpp::dcomplex;

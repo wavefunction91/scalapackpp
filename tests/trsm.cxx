@@ -1,7 +1,7 @@
 #include "ut.hpp"
 #include <scalapackpp/scatter_gather.hpp>
 #include <scalapackpp/block_cyclic.hpp>
-#include <scalapackpp/trsm.hpp>
+#include <scalapackpp/pblas/trsm.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
 #include <blacspp/util/type_conversions.hpp>
 

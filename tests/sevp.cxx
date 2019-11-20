@@ -1,7 +1,7 @@
 #include "ut.hpp"
 #include <scalapackpp/block_cyclic.hpp>
-#include <scalapackpp/gemm.hpp>
-#include <scalapackpp/sevp.hpp>
+#include <scalapackpp/pblas/gemm.hpp>
+#include <scalapackpp/eigenvalue_problem/sevp.hpp>
 
 template <typename T>
 T smart_conj( T x ) {

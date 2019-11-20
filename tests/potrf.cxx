@@ -1,8 +1,8 @@
 #include "ut.hpp"
 #include <scalapackpp/block_cyclic.hpp>
-#include <scalapackpp/trsm.hpp>
-#include <scalapackpp/gemm.hpp>
-#include <scalapackpp/potrf.hpp>
+#include <scalapackpp/pblas/trsm.hpp>
+#include <scalapackpp/pblas/gemm.hpp>
+#include <scalapackpp/factorizations/potrf.hpp>
 
 
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <scalapackpp/wrappers/heev.hpp>
+#include <scalapackpp/wrappers/eigenvalue_problem/heev.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
 #include <blacspp/util/type_conversions.hpp>
 

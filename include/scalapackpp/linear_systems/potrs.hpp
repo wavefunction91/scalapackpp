@@ -1,5 +1,5 @@
 #pragma once
-#include <scalapackpp/wrappers/potrs.hpp>
+#include <scalapackpp/wrappers/linear_systems/potrs.hpp>
 #include <blacspp/util/type_conversions.hpp>
 
 namespace scalapackpp {

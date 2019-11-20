@@ -1,5 +1,5 @@
 #pragma once
-#include <scalapackpp/wrappers/syev.hpp>
+#include <scalapackpp/wrappers/eigenvalue_problem/syev.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
 #include <blacspp/util/type_conversions.hpp>
 

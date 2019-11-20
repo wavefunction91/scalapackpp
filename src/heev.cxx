@@ -1,4 +1,4 @@
-#include <scalapackpp/wrappers/heev.hpp>
+#include <scalapackpp/wrappers/eigenvalue_problem/heev.hpp>
 
 using scalapackpp::scalapack_int;
 using scalapackpp::dcomplex;

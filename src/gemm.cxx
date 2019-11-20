@@ -1,4 +1,4 @@
-#include <scalapackpp/wrappers/gemm.hpp>
+#include <scalapackpp/wrappers/pblas/gemm.hpp>
 
 using scalapackpp::scalapack_int;
 using scalapackpp::dcomplex;

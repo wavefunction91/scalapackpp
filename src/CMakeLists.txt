@@ -7,57 +7,24 @@ set( ScaLAPACKPP_SRC
      gemm.cxx 
      descinit.cxx 
      gemr2d.cxx 
+     gesv.cxx
+     getrf.cxx
+     getrs.cxx
+     getri.cxx
      type_conversions.cxx 
      trmm.cxx 
      trsm.cxx 
+     trtri.cxx
+     trtrs.cxx
      information.cxx 
+     posv.cxx
      potrf.cxx 
      potrs.cxx
+     potri.cxx
      block_cyclic.cxx
      geadd.cxx
 )
 
-set( ScaLAPACK_HEADERS
-     block_cyclic.hpp
-     descinit.hpp
-     geadd.hpp
-     gemm.hpp
-     gevp.hpp
-     heev.hpp
-     information.hpp
-     potrf.hpp
-     potrs.hpp
-     scatter_gather.hpp
-     sevp.hpp
-     syev.hpp
-     transpose.hpp
-     trmm.hpp
-     trsm.hpp
-     types.hpp
-)
-
-set( ScaLAPACK_UTIL_HEADERS
-     util/sfinae.hpp
-     util/type_conversions.hpp
-)
-
-set( ScaLAPACK_WRAPPER_HEADERS
-     wrappers/axpy.hpp
-     wrappers/descinit.hpp
-     wrappers/geadd.hpp
-     wrappers/gemm.hpp
-     wrappers/gemr2d.hpp
-     wrappers/heev.hpp
-     wrappers/potrf.hpp
-     wrappers/potrs.hpp
-     wrappers/syev.hpp
-     wrappers/trmm.hpp
-     wrappers/trsm.hpp
-)
-
-list( TRANSFORM ScaLAPACK_HEADERS PREPEND ${PROJECT_SOURCE_DIR}/include/scalapackpp/ )
-list( TRANSFORM ScaLAPACK_UTIL_HEADERS PREPEND ${PROJECT_SOURCE_DIR}/include/scalapackpp/ )
-list( TRANSFORM ScaLAPACK_WRAPPER_HEADERS PREPEND ${PROJECT_SOURCE_DIR}/include/scalapackpp/ )
 
 add_library( scalapackpp ${ScaLAPACKPP_SRC})
 target_link_libraries( scalapackpp PUBLIC blacspp::blacspp ScaLAPACK::scalapack )
@@ -85,16 +52,9 @@ set_target_properties( scalapackpp PROPERTIES EXPORT_NAME scalapackpp )
 
 # Install Headers
 install( 
-  FILES ${ScaLAPACK_HEADERS} 
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/scalapackpp 
-)
-install( 
-  FILES ${ScaLAPACK_UTIL_HEADERS} 
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/scalapackpp/util 
-)
-install( 
-  FILES ${ScaLAPACK_WRAPPER_HEADERS} 
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/scalapackpp/wrappers 
+  DIRECTORY   ${PROJECT_SOURCE_DIR}/include
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  FILES_MATCHING PATTERN "*.hpp"
 )
 
 

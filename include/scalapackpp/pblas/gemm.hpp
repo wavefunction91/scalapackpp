@@ -1,5 +1,5 @@
 #pragma once
-#include <scalapackpp/wrappers/gemm.hpp>
+#include <scalapackpp/wrappers/pblas/gemm.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
 
 namespace scalapackpp {

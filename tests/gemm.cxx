@@ -1,7 +1,7 @@
 #include "ut.hpp"
 #include <scalapackpp/scatter_gather.hpp>
 #include <scalapackpp/block_cyclic.hpp>
-#include <scalapackpp/gemm.hpp>
+#include <scalapackpp/pblas/gemm.hpp>
 
 
 SCALAPACKPP_TEST_CASE( "Gemm", "[gemm]" ) {

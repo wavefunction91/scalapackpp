@@ -1,8 +1,7 @@
 #include "ut.hpp"
 #include <scalapackpp/block_cyclic.hpp>
 #include <scalapackpp/pblas/gemm.hpp>
-#include <scalapackpp/factorizations/potrf.hpp>
-#include <scalapackpp/linear_systems/potrs.hpp>
+#include <scalapackpp/linear_systems/gesv.hpp>
 
 
 
@@ -10,7 +9,7 @@
 
 
 
-SCALAPACKPP_TEST_CASE( "Potrs", "[potrs]" ) {
+SCALAPACKPP_TEST_CASE( "Gesv", "[gesv]" ) {
 
   using namespace scalapackpp;
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
@@ -42,32 +41,21 @@ SCALAPACKPP_TEST_CASE( "Potrs", "[potrs]" ) {
 
   }
 
+  auto A_copy( A_local );
+
   auto desc = mat_dist.descinit_noerror( M, M, M_loc );
   auto desc_rhs = mat_dist.descinit_noerror( M, NRHS, M_loc );
 
-  // Make A SPD
-  pgemm(
-    TransposeFlag::ConjTranspose, TransposeFlag::NoTranspose, M, M, M, 
-    1., A_local.data(), 1, 1, desc, A_local.data(), 1, 1, desc,
-    0., A_SPD_local.data(), 1, 1, desc
-  );
-  std::vector< TestType > A_SPD_copy( A_SPD_local );
-
-
-  // Perform POTRF
-  auto info = ppotrf( blacspp::Triangle::Lower, M, A_SPD_local.data(), 1, 1, desc );
-
-  REQUIRE( info == 0 );
 
   // Solve linear system
-  info = ppotrs( blacspp::Triangle::Lower, M, NRHS, A_SPD_local.data(), 1, 1, desc,
+  std::vector<scalapack_int> IPIV( M_loc + mat_dist.mb() );
+  auto info = pgesv( M, NRHS, A_local.data(), 1, 1, desc, IPIV.data(),
                  B_local.data(), 1, 1, desc_rhs );
 
   REQUIRE( info == 0 );
-
   // Check correctness
   pgemm( TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, M, NRHS, M,
-         -1., A_SPD_copy.data(), 1, 1, desc, B_local.data(), 1, 1, desc_rhs,
+         -1., A_copy.data(), 1, 1, desc, B_local.data(), 1, 1, desc_rhs,
          1. , B_copy.data(), 1, 1, desc_rhs );
 
   auto tol = 100*M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();

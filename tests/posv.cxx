@@ -1,8 +1,7 @@
 #include "ut.hpp"
 #include <scalapackpp/block_cyclic.hpp>
 #include <scalapackpp/pblas/gemm.hpp>
-#include <scalapackpp/factorizations/potrf.hpp>
-#include <scalapackpp/linear_systems/potrs.hpp>
+#include <scalapackpp/linear_systems/posv.hpp>
 
 
 
@@ -10,7 +9,7 @@
 
 
 
-SCALAPACKPP_TEST_CASE( "Potrs", "[potrs]" ) {
+SCALAPACKPP_TEST_CASE( "Posv", "[posv]" ) {
 
   using namespace scalapackpp;
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
@@ -53,18 +52,11 @@ SCALAPACKPP_TEST_CASE( "Potrs", "[potrs]" ) {
   );
   std::vector< TestType > A_SPD_copy( A_SPD_local );
 
-
-  // Perform POTRF
-  auto info = ppotrf( blacspp::Triangle::Lower, M, A_SPD_local.data(), 1, 1, desc );
-
-  REQUIRE( info == 0 );
-
   // Solve linear system
-  info = ppotrs( blacspp::Triangle::Lower, M, NRHS, A_SPD_local.data(), 1, 1, desc,
+  auto info = pposv( blacspp::Triangle::Lower, M, NRHS, A_SPD_local.data(), 1, 1, desc,
                  B_local.data(), 1, 1, desc_rhs );
 
   REQUIRE( info == 0 );
-
   // Check correctness
   pgemm( TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, M, NRHS, M,
          -1., A_SPD_copy.data(), 1, 1, desc, B_local.data(), 1, 1, desc_rhs,

@@ -1,7 +1,7 @@
 #pragma once
-#include <scalapackpp/sevp.hpp>
-#include <scalapackpp/trsm.hpp>
-#include <scalapackpp/potrf.hpp>
+#include <scalapackpp/pblas/trsm.hpp>
+#include <scalapackpp/factorizations/potrf.hpp>
+#include <scalapackpp/eigenvalue_problem/sevp.hpp>
 
 namespace scalapackpp {
 

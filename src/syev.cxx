@@ -1,4 +1,4 @@
-#include <scalapackpp/wrappers/syev.hpp>
+#include <scalapackpp/wrappers/eigenvalue_problem/syev.hpp>
 
 using scalapackpp::scalapack_int;
 

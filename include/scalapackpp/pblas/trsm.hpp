@@ -1,5 +1,5 @@
 #pragma once
-#include <scalapackpp/wrappers/trmm.hpp>
+#include <scalapackpp/wrappers/pblas/trsm.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
 #include <blacspp/util/type_conversions.hpp>
 
@@ -10,7 +10,7 @@ std::enable_if_t<
   detail::scalapack_supported_v<T> and 
   std::is_convertible_v<ALPHAT,T>
 >
-  ptrmm( SideFlag side, blacspp::Triangle uplo, TransposeFlag trans, 
+  ptrsm( SideFlag side, blacspp::Triangle uplo, TransposeFlag trans, 
          blacspp::Diagonal diag,
          scalapack_int M, scalapack_int N, ALPHAT ALPHA, 
          const T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
@@ -23,7 +23,7 @@ std::enable_if_t<
 
   const T ALPHA_t = T(ALPHA);
 
-  wrappers::ptrmm( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
+  wrappers::ptrsm( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
                    M, N, ALPHA_t, A, IA, JA, DESCA, B, IB, JB, DESCB );
 
 }

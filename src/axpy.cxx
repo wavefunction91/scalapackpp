@@ -1,4 +1,4 @@
-#include <scalapackpp/wrappers/axpy.hpp>
+#include <scalapackpp/wrappers/pblas/axpy.hpp>
 
 using scalapackpp::scalapack_int;
 using scalapackpp::dcomplex;

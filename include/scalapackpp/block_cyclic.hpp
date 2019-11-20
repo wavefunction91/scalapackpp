@@ -34,8 +34,8 @@ public:
   BlockCyclicDist2D( const BlockCyclicDist2D& );
   BlockCyclicDist2D( BlockCyclicDist2D&& ) noexcept ;
 
-  inline auto mb(){ return mb_; }
-  inline auto nb(){ return nb_; }
+  inline auto mb() const { return mb_; }
+  inline auto nb() const { return nb_; }
 
   std::pair< scalapack_int, scalapack_int > 
     get_local_dims( scalapack_int M, scalapack_int N );
@@ -71,7 +71,7 @@ public:
 
 
   inline std::pair< scalapack_int, scalapack_int >
-    owner_coordinate( scalapack_int I, scalapack_int J ) {
+    owner_coordinate( scalapack_int I, scalapack_int J ) const noexcept {
 
     return { (I / mb_) % grid_->npr(), (J / nb_) % grid_->npc() };
 
@@ -79,13 +79,13 @@ public:
 
 
 
-  inline bool i_own( scalapack_int I, scalapack_int J ) {
+  inline bool i_own( scalapack_int I, scalapack_int J ) const noexcept {
     auto [pr, pc] = owner_coordinate( I, J );
     return grid_->ipr() == pr and grid_->ipc() == pc;
   }
 
   inline std::pair< scalapack_int, scalapack_int >
-    local_indx( scalapack_int I, scalapack_int J ) {
+    local_indx( scalapack_int I, scalapack_int J ) const noexcept {
 
     auto l = I / (mb_ * grid_->npr());
     auto m = J / (nb_ * grid_->npc());
