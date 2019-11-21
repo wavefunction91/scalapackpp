@@ -53,7 +53,7 @@ set_target_properties( scalapackpp PROPERTIES EXPORT_NAME scalapackpp )
 # Install Headers
 install( 
   DIRECTORY   ${PROJECT_SOURCE_DIR}/include
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
   FILES_MATCHING PATTERN "*.hpp"
 )
 
