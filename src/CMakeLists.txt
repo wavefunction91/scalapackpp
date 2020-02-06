@@ -1,4 +1,6 @@
-find_package( blacspp REQUIRED )
+if( NOT TARGET blacspp::blacspp )
+  find_package( blacspp REQUIRED )
+endif()
 find_package( ScaLAPACK REQUIRED )
 
 set( ScaLAPACKPP_SRC

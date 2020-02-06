@@ -95,6 +95,7 @@ public:
   }
 
 
+  inline const blacspp::Grid& grid() const { return *grid_; }
 
 };
 
