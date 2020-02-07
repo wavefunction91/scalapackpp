@@ -10,4 +10,11 @@ endif()
 list( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
 
 add_subdirectory( src )
-add_subdirectory( tests )
+
+if(NOT DEFINED SCALAPACKPP_ENABLE_TESTS )
+  set( SCALAPACKPP_ENABLE_TESTS ON )
+endif()
+
+if( SCALAPACKPP_ENABLE_TESTS )
+  add_subdirectory( tests )
+endif()
