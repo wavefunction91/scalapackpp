@@ -44,7 +44,18 @@ add_library( scalapackpp::scalapackpp ALIAS scalapackpp )
 include( GNUInstallDirs )
 
 # TARGETS
-install( TARGETS scalapackpp
+
+# Check if blacspp is imported (e.g. not a subproject)
+get_target_property( BLACSPP_IS_IMPORTED blacspp::blacspp IMPORTED )
+
+# Export blacspp if not imported
+set( BLASPP_EXPORT_TARGET )
+if( NOT BLACSPP_IS_IMPORTED )
+  message( STATUS "SCALAPACKPP WILL EXPORT BLACSPP" )
+  set( BLACSPP_EXPORT_TARGET blacspp )
+endif()
+
+install( TARGETS scalapackpp ${BLACSPP_EXPORT_TARGET}
   EXPORT scalapackpp-targets
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
