@@ -44,7 +44,7 @@ add_library( scalapackpp::scalapackpp ALIAS scalapackpp )
 include( GNUInstallDirs )
 
 # TARGETS
-install( TARGETS scalapackpp
+install( TARGETS scalapackpp blacspp
   EXPORT scalapackpp-targets
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
