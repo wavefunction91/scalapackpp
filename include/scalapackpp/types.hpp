@@ -35,4 +35,12 @@ namespace scalapackpp {
     Vectors,
     NoVectors
   };
+
+
+  enum MatrixNorm {
+    FrobeniusNorm,
+    InfinityNorm,
+    OneNorm,
+    AbsMax
+  };
 }

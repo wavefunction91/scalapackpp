@@ -22,6 +22,7 @@ add_executable( test_scalapackpp
   potri.cxx 
   getri.cxx
   trtri.cxx
+  norm.cxx
 )
 target_link_libraries( test_scalapackpp PUBLIC ut_framework )
 

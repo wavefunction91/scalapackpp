@@ -36,6 +36,9 @@ public:
 
   inline auto mb() const { return mb_; }
   inline auto nb() const { return nb_; }
+  inline auto isrc() const { return isrc_; }
+  inline auto jsrc() const { return jsrc_; }
+  
 
   std::pair< scalapack_int, scalapack_int > 
     get_local_dims( scalapack_int M, scalapack_int N );

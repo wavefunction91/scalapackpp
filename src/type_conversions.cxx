@@ -18,4 +18,15 @@ std::string type_string( VectorFlag jobv ) {
   else                  return std::string( "N" );
 }
 
+std::string type_string( MatrixNorm norm ) {
+  switch( norm ) {
+    case FrobeniusNorm: return std::string( "F" );
+    case InfinityNorm:  return std::string( "I" );
+    case OneNorm:       return std::string( "O" );
+    case AbsMax:        return std::string( "M" );
+    default:
+      throw std::runtime_error("NORM NOT RECOGNIZED");
+  }
+}
+
 }
