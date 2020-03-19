@@ -4,7 +4,7 @@
 #include <scalapackpp/matrix_inverse/trtri.hpp>
 #include <scalapackpp/fill_triangle.hpp>
 
-
+#if 0
 SCALAPACKPP_REAL_TEST_CASE( "trtri", "[trtri]" ) {
 
   using namespace scalapackpp;
@@ -68,3 +68,4 @@ SCALAPACKPP_REAL_TEST_CASE( "trtri", "[trtri]" ) {
   }
 
 }
+#endif

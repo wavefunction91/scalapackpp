@@ -124,7 +124,7 @@ SCALAPACKPP_TEST_CASE( "GeneralNorm", "[norm]" ) {
 
 
 
-#if 1
+#if 0
 SCALAPACKPP_TEST_CASE( "SymmetricNorm", "[norm]" ) {
 
   using namespace scalapackpp;

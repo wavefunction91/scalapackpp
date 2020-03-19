@@ -28,6 +28,7 @@ set( ScaLAPACKPP_SRC
      lange.cxx
      lansy.cxx
      lanhe.cxx
+     scal.cxx
 )
 
 
