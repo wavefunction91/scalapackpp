@@ -26,6 +26,8 @@ set( ScaLAPACKPP_SRC
      block_cyclic.cxx
      geadd.cxx
      lange.cxx
+     lansy.cxx
+     lanhe.cxx
 )
 
 
