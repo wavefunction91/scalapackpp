@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 3.13 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 project( scalapackpp VERSION 0.0.0 LANGUAGES C CXX )
 
 # Append local cmake directory to find CMAKE Modules
