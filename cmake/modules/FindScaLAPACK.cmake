@@ -115,6 +115,11 @@ if( NOT scalapack_LIBRARIES )
     DOC "ScaLAPACK Libraries"
   )
 
+  # record where found ScaLAPACK to use as a search hint downstream
+  if (ScaLAPACK_LIBRARIES)
+    get_filename_component(scalapack_LIBRARY_DIR "${ScaLAPACK_LIBRARIES}" DIRECTORY CACHE)
+  endif (ScaLAPACK_LIBRARIES)
+
 else()
 
   set( ScaLAPACK_LIBRARIES ${scalapack_LIBRARIES} )
