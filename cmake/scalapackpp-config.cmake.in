@@ -7,7 +7,7 @@ include( CMakeFindDependencyMacro )
 
 if (NOT TARGET blacspp::blacspp)
     find_dependency( blacspp CONFIG REQUIRED HINTS "@blacspp_CONFIG@" )
-endif
+endif()
 
 set(scalapack_LIBRARY_DIR "@scalapack_LIBRARY_DIR@")
 if (NOT scalapack_LIBRARY_DIR)
