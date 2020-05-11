@@ -43,7 +43,7 @@ bool BlockCyclicDist2D::is_valid() const {
 
 
 std::pair< scalapack_int, scalapack_int > 
-  BlockCyclicDist2D::get_local_dims( scalapack_int M, scalapack_int N ) {
+  BlockCyclicDist2D::get_local_dims( scalapack_int M, scalapack_int N ) const {
 
   return scalapackpp::get_local_dims( *grid_, M, N, mb_, nb_, isrc_, jsrc_ );
 
@@ -51,14 +51,14 @@ std::pair< scalapack_int, scalapack_int >
 
 
 std::pair< scalapack_desc, scalapack_int >
-  BlockCyclicDist2D::descinit( scalapack_int M, scalapack_int N, scalapack_int LDD ){
+  BlockCyclicDist2D::descinit( scalapack_int M, scalapack_int N, scalapack_int LDD ) const {
 
   return scalapackpp::descinit( *grid_, M, N, mb_, nb_, isrc_, jsrc_, LDD );
 
 }
 
 scalapack_desc
-  BlockCyclicDist2D::descinit_noerror( scalapack_int M, scalapack_int N, scalapack_int LDD ){
+  BlockCyclicDist2D::descinit_noerror( scalapack_int M, scalapack_int N, scalapack_int LDD ) const {
 
   return scalapackpp::descinit_noerror( *grid_, M, N, mb_, nb_, isrc_, jsrc_, LDD );
 

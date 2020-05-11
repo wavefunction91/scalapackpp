@@ -41,13 +41,13 @@ public:
   
 
   std::pair< scalapack_int, scalapack_int > 
-    get_local_dims( scalapack_int M, scalapack_int N );
+    get_local_dims( scalapack_int M, scalapack_int N ) const;
 
   std::pair< scalapack_desc, scalapack_int >
-    descinit( scalapack_int M, scalapack_int N, scalapack_int LDD );
+    descinit( scalapack_int M, scalapack_int N, scalapack_int LDD ) const;
 
   scalapack_desc
-    descinit_noerror( scalapack_int M, scalapack_int N, scalapack_int LDD );
+    descinit_noerror( scalapack_int M, scalapack_int N, scalapack_int LDD ) const;
 
 
   template <typename T>
