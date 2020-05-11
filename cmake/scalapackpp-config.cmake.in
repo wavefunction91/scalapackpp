@@ -4,9 +4,16 @@ get_filename_component( scalapackpp_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH 
 
 list( APPEND CMAKE_MODULE_PATH ${scalapackpp_CMAKE_DIR} )
 include( CMakeFindDependencyMacro )
-find_dependency( blacspp )
-find_dependency( ScaLAPACK )
 
+if (NOT TARGET blacspp::blacspp)
+    find_dependency( blacspp CONFIG REQUIRED HINTS "@blacspp_CONFIG@" )
+endif()
+
+set(scalapack_LIBRARY_DIR "@scalapack_LIBRARY_DIR@")
+if (NOT scalapack_LIBRARY_DIR)
+    set(scalapack_LIBRARIES "@scalapack_LIBRARIES@")
+endif(NOT scalapack_LIBRARY_DIR)
+find_dependency( ScaLAPACK MODULE )
 
 list(REMOVE_AT CMAKE_MODULE_PATH -1)
 
