@@ -1,3 +1,9 @@
+/**
+ *  This file is a part of scalapackpp (see LICENSE)
+ *
+ *  Copyright (c) 2019-2020 David Williams-Young
+ *  All rights reserved
+ */
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch.hpp>
 #include <mpi.h>

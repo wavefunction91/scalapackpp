@@ -1,3 +1,9 @@
+/**
+ *  This file is a part of scalapackpp (see LICENSE)
+ *
+ *  Copyright (c) 2019-2020 David Williams-Young
+ *  All rights reserved
+ */
 #include "ut.hpp"
 #include <scalapackpp/matrix_norm/general_norm.hpp>
 #include <scalapackpp/matrix_norm/symmetric_norm.hpp>

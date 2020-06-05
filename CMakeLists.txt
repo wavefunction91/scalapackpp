@@ -1,3 +1,9 @@
+#
+# This file is a part of scalapackspp (see LICENSE)
+#
+# Copyright (c) 2019-2020 David Williams-Young
+# All rights reserved
+#
 cmake_minimum_required( VERSION 3.12 FATAL_ERROR )
 project( scalapackpp VERSION 0.0.0 LANGUAGES C CXX )
 
