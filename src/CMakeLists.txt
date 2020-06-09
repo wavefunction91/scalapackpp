@@ -13,6 +13,7 @@ set( ScaLAPACKPP_SRC
      getrf.cxx
      getrs.cxx
      getri.cxx
+     gesvd.cxx
      type_conversions.cxx 
      trmm.cxx 
      trsm.cxx 

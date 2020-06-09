@@ -12,6 +12,7 @@ add_executable( test_scalapackpp
   sevp.cxx 
   index.cxx 
   geadd.cxx 
+  gesvd.cxx
   transpose.cxx 
   gevp.cxx 
   potrs.cxx 
