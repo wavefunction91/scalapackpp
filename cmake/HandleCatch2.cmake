@@ -1,5 +1,5 @@
 #
-# a simple c++ wrapper for blacs along with minimal extra functionality to 
+# a simple c++ wrapper for scalapack along with minimal extra functionality to 
 # aid the the high-level development of distributed memory linear algebra.
 # copyright (c) 2016-2018 david williams-young
 #
@@ -33,17 +33,14 @@ else()
 
   # Pull Catch2
   message(STATUS "Could not find Catch2! Building..." )
-
-  include( DownloadProject ) 
-  download_project(
-    PROJ                catch2
+  include( FetchContent )
+  FetchContent_Declare( catch2
     GIT_REPOSITORY      https://github.com/catchorg/Catch2.git
-    GIT_TAG             master
+    GIT_TAG             v2.13.3 
     UPDATE_DISCONNECTED 1
   )
 
-  add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
-
+  FetchContent_MakeAvailable( catch2 )
   target_link_libraries( scalapackpp::catch2 INTERFACE Catch2 )
 
 endif()

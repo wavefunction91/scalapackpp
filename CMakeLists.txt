@@ -13,7 +13,6 @@ if( CMAKE_MODULE_PATH )
 else()
   set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 endif()
-list( APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules")
 
 add_subdirectory( src )
 
@@ -21,6 +20,11 @@ if(NOT DEFINED SCALAPACKPP_ENABLE_TESTS )
   set( SCALAPACKPP_ENABLE_TESTS ON )
 endif()
 
-if( SCALAPACKPP_ENABLE_TESTS )
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+  include(CTest)
+endif()
+
+if( CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND SCALAPACKPP_ENABLE_TESTS AND BUILD_TESTING )
+  enable_testing()
   add_subdirectory( tests )
 endif()

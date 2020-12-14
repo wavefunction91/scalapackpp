@@ -1,7 +1,15 @@
 if( NOT TARGET blacspp::blacspp )
-  find_package( blacspp REQUIRED )
+  #find_package( blacspp REQUIRED ) # blacspp links to ScaLAPACK
+  find_package( blacspp QUIET ) # blacspp links to ScaLAPACK
+  if( NOT blacspp_FOUND )
+    include( FetchContent )
+    FetchContent_Declare( blacspp
+      GIT_REPOSITORY https://github.com/wavefunction91/blacspp.git
+      GIT_TAG        feature/ci-new-cmake
+    )
+    FetchContent_MakeAvailable( blacspp )
+  endif()
 endif()
-find_package( ScaLAPACK REQUIRED )
 
 set( ScaLAPACKPP_SRC
      syev.cxx 
@@ -34,7 +42,7 @@ set( ScaLAPACKPP_SRC
 
 
 add_library( scalapackpp ${ScaLAPACKPP_SRC})
-target_link_libraries( scalapackpp PUBLIC blacspp::blacspp ScaLAPACK::scalapack )
+target_link_libraries( scalapackpp PUBLIC blacspp::blacspp )
 
 target_include_directories( scalapackpp PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -104,23 +112,9 @@ configure_package_config_file(
 
 # Install misc cmake modules
 install( FILES
-  ${PROJECT_SOURCE_DIR}/cmake/modules/CommonFunctions.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/FindBLACS.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/FindBLAS.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/FindLAPACK.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/FindScaLAPACK.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/scalapackpp-config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/scalapackpp-config-version.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
-)
-install( FILES  
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindBLIS.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindIBMESSL.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindIntelMKL.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindOpenBLAS.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindReferenceBLAS.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindReferenceLAPACK.cmake
-  DESTINATION ${INSTALL_CONFIGDIR}/linalg-modules
 )
 
 
