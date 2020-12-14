@@ -27,3 +27,7 @@ add_executable( test_scalapackpp
 )
 target_link_libraries( test_scalapackpp PUBLIC ut_framework )
 
+add_test( NAME SCALAPACKPP_TEST 
+          COMMAND
+            ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 4 ${MPIEXEC_PREFLAGS} $<TARGET_FILE:test_scalapackpp> ${MPIEXEC_POSTFLAGS}
+)
