@@ -1,14 +1,16 @@
 cmake_minimum_required( VERSION 3.17 FATAL_ERROR )
 project( scalapackpp_as_subproject LANGUAGES C CXX )
 
-# Get current Git Revision
-find_package( Git REQUIRED )
-execute_process( 
-  COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
-  OUTPUT_VARIABLE GIT_REVISION
-  ERROR_QUIET
-)
-string( STRIP "${GIT_REVISION}" GIT_REVISION )
+if( NOT GIT_REVISION )
+  # Get current Git Revision
+  find_package( Git REQUIRED )
+  execute_process( 
+    COMMAND ${GIT_EXECUTABLE} rev-parse HEAD
+    OUTPUT_VARIABLE GIT_REVISION
+    ERROR_QUIET
+  )
+  string( STRIP "${GIT_REVISION}" GIT_REVISION )
+endif()
 
 message( STATUS "Pulling GIT_REVISION = ${GIT_REVISION}" )
 
