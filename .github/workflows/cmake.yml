@@ -66,8 +66,12 @@ jobs:
 
     - name: CMake Subproject Configure
       working-directory: ${{runner.workspace}}
+      env:
+        BUILD_TYPE: ${{matrix.build_type}}
+        MPICH_PREFIX: ${{runner.workspace}}/install/mpich
+        SCALAPACK_PREFIX: ${{runner.workspace}}/install/scalapack
       shell: bash
-      run: echo $GITHUB_HEAD_REF && cmake -H$GITHUB_WORKSPACE/tests/cmake/subproject -B${{runner.workspace}}/cmake_subproject_build -DGIT_REVISION=$GITHUB_HEAD_REF
+      run: cmake -H$GITHUB_WORKSPACE/tests/cmake/subproject -B${{runner.workspace}}/cmake_subproject_build -DGIT_REVISION=$GITHUB_HEAD_REF -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="${MPICH_PREFIX};${SCALAPACK_PREFIX}"
 
     - name: CMake Subproject Build
       working-directory: ${{runner.workspace}}
