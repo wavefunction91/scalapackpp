@@ -65,9 +65,9 @@ jobs:
       run: ctest -C $BUILD_TYPE
 
     - name: CMake Subproject Configure
-      working-directory: $GITHUB_WORKSPACE
+      working-directory: ${{runner.workspace}}
       shell: bash
-      run: cmake -H$GITHUB_WORKSPACE/tests/cmake/subproject -B${{runner.workspace}}/cmake_subproject_build 
+      run: cd $GITHUB_WORKSPACE && cmake -H$GITHUB_WORKSPACE/tests/cmake/subproject -B${{runner.workspace}}/cmake_subproject_build 
 
     - name: CMake Subproject Build
       working-directory: ${{runner.workspace}}
