@@ -76,6 +76,11 @@ install( TARGETS scalapackpp ${BLACSPP_EXPORT_TARGET}
 
 set_target_properties( scalapackpp PROPERTIES EXPORT_NAME scalapackpp )
 
+# Export build tree
+export(EXPORT scalapackpp-targets
+      NAMESPACE scalapackpp::
+      FILE "${PROJECT_BINARY_DIR}/scalapackpp-targets.cmake")
+
 # Install Headers
 install( 
   DIRECTORY   ${PROJECT_SOURCE_DIR}/include
