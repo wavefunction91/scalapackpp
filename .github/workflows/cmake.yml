@@ -82,3 +82,18 @@ jobs:
       working-directory: ${{runner.workspace}}
       shell: bash
       run: cmake --build ${{runner.workspace}}/cmake_subproject_build -j2
+
+    - name: CMake Discovery Configure
+      working-directory: ${{runner.workspace}}
+      env:
+        BUILD_TYPE: ${{matrix.build_type}}
+        MPICH_PREFIX: ${{runner.workspace}}/install/mpich
+        SCALAPACK_PREFIX: ${{runner.workspace}}/install/scalapack
+        SCALAPACKPP_PREFIX: ${{runner.workspace}}/install
+      shell: bash
+      run: cmake -H$GITHUB_WORKSPACE/tests/cmake/discovery -B${{runner.workspace}}/cmake_discovery_build -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH="${MPICH_PREFIX};${SCALAPACK_PREFIX};${SCALAPACKPP_PREFIX}"
+
+    - name: CMake Subproject Build
+      working-directory: ${{runner.workspace}}
+      shell: bash
+      run: cmake --build ${{runner.workspace}}/cmake_discovery_build -j2
