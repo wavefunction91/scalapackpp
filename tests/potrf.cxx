@@ -22,7 +22,7 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
+  int64_t M = 100;
 
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
@@ -92,7 +92,7 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
     for( auto i = 0; i < M; ++i )
     for( auto j = 0; j < M; ++j ) {
       auto x = std::real( gathered[ i + j*M ] );
-      if( i == j ) CHECK( x == Approx( detail::real_t<TestType>(1.) ) );
+      if( i == j ) CHECK( std::abs(x-TestType(1)) < tol );
       else         CHECK( std::abs(x) < tol );
     } 
 

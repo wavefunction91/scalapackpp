@@ -5,10 +5,12 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/matrix_norm/lansy.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
+
 
 // Prototypes
 extern "C" {
@@ -30,40 +32,24 @@ double pzlansy_( const char* NORM, const char* UPLO, const scalapack_int* N,
 
 namespace scalapackpp::wrappers {
 
-template <>
-float plansy( const char* NORM, const char* UPLO, scalapack_int N, const float* A, 
-              scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-              float* WORK ) {
-
-  return pslansy_( NORM, UPLO, &N, A, &IA, &JA, DESCA.data(), WORK );
-
+#define plansy_impl(F,FNAME)                                              \
+template <>                                                               \
+detail::real_t<F> plansy( const char* NORM, const char* UPLO, int64_t N,  \
+          const F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,\
+          detail::real_t<F>* WORK ) {                                     \
+                                                                          \
+  auto _N     = detail::to_scalapack_int( N  );                           \
+  auto _IA    = detail::to_scalapack_int( IA );                           \
+  auto _JA    = detail::to_scalapack_int( JA );                           \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+                                                                          \
+  return FNAME( NORM, UPLO, &_N, A, &_IA, &_JA, _DESCA.data(), WORK );    \
+                                                                          \
 }
 
-template <>
-double plansy( const char* NORM, const char* UPLO, scalapack_int N, const double* A, 
-               scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-               double* WORK ) {
-
-  return pdlansy_( NORM, UPLO, &N, A, &IA, &JA, DESCA.data(), WORK );
-
-}
-
-template <>
-float plansy( const char* NORM, const char* UPLO, scalapack_int N, const scomplex* A, 
-              scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-              float* WORK ) {
-
-  return pclansy_( NORM, UPLO, &N, A, &IA, &JA, DESCA.data(), WORK );
-
-}
-
-template <>
-double plansy( const char* NORM, const char* UPLO, scalapack_int N, const dcomplex* A, 
-               scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-               double* WORK ) {
-
-  return pzlansy_( NORM, UPLO, &N, A, &IA, &JA, DESCA.data(), WORK );
-
-}
+plansy_impl( float,    pslansy_ );
+plansy_impl( double,   pdlansy_ );
+plansy_impl( scomplex, pclansy_ );
+plansy_impl( dcomplex, pzlansy_ );
 
 }

@@ -11,9 +11,9 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  transpose( scalapack_int M, scalapack_int N, 
-    const T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-          T* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB 
+  transpose( int64_t M, int64_t N, 
+    const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
+          T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB 
   ) {
 
   pgeadd( TransposeFlag::Transpose, M, N, 1., A, IA, JA, DESCA, 
@@ -23,9 +23,9 @@ detail::enable_if_scalapack_supported_t<T>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  conj_transpose( scalapack_int M, scalapack_int N, 
-    const T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-          T* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB 
+  conj_transpose( int64_t M, int64_t N, 
+    const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
+          T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB 
   ) {
 
   if constexpr ( detail::scalapack_real_supported_v<T> )

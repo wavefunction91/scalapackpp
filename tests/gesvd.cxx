@@ -16,10 +16,10 @@ SCALAPACKPP_TEST_CASE( "Gesvd", "[svd]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
-  scalapack_int N = 10;
+  int64_t M = 100;
+  int64_t N = 10;
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
-  scalapack_int SIZE = std::min(M,N);
+  int64_t SIZE = std::min(M,N);
 
   auto [AM_loc, AN_loc]   = mat_dist.get_local_dims( M, N    );
   auto [UM_loc, UN_loc]   = mat_dist.get_local_dims( M, SIZE );

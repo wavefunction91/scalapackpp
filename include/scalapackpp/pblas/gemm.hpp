@@ -17,11 +17,11 @@ std::enable_if_t<
   std::is_convertible_v<BETAT,T>
 >
   pgemm( TransposeFlag transa, TransposeFlag transb,
-         scalapack_int M, scalapack_int N, scalapack_int K, ALPHAT ALPHA, 
-         const T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         const T* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB,
+         int64_t M, int64_t N, int64_t K, ALPHAT ALPHA, 
+         const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
+         const T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB,
          BETAT BETA,
-         T* C, scalapack_int IC, scalapack_int JC, const scalapack_desc& DESCC ) {
+         T* C, int64_t IC, int64_t JC, const scalapack_desc& DESCC ) {
 
   assert( A != C );
   assert( B != C );

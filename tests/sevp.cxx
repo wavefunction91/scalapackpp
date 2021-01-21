@@ -25,7 +25,7 @@ SCALAPACKPP_REAL_TEST_CASE( "Syev", "[sevp]" ){
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
+  int64_t M = 100;
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
   auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
@@ -85,7 +85,7 @@ SCALAPACKPP_REAL_TEST_CASE( "Syevd", "[sevp]" ){
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
+  int64_t M = 100;
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
   auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
@@ -148,7 +148,7 @@ SCALAPACKPP_COMPLEX_TEST_CASE( "Heev", "[sevp]" ){
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
+  int64_t M = 100;
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
   auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
@@ -210,7 +210,7 @@ SCALAPACKPP_COMPLEX_TEST_CASE( "Heevd", "[sevp]" ){
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
+  int64_t M = 100;
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
   auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
@@ -286,7 +286,7 @@ SCALAPACKPP_TEST_CASE( "Hereig", "[sevp]" ){
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
+  int64_t M = 100;
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
   auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
@@ -348,7 +348,7 @@ SCALAPACKPP_TEST_CASE( "Hereigd", "[sevp]" ){
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
+  int64_t M = 100;
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
   auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );

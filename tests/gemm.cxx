@@ -17,7 +17,7 @@ SCALAPACKPP_TEST_CASE( "Gemm", "[gemm]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  const scalapack_int M = 100, N = 200;
+  const int64_t M = 100, N = 200;
 
   BlockCyclicDist2D mat_dist( grid, 2, 4 );
 

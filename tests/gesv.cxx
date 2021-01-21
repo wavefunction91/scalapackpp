@@ -21,7 +21,7 @@ SCALAPACKPP_TEST_CASE( "Gesv", "[gesv]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100, NRHS = 20;
+  int64_t M = 100, NRHS = 20;
 
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
@@ -54,7 +54,7 @@ SCALAPACKPP_TEST_CASE( "Gesv", "[gesv]" ) {
 
 
   // Solve linear system
-  std::vector<scalapack_int> IPIV( M_loc + mat_dist.mb() );
+  std::vector<int64_t> IPIV( M_loc + mat_dist.mb() );
   auto info = pgesv( M, NRHS, A_local.data(), 1, 1, desc, IPIV.data(),
                  B_local.data(), 1, 1, desc_rhs );
 

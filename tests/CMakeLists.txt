@@ -21,6 +21,8 @@ set( LAPACK_LIBRARIES "${ScaLAPACK_LIBRARIES}" )
 message( STATUS "BLAS_LIBRARIES = ${BLAS_LIBRARIES}" )
 message( STATUS "LAPACK_LIBRARIES = ${LAPACK_LIBRARIES}" )
 
+set( use_openmp FALSE CACHE BOOL "Disable OpenMP in ICL Wrappers" )
+
 FetchContent_Declare( blaspp
   GIT_REPOSITORY https://bitbucket.org/icl/blaspp.git 
 )

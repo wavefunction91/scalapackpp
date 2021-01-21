@@ -11,11 +11,11 @@
 namespace scalapackpp::wrappers {
 
 template <typename T>
-detail::enable_if_scalapack_supported_t<T, scalapack_int>
-  pgesv( scalapack_int N, scalapack_int NRHS, 
-    T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    const scalapack_int* IPIV,
-    T* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB );
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  pgesv( int64_t N, int64_t NRHS, 
+    T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
+    const internal::scalapack_int* IPIV,
+    T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB );
           
 }
 

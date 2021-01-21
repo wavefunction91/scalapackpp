@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/factorizations/getrf.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -31,48 +32,28 @@ void pzgetrf_( const scalapack_int* M, const scalapack_int* N, dcomplex* A,
 
 namespace scalapackpp::wrappers {
 
-template <>
-scalapack_int
-  pgetrf( scalapack_int M, scalapack_int N, float* A, scalapack_int IA, scalapack_int JA,
-          const scalapack_desc& DESCA, scalapack_int* IPIV ) {
-
-  scalapack_int INFO;
-  psgetrf_( &M, &N, A, &IA, &JA, DESCA.data(), IPIV, &INFO );
-  return INFO;
-
+#define pgetrf_impl(F,FNAME)                                              \
+template <>                                                               \
+int64_t                                                                   \
+  pgetrf( int64_t M, int64_t N, F* A, int64_t IA, int64_t JA,             \
+          const scalapack_desc& DESCA, scalapack_int* IPIV ) {            \
+                                                                          \
+  auto _M     = detail::to_scalapack_int( M    );                         \
+  auto _N     = detail::to_scalapack_int( N    );                         \
+  auto _IA    = detail::to_scalapack_int( IA   );                         \
+  auto _JA    = detail::to_scalapack_int( JA   );                         \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+                                                                          \
+  scalapack_int INFO;                                                     \
+  FNAME( &_M, &_N, A, &_IA, &_JA, _DESCA.data(), IPIV, &INFO );           \
+  return INFO;                                                            \
+                                                                          \
 }
 
-template <>
-scalapack_int
-  pgetrf( scalapack_int M, scalapack_int N, double* A, scalapack_int IA, scalapack_int JA,
-          const scalapack_desc& DESCA, scalapack_int* IPIV ) {
+pgetrf_impl( float,    psgetrf_ );
+pgetrf_impl( double,   pdgetrf_ );
+pgetrf_impl( scomplex, pcgetrf_ );
+pgetrf_impl( dcomplex, pzgetrf_ );
 
-  scalapack_int INFO;
-  pdgetrf_( &M, &N, A, &IA, &JA, DESCA.data(), IPIV, &INFO );
-  return INFO;
-
-}
-
-template <>
-scalapack_int
-  pgetrf( scalapack_int M, scalapack_int N, scomplex* A, scalapack_int IA, scalapack_int JA,
-          const scalapack_desc& DESCA, scalapack_int* IPIV ) {
-
-  scalapack_int INFO;
-  pcgetrf_( &M, &N, A, &IA, &JA, DESCA.data(), IPIV, &INFO );
-  return INFO;
-
-}
-
-template <>
-scalapack_int
-  pgetrf( scalapack_int M, scalapack_int N, dcomplex* A, scalapack_int IA, scalapack_int JA,
-          const scalapack_desc& DESCA, scalapack_int* IPIV ) {
-
-  scalapack_int INFO;
-  pzgetrf_( &M, &N, A, &IA, &JA, DESCA.data(), IPIV, &INFO );
-  return INFO;
-
-}
 
 }

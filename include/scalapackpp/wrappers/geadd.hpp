@@ -12,9 +12,9 @@ namespace scalapackpp::wrappers {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  pgeadd( const char* TRANS, scalapack_int M, scalapack_int N, T ALPHA,
-        const T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
+  pgeadd( const char* TRANS, int64_t M, int64_t N, T ALPHA,
+        const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
         T BETA, 
-        T* C, scalapack_int IC, scalapack_int JC, const scalapack_desc& DESCC );
+        T* C, int64_t IC, int64_t JC, const scalapack_desc& DESCC );
 
 }

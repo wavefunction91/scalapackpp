@@ -13,9 +13,8 @@
 
 #include <blas.hh>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::scomplex;
-using scalapackpp::dcomplex;
+using scalapackpp::internal::scomplex;
+using scalapackpp::internal::dcomplex;
 
 
 SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
@@ -25,7 +24,7 @@ SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  const scalapack_int M = 100, N = 200;
+  const int64_t M = 100, N = 200;
 
   BlockCyclicDist2D mat_dist( grid, 2, 4 );
 

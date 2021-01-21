@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/pblas/scal.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -31,33 +32,26 @@ void pzscal_( const scalapack_int* N, const dcomplex* ALPHA, dcomplex* X,
 
 namespace scalapackpp::wrappers {
 
-template <>
-void pscal( scalapack_int N, float ALPHA, float * X, scalapack_int IX, scalapack_int JX, 
-            const scalapack_desc& DESCX, scalapack_int INCX ) {
-
-  psscal_( &N, &ALPHA, X, &IX, &JX, DESCX.data(), &INCX );
-
-}
-template <>
-void pscal( scalapack_int N, double ALPHA, double * X, scalapack_int IX, scalapack_int JX, 
-            const scalapack_desc& DESCX, scalapack_int INCX ) {
-
-  pdscal_( &N, &ALPHA, X, &IX, &JX, DESCX.data(), &INCX );
-
-}
-template <>
-void pscal( scalapack_int N, scomplex ALPHA, scomplex * X, scalapack_int IX, scalapack_int JX, 
-            const scalapack_desc& DESCX, scalapack_int INCX ) {
-
-  pcscal_( &N, &ALPHA, X, &IX, &JX, DESCX.data(), &INCX );
-
-}
-template <>
-void pscal( scalapack_int N, dcomplex ALPHA, dcomplex * X, scalapack_int IX, scalapack_int JX, 
-            const scalapack_desc& DESCX, scalapack_int INCX ) {
-
-  pzscal_( &N, &ALPHA, X, &IX, &JX, DESCX.data(), &INCX );
-
+#define pscal_impl(F,FNAME)\
+template <>                                                              \
+void pscal( int64_t N, F ALPHA,                                          \
+  F * X, int64_t IX, int64_t JX, const scalapack_desc& DESCX,            \
+  int64_t INCX ) {                                                       \
+                                                                         \
+  auto _N  = detail::to_scalapack_int( N  );                             \
+  auto _IX = detail::to_scalapack_int( IX );                             \
+  auto _JX = detail::to_scalapack_int( JX );                             \
+  auto _INCX = detail::to_scalapack_int( INCX );                         \
+                                                                         \
+  auto _DESCX = detail::to_scalapack_int( DESCX );                       \
+                                                                         \
+  FNAME( &_N, &ALPHA, X, &_IX, &_JX, _DESCX.data(), &_INCX );            \
+                                                                         \
 }
 
+
+pscal_impl( float,    psscal_ );
+pscal_impl( double,   pdscal_ );
+pscal_impl( scomplex, pcscal_ );
+pscal_impl( dcomplex, pzscal_ );
 }

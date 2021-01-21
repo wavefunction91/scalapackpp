@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/gemr2d.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 
 extern "C" {
@@ -40,54 +41,33 @@ void pzgemr2d_( const scalapack_int* M, const scalapack_int* N,
 
 namespace scalapackpp::wrappers {
 
-template <>
-void pgemr2d( scalapack_int M, scalapack_int N, 
-    const float* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    float* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB,
-    scalapack_int ICONTEXT ) {
-
-  psgemr2d_( &M, &N, A, &IA, &JA, DESCA.data(), B, &IB, &JB, DESCB.data(), 
-             &ICONTEXT );
-
+#define pgemr2d_impl(F, FNAME)                                            \
+template <>                                                               \
+void pgemr2d( int64_t M, int64_t N,                                       \
+    const F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,      \
+    F* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB,            \
+    int64_t ICONTEXT ) {                                                  \
+                                                                          \
+  auto _M     = detail::to_scalapack_int( M  );                           \
+  auto _N     = detail::to_scalapack_int( N  );                           \
+  auto _IA    = detail::to_scalapack_int( IA );                           \
+  auto _JA    = detail::to_scalapack_int( JA );                           \
+  auto _IB    = detail::to_scalapack_int( IB );                           \
+  auto _JB    = detail::to_scalapack_int( JB );                           \
+                                                                          \
+  auto _ICONTEXT = detail::to_scalapack_int( ICONTEXT );                  \
+                                                                          \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+  auto _DESCB = detail::to_scalapack_int( DESCB );                        \
+                                                                          \
+  FNAME( &_M, &_N, A, &_IA, &_JA, _DESCA.data(),                          \
+                   B, &_IB, &_JB, _DESCB.data(), &_ICONTEXT );            \
+                                                                          \
 }
 
-
-
-template <>
-void pgemr2d( scalapack_int M, scalapack_int N, 
-    const double* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    double* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB,
-    scalapack_int ICONTEXT ) {
-
-  pdgemr2d_( &M, &N, A, &IA, &JA, DESCA.data(), B, &IB, &JB, DESCB.data(), 
-             &ICONTEXT );
-
-}
-
-
-
-template <>
-void pgemr2d( scalapack_int M, scalapack_int N, 
-    const scomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    scomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB,
-    scalapack_int ICONTEXT ) {
-
-  pcgemr2d_( &M, &N, A, &IA, &JA, DESCA.data(), B, &IB, &JB, DESCB.data(), 
-             &ICONTEXT );
-
-}
-
-
-
-template <>
-void pgemr2d( scalapack_int M, scalapack_int N, 
-    const dcomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    dcomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB,
-    scalapack_int ICONTEXT ) {
-
-  pzgemr2d_( &M, &N, A, &IA, &JA, DESCA.data(), B, &IB, &JB, DESCB.data(), 
-             &ICONTEXT );
-
-}
+pgemr2d_impl( float,    psgemr2d_ );
+pgemr2d_impl( double,   pdgemr2d_ );
+pgemr2d_impl( scomplex, pcgemr2d_ );
+pgemr2d_impl( dcomplex, pzgemr2d_ );
 
 }

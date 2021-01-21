@@ -11,9 +11,9 @@
 namespace scalapackpp::wrappers {
 
 template <typename T>
-detail::enable_if_scalapack_supported_t<T, scalapack_int>
-  ptrtri( const char* UPLO, const char* DIAG, scalapack_int N,
-          T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA );
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  ptrtri( const char* UPLO, const char* DIAG, int64_t N,
+          T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA );
 
 
 }

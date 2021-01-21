@@ -17,7 +17,7 @@ SCALAPACKPP_REAL_TEST_CASE( "trtri", "[trtri]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
+  int64_t M = 100;
 
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 

@@ -22,9 +22,9 @@ template <>
 struct scalapack_real_supported< double >   : public std::true_type { };
 
 template <>
-struct scalapack_complex_supported< scomplex > : public std::true_type { };
+struct scalapack_complex_supported< internal::scomplex > : public std::true_type { };
 template <>
-struct scalapack_complex_supported< dcomplex > : public std::true_type { };
+struct scalapack_complex_supported< internal::dcomplex > : public std::true_type { };
 
 template <typename T>
 inline constexpr bool scalapack_real_supported_v = 
@@ -59,13 +59,9 @@ struct real {
   using type = T;
 };
 
-template<>
-struct real< scomplex > {
-  using type = float;
-};
-template<>
-struct real< dcomplex > {
-  using type = double;
+template <typename T>
+struct real< std::complex<T> > {
+  using type = T;
 };
 
 template <typename T>

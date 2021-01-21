@@ -17,7 +17,7 @@ SCALAPACKPP_TEST_CASE( "Getri", "[getri]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
+  int64_t M = 100;
 
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
@@ -40,7 +40,7 @@ SCALAPACKPP_TEST_CASE( "Getri", "[getri]" ) {
 
   auto desc = mat_dist.descinit_noerror( M, M, M_loc );
 
-  std::vector<scalapack_int> IPIV( M_loc + mat_dist.mb() );
+  std::vector<int64_t> IPIV( M_loc + mat_dist.mb() );
   std::vector< TestType >    A_inv_local( A_local );
   auto info = pgetrf( M, M, A_inv_local.data(), 1, 1, desc, IPIV.data() );
   REQUIRE( info == 0 );

@@ -12,8 +12,8 @@ namespace scalapackpp::wrappers {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
-  plansy( const char* NORM, const char* UPLO, scalapack_int N, const T* A, 
-          scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
+  plansy( const char* NORM, const char* UPLO, int64_t N, const T* A, 
+          int64_t IA, int64_t JA, const scalapack_desc& DESCA,
           detail::real_t<T>* WORK );
 
 }

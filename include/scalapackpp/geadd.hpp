@@ -16,10 +16,10 @@ std::enable_if_t<
   std::is_convertible_v<ALPHAT,T> and
   std::is_convertible_v<BETAT,T>
 >
-  pgeadd( TransposeFlag trans, scalapack_int M, scalapack_int N, ALPHAT ALPHA,
-        const T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
+  pgeadd( TransposeFlag trans, int64_t M, int64_t N, ALPHAT ALPHA,
+        const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
         BETAT BETA, 
-        T* C, scalapack_int IC, scalapack_int JC, const scalapack_desc& DESCC ) {
+        T* C, int64_t IC, int64_t JC, const scalapack_desc& DESCC ) {
 
   assert( A != C );
 

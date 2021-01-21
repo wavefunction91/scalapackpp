@@ -11,11 +11,11 @@
 namespace scalapackpp {
 
 template <typename T>
-detail::enable_if_scalapack_supported_t<T, scalapack_int>
-  hereig( VectorFlag jobz, blacspp::Triangle uplo, scalapack_int N,
-          T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  hereig( VectorFlag jobz, blacspp::Triangle uplo, int64_t N,
+          T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
           detail::real_t<T>* W,
-          T* Z, scalapack_int IZ, scalapack_int JZ, const scalapack_desc& DESCZ ) {
+          T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
 
 
   if constexpr ( detail::scalapack_real_supported_v<T> )
@@ -27,11 +27,11 @@ detail::enable_if_scalapack_supported_t<T, scalapack_int>
 
 
 template <typename T>
-detail::enable_if_scalapack_supported_t<T, scalapack_int>
-  hereigd( VectorFlag jobz, blacspp::Triangle uplo, scalapack_int N,
-           T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  hereigd( VectorFlag jobz, blacspp::Triangle uplo, int64_t N,
+           T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
            detail::real_t<T>* W,
-           T* Z, scalapack_int IZ, scalapack_int JZ, const scalapack_desc& DESCZ ) {
+           T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
 
 
   if constexpr ( detail::scalapack_real_supported_v<T> )

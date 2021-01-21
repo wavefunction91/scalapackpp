@@ -12,8 +12,8 @@ namespace scalapackpp::wrappers {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  pscal( scalapack_int N, T ALPHA, T* X, scalapack_int IX, scalapack_int JX, 
-         const scalapack_desc& DESCX, scalapack_int INCX );
+  pscal( int64_t N, T ALPHA, T* X, int64_t IX, int64_t JX, 
+         const scalapack_desc& DESCX, int64_t INCX );
          
 
 }

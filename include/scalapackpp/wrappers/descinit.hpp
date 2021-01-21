@@ -9,10 +9,10 @@
 
 namespace scalapackpp::wrappers {
 
-std::pair< scalapack_desc, scalapack_int > descinit( 
-  scalapack_int M, scalapack_int N, scalapack_int MB, scalapack_int NB,
-  scalapack_int ISRC, scalapack_int JSRC, scalapack_int ICONTEXT,
-  scalapack_int LDD 
+std::pair< scalapack_desc, int64_t > descinit( 
+  int64_t M, int64_t N, int64_t MB, int64_t NB,
+  int64_t ISRC, int64_t JSRC, int64_t ICONTEXT,
+  int64_t LDD 
 );
 
 }

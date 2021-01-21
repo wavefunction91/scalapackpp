@@ -11,10 +11,10 @@
 namespace scalapackpp::wrappers {
 
 template <typename T>
-detail::enable_if_scalapack_supported_t<T, scalapack_int>
+detail::enable_if_scalapack_supported_t<T, int64_t>
   ptrtrs( const char* UPLO, const char* TRANS, const char* DIAG,
-    scalapack_int N, scalapack_int NRHS, 
-    const T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-          T* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB );
+    int64_t N, int64_t NRHS, 
+    const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
+          T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB );
           
 }

@@ -22,7 +22,7 @@ SCALAPACKPP_TEST_CASE( "Getrf_s", "[getrf_s]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100, NRHS = 20;
+  int64_t M = 100, NRHS = 20;
 
   BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
@@ -55,7 +55,7 @@ SCALAPACKPP_TEST_CASE( "Getrf_s", "[getrf_s]" ) {
 
 
   // Solve linear system
-  std::vector<scalapack_int> IPIV( M_loc + mat_dist.mb() );
+  std::vector<int64_t> IPIV( M_loc + mat_dist.mb() );
   auto info = pgetrf( M, M, A_local.data(), 1, 1, desc, IPIV.data() );
   REQUIRE( info == 0 );
 

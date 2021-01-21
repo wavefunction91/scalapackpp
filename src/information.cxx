@@ -8,9 +8,9 @@
 
 namespace scalapackpp {
 
-scalapack_int numroc( scalapack_int N, scalapack_int NB,
-  scalapack_int IPROC, scalapack_int ISRC, 
-  scalapack_int NPROC ) {
+int64_t numroc( int64_t N, int64_t NB,
+  int64_t IPROC, int64_t ISRC, 
+  int64_t NPROC ) {
 
   auto dist    = ( NPROC + IPROC - ISRC ) % NPROC;
   auto nblocks = N / NB;
@@ -23,11 +23,11 @@ scalapack_int numroc( scalapack_int N, scalapack_int NB,
   return dim;
 }
 
-std::pair<scalapack_int, scalapack_int>
+std::pair<int64_t, int64_t>
   get_local_dims( const blacspp::Grid& grid,
-    scalapack_int M, scalapack_int N,
-    scalapack_int MB, scalapack_int NB,
-    scalapack_int ISRC, scalapack_int JSRC ) {
+    int64_t M, int64_t N,
+    int64_t MB, int64_t NB,
+    int64_t ISRC, int64_t JSRC ) {
 
   return { numroc( M, MB, grid.ipr(), ISRC, grid.npr() ),
            numroc( N, NB, grid.ipc(), JSRC, grid.npc() ) };
