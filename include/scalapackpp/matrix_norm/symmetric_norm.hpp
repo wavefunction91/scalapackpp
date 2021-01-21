@@ -42,7 +42,7 @@ detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
   if( norm == OneNorm or norm == InfinityNorm )
     LWORK = 2*(Nq0 + Np0 + LDW);
 
-  LWORK = std::max( 1, LWORK );
+  LWORK = std::max( (int64_t)1, LWORK );
   std::vector< detail::real_t<T> > WORK( LWORK );
 
   auto NORM = detail::type_string( norm );
