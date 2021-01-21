@@ -31,7 +31,7 @@ detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
   if( norm == MatrixNorm::OneNorm )           LWORK = Nq0;
   else if( norm == MatrixNorm::InfinityNorm ) LWORK = Mp0;
 
-  LWORK = std::max( 1, LWORK );
+  LWORK = std::max( (scalapack_int)1, LWORK );
   std::vector< detail::real_t<T> > WORK( LWORK );
 
   auto NORM = detail::type_string( norm );

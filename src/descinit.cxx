@@ -27,7 +27,7 @@ std::pair< scalapack_desc, scalapack_int > descinit(
 ) {
 
 
-  scalapack_int LDD_use = std::max(1, LDD);
+  scalapack_int LDD_use = std::max((scalapack_int)1, LDD);
   scalapack_desc desc;
 
   scalapack_int INFO;

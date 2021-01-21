@@ -11,56 +11,12 @@
 #include <scalapackpp/util/type_conversions.hpp>
 #include <blacspp/util/type_conversions.hpp>
 
+#include <blas.hh>
+
 using scalapackpp::scalapack_int;
 using scalapackpp::scomplex;
 using scalapackpp::dcomplex;
 
-extern "C" {
-
-void strsm_( const char*, const char*, const char*, const char*, 
-             const scalapack_int*, const scalapack_int*, const float*,
-             const float*, const scalapack_int*, float*, const scalapack_int* );
-void dtrsm_( const char*, const char*, const char*, const char*, 
-             const scalapack_int*, const scalapack_int*, const double*,
-             const double*, const scalapack_int*, double*, const scalapack_int* );
-void ctrsm_( const char*, const char*, const char*, const char*, 
-             const scalapack_int*, const scalapack_int*, const scomplex*,
-             const scomplex*, const scalapack_int*, scomplex*, const scalapack_int* );
-void ztrsm_( const char*, const char*, const char*, const char*, 
-             const scalapack_int*, const scalapack_int*, const dcomplex*,
-             const dcomplex*, const scalapack_int*, dcomplex*, const scalapack_int* );
-}
-
-namespace scalapackpp {
-
-template <typename T, typename ALPHAT>
-void trsm( SideFlag side, blacspp::Triangle uplo, TransposeFlag trans, blacspp::Diagonal diag,
-         scalapack_int M, scalapack_int N, ALPHAT ALPHA, 
-         const T* A, scalapack_int LDA, T* B, scalapack_int LDB ) {
-
-  auto SIDE = detail::type_string( side );
-  auto UPLO = blacspp::detail::type_string( uplo );
-  auto TRANS = detail::type_string( trans );
-  auto DIAG  = blacspp::detail::type_string( diag );
-
-  T ALPHA_t = ALPHA;
-
-  if constexpr ( std::is_same_v< T, float > )
-  strsm_( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
-          &M, &N, &ALPHA_t, A, &LDA, B, &LDB );
-  if constexpr ( std::is_same_v< T, double > )
-  dtrsm_( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
-          &M, &N, &ALPHA_t, A, &LDA, B, &LDB );
-  if constexpr ( std::is_same_v< T, scomplex > )
-  ctrsm_( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
-          &M, &N, &ALPHA_t, A, &LDA, B, &LDB );
-  if constexpr ( std::is_same_v< T, dcomplex > )
-  ztrsm_( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
-          &M, &N, &ALPHA_t, A, &LDA, B, &LDB );
-
-}
-
-}
 
 SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
 
@@ -86,9 +42,10 @@ SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
     for( auto i = 0; i < M; ++i )
       if( j > i ) A_root[ i + j*M ] = 0;
 
-    scalapackpp::trsm(    
-      SideFlag::Left, blacspp::Triangle::Lower,
-      TransposeFlag::NoTranspose, blacspp::Diagonal::Unit,
+    blas::trsm(    
+      blas::Layout::ColMajor,
+      blas::Side::Left, blas::Uplo::Lower,
+      blas::Op::NoTrans, blas::Diag::Unit,
       M, N, 1, A_root.data(), M, B_ref_root.data(), M
     );
   }
