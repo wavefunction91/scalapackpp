@@ -7,7 +7,8 @@
 #pragma once
 #include <scalapackpp/types.hpp>
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 std::pair< scalapack_desc, int64_t > descinit( 
   int64_t M, int64_t N, int64_t MB, int64_t NB,
@@ -15,4 +16,5 @@ std::pair< scalapack_desc, int64_t > descinit(
   int64_t LDD 
 );
 
+}
 }

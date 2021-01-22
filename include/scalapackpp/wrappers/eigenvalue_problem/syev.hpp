@@ -8,7 +8,8 @@
 #include <scalapackpp/types.hpp>
 #include <scalapackpp/util/sfinae.hpp>
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
@@ -26,4 +27,5 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
          T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ,
          T* WORK, int64_t LWORK, internal::scalapack_int* IWORK, int64_t LIWORK );
 
+}
 }

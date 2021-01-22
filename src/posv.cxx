@@ -40,7 +40,8 @@ void pzposv_( const char* UPLO, const scalapack_int* N, const scalapack_int* NRH
 
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pposv_impl(F,FNAME)                                               \
 template <>                                                               \
@@ -71,4 +72,5 @@ pposv_impl( double,   pdposv_ );
 pposv_impl( scomplex, pcposv_ );
 pposv_impl( dcomplex, pzposv_ );
 
+}
 }

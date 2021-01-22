@@ -12,9 +12,9 @@ namespace scalapackpp {
 
 template <typename T, typename ALPHAT, typename BETAT>
 std::enable_if_t<
-  detail::scalapack_supported_v<T> and 
-  std::is_convertible_v<ALPHAT,T> and
-  std::is_convertible_v<BETAT,T>
+  detail::scalapack_supported<T>::value and 
+  std::is_convertible<ALPHAT,T>::value and
+  std::is_convertible<BETAT,T>::value
 >
   pgeadd( TransposeFlag trans, int64_t M, int64_t N, ALPHAT ALPHA,
         const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,

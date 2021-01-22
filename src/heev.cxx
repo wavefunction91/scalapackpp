@@ -47,7 +47,8 @@ void pzheevd_( const char* JOBZ, const char* UPLO, const scalapack_int* N,
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pheev_impl(F, FNAME)                                        \
 template <>                                                         \
@@ -116,5 +117,6 @@ pheevd_impl( scomplex, pcheevd_ );
 pheevd_impl( dcomplex, pzheevd_ );
 
 
+}
 }
 

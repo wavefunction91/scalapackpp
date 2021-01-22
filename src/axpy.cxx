@@ -33,7 +33,8 @@ void pzaxpy_( const scalapack_int* N, const dcomplex* ALPHA, const dcomplex* X,
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define paxpy_impl(F,FNAME)\
 template <>                                                              \
@@ -62,4 +63,5 @@ paxpy_impl( dcomplex, pzaxpy_ );
 
 
 
+}
 }

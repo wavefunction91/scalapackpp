@@ -34,7 +34,8 @@ void pzgetri_( const scalapack_int* N, dcomplex * A, const scalapack_int* IA, co
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pgetri_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -63,6 +64,7 @@ pgetri_impl( double,   pdgetri_ );
 pgetri_impl( scomplex, pcgetri_ );
 pgetri_impl( dcomplex, pzgetri_ );
 
+}
 }
 
 

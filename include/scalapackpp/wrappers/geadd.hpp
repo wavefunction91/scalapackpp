@@ -8,7 +8,8 @@
 #include <scalapackpp/types.hpp>
 #include <scalapackpp/util/sfinae.hpp>
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
@@ -17,4 +18,5 @@ detail::enable_if_scalapack_supported_t<T>
         T BETA, 
         T* C, int64_t IC, int64_t JC, const scalapack_desc& DESCC );
 
+}
 }

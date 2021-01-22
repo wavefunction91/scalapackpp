@@ -30,7 +30,8 @@ void pzgetrf_( const scalapack_int* M, const scalapack_int* N, dcomplex* A,
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pgetrf_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -56,4 +57,5 @@ pgetrf_impl( scomplex, pcgetrf_ );
 pgetrf_impl( dcomplex, pzgetrf_ );
 
 
+}
 }

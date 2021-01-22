@@ -38,7 +38,8 @@ void pzgetrs_( const char* TRANS, const scalapack_int* N, const scalapack_int* N
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pgetrs_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -70,4 +71,5 @@ pgetrs_impl( double,   pdgetrs_ );
 pgetrs_impl( scomplex, pcgetrs_ );
 pgetrs_impl( dcomplex, pzgetrs_ );
           
+}
 }

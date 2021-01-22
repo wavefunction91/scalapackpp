@@ -50,7 +50,8 @@ void pzgesvd_(const char* JOBU, const char* JOBVT, const scalapack_int* M,
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pgesvd_real_impl(F,FNAME)                                         \
 template <>                                                               \
@@ -120,4 +121,5 @@ int64_t                                                                   \
 pgesvd_complex_impl( scomplex, pcgesvd_ );
 pgesvd_complex_impl( dcomplex, pzgesvd_ );
 
+}
 }

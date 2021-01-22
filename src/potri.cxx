@@ -25,7 +25,8 @@ void pzpotri_( const char* UPLO, const scalapack_int* N, dcomplex* A, const scal
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define ppotri_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -49,4 +50,5 @@ ppotri_impl( double,   pdpotri_ );
 ppotri_impl( scomplex, pcpotri_ );
 ppotri_impl( dcomplex, pzpotri_ );
 
+}
 }

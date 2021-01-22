@@ -9,7 +9,8 @@
 #include <blacspp/util/type_conversions.hpp>
 #include <string>
 
-namespace scalapackpp::detail {
+namespace scalapackpp {
+namespace detail      {
 
   extern std::string type_string( TransposeFlag );
   extern std::string type_string( SideFlag );
@@ -41,4 +42,6 @@ namespace scalapackpp::detail {
     return _DESC;
 
   }
+
+}
 }

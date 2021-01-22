@@ -59,7 +59,8 @@ void pzgemm_( const char* TRANSA, const char* TRANSB,
 
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pgemm_impl(F,FNAME)                                               \
 template <>                                                               \
@@ -97,5 +98,6 @@ pgemm_impl( double,   pdgemm_ );
 pgemm_impl( scomplex, pcgemm_ );
 pgemm_impl( dcomplex, pzgemm_ );
 
+}
 }
 

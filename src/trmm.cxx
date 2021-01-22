@@ -33,7 +33,8 @@ void pztrmm_( const char* SIDE, const char* UPLO, const char* TRANS, const char*
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define ptrmm_impl(F,FNAME)                                               \
 template <>                                                               \
@@ -63,4 +64,5 @@ ptrmm_impl( float,    pstrmm_ );
 ptrmm_impl( double,   pdtrmm_ );
 ptrmm_impl( scomplex, pctrmm_ );
 ptrmm_impl( dcomplex, pztrmm_ );
+}
 }

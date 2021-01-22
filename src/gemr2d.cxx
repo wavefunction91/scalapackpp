@@ -39,7 +39,8 @@ void pzgemr2d_( const scalapack_int* M, const scalapack_int* N,
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pgemr2d_impl(F, FNAME)                                            \
 template <>                                                               \
@@ -70,4 +71,5 @@ pgemr2d_impl( double,   pdgemr2d_ );
 pgemr2d_impl( scomplex, pcgemr2d_ );
 pgemr2d_impl( dcomplex, pzgemr2d_ );
 
+}
 }

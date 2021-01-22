@@ -9,6 +9,8 @@
 #include <blacspp/grid.hpp>
 #include <scalapackpp/scatter_gather.hpp>
 
+#include <tuple>
+
 namespace scalapackpp {
 
 class BlockCyclicDist2D {
@@ -89,7 +91,8 @@ public:
 
 
   inline bool i_own( int64_t I, int64_t J ) const noexcept {
-    auto [pr, pc] = owner_coordinate( I, J );
+    int64_t pr,pc;
+    std::tie( pr, pc ) = owner_coordinate( I, J );
     return grid_->ipr() == pr and grid_->ipc() == pc;
   }
 

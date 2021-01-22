@@ -13,8 +13,8 @@ namespace scalapackpp {
 
 template <typename T, typename ALPHAT>
 std::enable_if_t<
-  detail::scalapack_supported_v<T> and 
-  std::is_convertible_v<ALPHAT,T>
+  detail::scalapack_supported<T>::value and 
+  std::is_convertible<ALPHAT,T>::value
 >
   ptrsm( SideFlag side, blacspp::Triangle uplo, TransposeFlag trans, 
          blacspp::Diagonal diag,

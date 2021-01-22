@@ -30,7 +30,8 @@ void pztrtri_( const char* UPLO, const char* DIAG, const scalapack_int* N,
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define ptrtri_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -54,4 +55,5 @@ ptrtri_impl( double,   pdtrtri_ );
 ptrtri_impl( scomplex, pctrtri_ );
 ptrtri_impl( dcomplex, pztrtri_ );
 
+}
 }

@@ -30,7 +30,8 @@ double pzlange_( const char* NORM, const scalapack_int* M, const scalapack_int* 
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define plange_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -53,4 +54,5 @@ plange_impl( double,   pdlange_ );
 plange_impl( scomplex, pclange_ );
 plange_impl( dcomplex, pzlange_ );
 
+}
 }

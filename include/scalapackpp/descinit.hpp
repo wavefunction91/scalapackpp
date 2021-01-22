@@ -8,6 +8,8 @@
 #include <scalapackpp/wrappers/descinit.hpp>
 #include <blacspp/grid.hpp>
 
+#include <tuple>
+
 namespace scalapackpp {
 
 
@@ -29,7 +31,9 @@ inline descinit_noerror(
   int64_t ISRC, int64_t JSRC, int64_t LDD 
 ) {
 
-  auto [ desc, info ] = descinit( grid, M, N, MB, NB, ISRC, JSRC, LDD );
+  scalapack_desc desc;
+  int64_t        info;
+  std::tie(desc,info) = descinit( grid, M, N, MB, NB, ISRC, JSRC, LDD );
   (void)info;
   return desc;
 

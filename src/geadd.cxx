@@ -39,7 +39,8 @@ void pzgeadd_( const char* TRANS, const scalapack_int* M, const scalapack_int* N
 
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pgeadd_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -72,4 +73,5 @@ pgeadd_impl( double,   pdgeadd_ );
 pgeadd_impl( scomplex, pcgeadd_ );
 pgeadd_impl( dcomplex, pzgeadd_ );
 
+}
 }

@@ -40,7 +40,8 @@ void pzpotrs_( const char* UPLO, const scalapack_int* N, const scalapack_int* NR
 
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define ppotrs_impl(F,FNAME)                                               \
 template <>                                                               \
@@ -71,4 +72,5 @@ ppotrs_impl( double,   pdpotrs_ );
 ppotrs_impl( scomplex, pcpotrs_ );
 ppotrs_impl( dcomplex, pzpotrs_ );
 
+}
 }

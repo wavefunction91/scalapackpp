@@ -23,7 +23,8 @@ double pzlanhe_( const char* NORM, const char* UPLO, const scalapack_int* N,
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define planhe_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -43,4 +44,5 @@ detail::real_t<F> planhe( const char* NORM, const char* UPLO, int64_t N,  \
 planhe_impl( scomplex, pclanhe_ );
 planhe_impl( dcomplex, pzlanhe_ );
 
+}
 }

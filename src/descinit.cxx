@@ -19,7 +19,8 @@ extern "C" {
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 std::pair< scalapack_desc, int64_t > descinit( 
   int64_t M, int64_t N, int64_t MB, int64_t NB,
@@ -45,4 +46,5 @@ std::pair< scalapack_desc, int64_t > descinit(
   return std::make_pair( detail::to_interface_int(desc), (int64_t)INFO );
 }
 
+}
 }

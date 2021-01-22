@@ -30,7 +30,8 @@ double pzlansy_( const char* NORM, const char* UPLO, const scalapack_int* N,
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define plansy_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -52,4 +53,5 @@ plansy_impl( double,   pdlansy_ );
 plansy_impl( scomplex, pclansy_ );
 plansy_impl( dcomplex, pzlansy_ );
 
+}
 }

@@ -8,7 +8,8 @@
 #include <scalapackpp/types.hpp>
 #include <scalapackpp/util/sfinae.hpp>
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 template <typename T>
 detail::enable_if_scalapack_complex_supported_t<T, int64_t>
@@ -29,4 +30,5 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
          detail::real_t<T>* RWORK, int64_t LRWORK, 
          internal::scalapack_int* IWORK, int64_t LIWORK );
 
+}
 }

@@ -6,7 +6,8 @@
  */
 #include <scalapackpp/util/type_conversions.hpp>
 
-namespace scalapackpp::detail {
+namespace scalapackpp {
+namespace detail      {
 
 std::string type_string( TransposeFlag trans ) {
   if( trans == NoTranspose )     return std::string( "N" );
@@ -35,4 +36,5 @@ std::string type_string( MatrixNorm norm ) {
   }
 }
 
+}
 }

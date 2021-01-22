@@ -30,7 +30,8 @@ void pzscal_( const scalapack_int* N, const dcomplex* ALPHA, dcomplex* X,
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pscal_impl(F,FNAME)\
 template <>                                                              \
@@ -54,4 +55,5 @@ pscal_impl( float,    psscal_ );
 pscal_impl( double,   pdscal_ );
 pscal_impl( scomplex, pcscal_ );
 pscal_impl( dcomplex, pzscal_ );
+}
 }

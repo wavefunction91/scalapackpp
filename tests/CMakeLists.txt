@@ -37,6 +37,7 @@ target_compile_definitions( lapackpp PUBLIC LAPACK_COMPLEX_CPP )
 
 add_library( ut_framework ut.cxx )
 target_link_libraries( ut_framework PUBLIC scalapackpp scalapackpp::catch2 lapackpp )
+target_compile_features( ut_framework PUBLIC cxx_std_17 )
 
 add_executable( test_scalapackpp 
   scatter_gather.cxx 

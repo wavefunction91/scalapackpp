@@ -38,7 +38,8 @@ void pzgesv_( const scalapack_int* N, const scalapack_int* NRHS,
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define pgesv_impl(F,FNAME)                                               \
 template <>                                                               \
@@ -70,4 +71,5 @@ pgesv_impl( double,   pdgesv_ );
 pgesv_impl( scomplex, pcgesv_ );
 pgesv_impl( dcomplex, pzgesv_ );
           
+}
 }

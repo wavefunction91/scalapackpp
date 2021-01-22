@@ -43,7 +43,8 @@ void pdsyevd_( const char* JOBZ, const char* UPLO, const scalapack_int* N,
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define psyev_impl(F, FNAME)                                        \
 template <>                                                         \
@@ -106,5 +107,6 @@ int64_t                                                             \
 psyevd_impl( float,  pssyevd_ );
 psyevd_impl( double, pdsyevd_ );
 
+}
 }
 

@@ -30,7 +30,8 @@ void pzpotrf_( const char* UPLO, const scalapack_int* N,
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define ppotrf_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -54,4 +55,5 @@ ppotrf_impl( double,   pdpotrf_ );
 ppotrf_impl( scomplex, pcpotrf_ );
 ppotrf_impl( dcomplex, pzpotrf_ );
 
+}
 }

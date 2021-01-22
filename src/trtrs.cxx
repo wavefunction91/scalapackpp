@@ -37,7 +37,8 @@ void pztrtrs_( const char* UPLO, const char* TRANS, const char* DIAG,
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 #define ptrtrs_impl(F,FNAME)                                              \
 template <>                                                               \
@@ -69,4 +70,5 @@ ptrtrs_impl( double,   pdtrtrs_ );
 ptrtrs_impl( scomplex, pctrtrs_ );
 ptrtrs_impl( dcomplex, pztrtrs_ );
 
+}
 }
