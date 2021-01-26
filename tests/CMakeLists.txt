@@ -56,6 +56,7 @@ add_executable( test_scalapackpp
   potrs.cxx 
   posv.cxx 
   gesv.cxx 
+  gels.cxx 
   getrf_s.cxx 
   trtrs.cxx 
   potri.cxx 

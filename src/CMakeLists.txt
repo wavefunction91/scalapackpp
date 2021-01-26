@@ -32,6 +32,7 @@ set( ScaLAPACKPP_SRC
      descinit.cxx 
      gemr2d.cxx 
      gesv.cxx
+     gels.cxx
      getrf.cxx
      getrs.cxx
      getri.cxx
