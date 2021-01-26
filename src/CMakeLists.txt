@@ -46,6 +46,7 @@ set( ScaLAPACKPP_SRC
      potri.cxx
      block_cyclic.cxx
      geadd.cxx
+     tradd.cxx
      lange.cxx
      lansy.cxx
      lanhe.cxx
