@@ -42,6 +42,7 @@ target_compile_features( ut_framework PUBLIC cxx_std_17 )
 add_executable( test_scalapackpp 
   scatter_gather.cxx 
   gemm.cxx 
+  hemm.cxx 
   trmm.cxx 
   trsm.cxx 
   potrf.cxx 
