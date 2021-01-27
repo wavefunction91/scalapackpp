@@ -5,6 +5,7 @@
  *  All rights reserved
  */
 #include <scalapackpp/information.hpp>
+#include <blacspp/wrappers/support.hpp>
 
 namespace scalapackpp {
 
@@ -34,29 +35,26 @@ std::pair<int64_t, int64_t>
 
 }
 
-/*
-std::pair< block_cyclic_coordinate, block_cyclic_coordinate >
-  local_index( const blacspp::Grid& grid,
-    scalapack_int MB, scalapack_int NB,
-    scalapack_int I, scalapack_int J
-  ) {
 
-  block_cyclic_coordinate row_coord, col_coord;
+int64_t local_row_from_desc( int64_t M, const scalapack_desc& desc ) {
+  const auto ICXT_A = desc[internal::_CTXT_A];
+  const auto M_A    = desc[internal::_M_A];
+  const auto MB_A   = desc[internal::_MB_A];
+  const auto RSRC_A = desc[internal::_RSRC_A];
 
-  row_coord.block_idx = I / ( grid.npr() * MB );
-  col_coord.block_idx = J / ( grid.npc() * NB );
-
-  row_coord.process_id = (I / MB) & grid.npr();
-  col_coord.process_id = (J / NB) & grid.npc();
-
-  row_coord.local_idx  = I % MB;
-  col_coord.local_idx  = J % NB;
-
-  return {row_coord, col_coord};
-
+  auto grid_dim = blacspp::wrappers::grid_info( ICXT_A );
+  return numroc( M, MB_A, RSRC_A, grid_dim.my_row, grid_dim.np_row );
 }
-*/
 
+int64_t local_col_from_desc( int64_t N, const scalapack_desc& desc ) {
+  const auto ICXT_A = desc[internal::_CTXT_A];
+  const auto N_A    = desc[internal::_N_A];
+  const auto NB_A   = desc[internal::_NB_A];
+  const auto CSRC_A = desc[internal::_CSRC_A];
+
+  auto grid_dim = blacspp::wrappers::grid_info( ICXT_A );
+  return numroc( N, NB_A, CSRC_A, grid_dim.my_col, grid_dim.np_col );
+}
 
 
 }

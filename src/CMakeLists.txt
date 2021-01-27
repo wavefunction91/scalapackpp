@@ -34,8 +34,14 @@ set( ScaLAPACKPP_SRC
      gesv.cxx
      gels.cxx
      getrf.cxx
+     geqrf.cxx
+     geqpf.cxx
      getrs.cxx
      getri.cxx
+     orgqr.cxx
+     ungqr.cxx
+     ormqr.cxx
+     unmqr.cxx
      gesvd.cxx
      type_conversions.cxx 
      trmm.cxx 

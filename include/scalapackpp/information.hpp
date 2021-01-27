@@ -20,17 +20,9 @@ namespace scalapackpp {
       int64_t MB, int64_t NB,
       int64_t ISRC, int64_t JSRC );
 
-/*
-  std::pair< block_cyclic_coordinate, block_cyclic_coordinate >
-    local_index( const blacspp::Grid& grid,
-      int64_t MB, int64_t NB,
-      int64_t I, int64_t J
-    );
 
-  std::pair< int64_t, int64_t >
-    global_index( const blacspp::Grid& grid,
-      int64_t MB, int64_t NB,
-      int64_t I, int64_t J
-    );
-*/
+  int64_t local_row_from_desc( int64_t M, const scalapack_desc& desc );
+  int64_t local_col_from_desc( int64_t N, const scalapack_desc& desc );
+
+
 }
