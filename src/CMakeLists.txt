@@ -27,9 +27,12 @@ set( ScaLAPACKPP_SRC
      syev.cxx 
      heev.cxx 
      gemm.cxx 
+     symm.cxx 
+     hemm.cxx 
      descinit.cxx 
      gemr2d.cxx 
      gesv.cxx
+     gels.cxx
      getrf.cxx
      getrs.cxx
      getri.cxx
@@ -46,6 +49,7 @@ set( ScaLAPACKPP_SRC
      potri.cxx
      block_cyclic.cxx
      geadd.cxx
+     tradd.cxx
      lange.cxx
      lansy.cxx
      lanhe.cxx

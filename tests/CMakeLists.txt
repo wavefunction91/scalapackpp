@@ -42,18 +42,21 @@ target_compile_features( ut_framework PUBLIC cxx_std_17 )
 add_executable( test_scalapackpp 
   scatter_gather.cxx 
   gemm.cxx 
+  hemm.cxx 
   trmm.cxx 
   trsm.cxx 
   potrf.cxx 
   sevp.cxx 
   index.cxx 
   geadd.cxx 
+  tradd.cxx 
   gesvd.cxx
   transpose.cxx 
   gevp.cxx 
   potrs.cxx 
   posv.cxx 
   gesv.cxx 
+  gels.cxx 
   getrf_s.cxx 
   trtrs.cxx 
   potri.cxx 
