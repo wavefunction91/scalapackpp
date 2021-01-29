@@ -9,7 +9,46 @@
 #include <scalapackpp/factorizations/potrf.hpp>
 #include <scalapackpp/eigenvalue_problem/sevp.hpp>
 
+#include <scalapackpp/wrappers/eigenvalue_problem/sygst.hpp>
+#include <scalapackpp/wrappers/eigenvalue_problem/hegst.hpp>
+
 namespace scalapackpp {
+
+template <
+  typename T,
+  detail::enable_if_scalapack_real_supported_t<T,bool> = true
+>
+std::pair<int64_t, T>
+  gen_to_std_evp( int64_t IBTYPE, blacspp::Triangle uplo, int64_t N,
+                        T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
+                  const T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {
+
+  auto UPLO = blacspp::detail::type_string(uplo);
+  T SCALE;
+  auto info = 
+    wrappers::psygst( IBTYPE, UPLO.c_str(), N, A, IA, JA, DESCA, B, IB, JB, DESCB, &SCALE );
+
+  return std::make_pair( info, SCALE );
+
+}
+
+template <
+  typename T,
+  detail::enable_if_scalapack_complex_supported_t<T,bool> = true
+>
+std::pair<int64_t, detail::real_t<T>>
+  gen_to_std_evp( int64_t IBTYPE, blacspp::Triangle uplo, int64_t N,
+                        T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
+                  const T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {
+
+  auto UPLO = blacspp::detail::type_string(uplo);
+  detail::real_t<T> SCALE;
+  auto info = 
+    wrappers::phegst( IBTYPE, UPLO.c_str(), N, A, IA, JA, DESCA, B, IB, JB, DESCB, &SCALE );
+
+  return std::make_pair( info, SCALE );
+
+}
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
@@ -24,6 +63,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
     auto info = ppotrf( uplo, N, B, IB, JB, DESCB );
     if( info ) return info;
 
+#if 0
     // Transform A -> L**-1 * A * L**-H
     ptrsm( SideFlag::Left, uplo, TransposeFlag::NoTranspose, 
            blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
@@ -31,6 +71,11 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
     ptrsm( SideFlag::Right, uplo, TransposeFlag::ConjTranspose, 
            blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
            A, IA, JA, DESCA );
+#else
+    detail::real_t<T> SCALE;
+    std::tie( info, SCALE) = 
+      gen_to_std_evp( 1, uplo, N, A, IA, JA, DESCA, B, IB, JB, DESCB );
+#endif
 
     // Solve SEVP
     info = hereig( jobz, uplo, N, A, IA, JA, DESCA, W, Z, IZ, JZ, DESCZ );
@@ -38,10 +83,16 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 
     // If eigenvectors requested, backtransform Z
-    if( jobz == VectorFlag::Vectors )
-      ptrsm( SideFlag::Left, uplo, TransposeFlag::ConjTranspose,
-             blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
-             Z, IZ, JZ, DESCZ );
+    if( jobz == VectorFlag::Vectors ) {
+      if( uplo == blacspp::Triangle::Lower )
+        ptrsm( SideFlag::Left, uplo, TransposeFlag::ConjTranspose,
+               blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
+               Z, IZ, JZ, DESCZ );
+      else
+        ptrsm( SideFlag::Left, uplo, TransposeFlag::NoTranspose,
+               blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
+               Z, IZ, JZ, DESCZ );
+    }
      
     return info;
 }
@@ -59,6 +110,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
     auto info = ppotrf( uplo, N, B, IB, JB, DESCB );
     if( info ) return info;
 
+#if 0
     // Transform A -> L**-1 * A * L**-H
     ptrsm( SideFlag::Left, uplo, TransposeFlag::NoTranspose, 
            blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
@@ -66,6 +118,11 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
     ptrsm( SideFlag::Right, uplo, TransposeFlag::ConjTranspose, 
            blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
            A, IA, JA, DESCA );
+#else
+    detail::real_t<T> SCALE;
+    std::tie( info, SCALE) = 
+      gen_to_std_evp( 1, uplo, N, A, IA, JA, DESCA, B, IB, JB, DESCB );
+#endif
 
     // Solve SEVP
     info = hereigd( jobz, uplo, N, A, IA, JA, DESCA, W, Z, IZ, JZ, DESCZ );
@@ -73,10 +130,16 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 
     // If eigenvectors requested, backtransform Z
-    if( jobz == VectorFlag::Vectors )
-      ptrsm( SideFlag::Left, uplo, TransposeFlag::ConjTranspose,
-             blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
-             Z, IZ, JZ, DESCZ );
+    if( jobz == VectorFlag::Vectors ) {
+      if( uplo == blacspp::Triangle::Lower )
+        ptrsm( SideFlag::Left, uplo, TransposeFlag::ConjTranspose,
+               blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
+               Z, IZ, JZ, DESCZ );
+      else
+        ptrsm( SideFlag::Left, uplo, TransposeFlag::NoTranspose,
+               blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
+               Z, IZ, JZ, DESCZ );
+    }
      
     return info;
 }

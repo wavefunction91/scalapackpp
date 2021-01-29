@@ -26,6 +26,8 @@ endif()
 set( ScaLAPACKPP_SRC
      syev.cxx 
      heev.cxx 
+     sygst.cxx 
+     hegst.cxx 
      gemm.cxx 
      symm.cxx 
      hemm.cxx 
