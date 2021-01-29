@@ -12,7 +12,7 @@ TEST_CASE( "Index Conversion", "[index]" ) {
 
 
   using namespace scalapackpp;
-  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
+  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   int64_t M = 100;
@@ -35,12 +35,12 @@ TEST_CASE( "Index Conversion", "[index]" ) {
     }
 
     std::vector<double> A;
-    if( grid.ipr() == 0 and grid.ipc() == 0 ) 
+    if( grid->ipr() == 0 and grid->ipc() == 0 ) 
       A.resize( M*M, 0. );
 
     mat_dist.gather( M, M, A.data(), M, A_local.data(), M_loc, 0, 0 );
     
-    if( grid.ipr() == 0 and grid.ipc() == 0 ) {
+    if( grid->ipr() == 0 and grid->ipc() == 0 ) {
       for( auto i = 0; i < M; ++i )
       for( auto j = 0; j < M; ++j ) {
         if( i == j ) CHECK( A[i + j*M] == 1. );

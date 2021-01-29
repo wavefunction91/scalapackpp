@@ -10,16 +10,12 @@
 
 namespace scalapackpp {
 
-BlockCyclicDist2D::BlockCyclicDist2D( const blacspp::Grid* grid,
+BlockCyclicDist2D::BlockCyclicDist2D( std::shared_ptr<const Grid> grid,
   int64_t MB, int64_t NB, int64_t ISRC, int64_t JSRC
 ) : grid_(grid), mb_(MB), nb_(NB), isrc_(ISRC), jsrc_(JSRC){ }
 
-BlockCyclicDist2D::BlockCyclicDist2D( const blacspp::Grid& grid,
-  int64_t MB, int64_t NB, int64_t ISRC, int64_t JSRC
-) : BlockCyclicDist2D( &grid, MB, NB, ISRC, JSRC ){ }
-
 BlockCyclicDist2D::BlockCyclicDist2D( 
-  const blacspp::Grid& grid, int64_t MB, int64_t NB
+  std::shared_ptr<const Grid> grid, int64_t MB, int64_t NB
 ) : BlockCyclicDist2D( grid, MB, NB, 0, 0 ){ }
 
 BlockCyclicDist2D::BlockCyclicDist2D() : BlockCyclicDist2D( nullptr, 0, 0, 0, 0 ){ }
@@ -27,6 +23,8 @@ BlockCyclicDist2D::BlockCyclicDist2D() : BlockCyclicDist2D( nullptr, 0, 0, 0, 0 
 
 BlockCyclicDist2D::BlockCyclicDist2D( const BlockCyclicDist2D& ) = default;
 BlockCyclicDist2D::BlockCyclicDist2D( BlockCyclicDist2D&& ) noexcept = default;
+BlockCyclicDist2D::BlockCyclicDist2D& BlockCyclicDist2D::operator=( const BlockCyclicDist2D& ) = default;
+BlockCyclicDist2D::BlockCyclicDist2D& BlockCyclicDist2D::operator=( BlockCyclicDist2D&& ) noexcept = default;
 
 
 bool BlockCyclicDist2D::is_valid() const {

@@ -19,7 +19,7 @@
 SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
 
   using namespace scalapackpp;
-  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
+  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   int64_t M = 100, mb = 4;
@@ -75,12 +75,12 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
 
 
   std::vector< TestType > gathered;
-  if( grid.ipr() == 0 and grid.ipc() == 0 )
+  if( grid->ipr() == 0 and grid->ipc() == 0 )
     gathered.resize( M*M );
 
   A_SPD_copy.gather_from( M, M, gathered.data(), M, 0, 0 );
 
-  if( grid.ipr() == 0 and grid.ipc() == 0 ) {
+  if( grid->ipr() == 0 and grid->ipc() == 0 ) {
 
     auto tol = M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();
     for( auto i = 0; i < M; ++i )

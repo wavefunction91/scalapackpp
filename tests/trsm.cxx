@@ -21,14 +21,14 @@ SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
 
   using namespace scalapackpp;
 
-  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
+  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   const int64_t M = 100, N = 200;
   int64_t mb = 2, nb = 4;
 
   std::vector< TestType > A_root, B_ref_root;
-  if( grid.ipr() == 0 and grid.ipc() == 0 ) {
+  if( grid->ipr() == 0 and grid->ipc() == 0 ) {
     A_root.resize( M*M, 1 );
     B_ref_root.resize( M*N, 2 );
 

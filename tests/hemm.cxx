@@ -15,7 +15,7 @@ SCALAPACKPP_REAL_TEST_CASE( "Symm", "[symm]" ) {
 
   using namespace scalapackpp;
 
-  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
+  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   const int64_t M = 100, N = 200;
@@ -52,7 +52,7 @@ SCALAPACKPP_TEST_CASE( "Hemm", "[hemm]" ) {
 
   using namespace scalapackpp;
 
-  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
+  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   const int64_t M = 100, N = 200;

@@ -22,7 +22,7 @@ SCALAPACKPP_TEST_CASE( "GEVP Drivers", "[gevp]" ){
   using namespace scalapackpp;
 
   using real_t = detail::real_t<TestType>;
-  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
+  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   int64_t M = 100;
@@ -40,7 +40,7 @@ SCALAPACKPP_TEST_CASE( "GEVP Drivers", "[gevp]" ){
   // Create a symmetric, diagonally dominant matrix (A)
   // and SPD matrix B
   std::vector< TestType > A, B;
-  if( grid.ipr() == 0 and grid.ipc() == 0 ) {
+  if( grid->ipr() == 0 and grid->ipc() == 0 ) {
     A.resize( M*M );
     B.resize( M*M );
     for( auto i = 0; i < M ; ++i )

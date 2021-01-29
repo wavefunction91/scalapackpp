@@ -16,7 +16,7 @@ SCALAPACKPP_TEST_CASE( "Gels", "[gels]" ) {
 
   using namespace scalapackpp;
 
-  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
+  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   int64_t M = 100, N = 50, NRHS = 20;
@@ -27,7 +27,7 @@ SCALAPACKPP_TEST_CASE( "Gels", "[gels]" ) {
 
   std::vector< TestType > A,B;
 
-  if( grid.ipr() == 0 and grid.ipc() == 0 ) {
+  if( grid->ipr() == 0 and grid->ipc() == 0 ) {
 
     A.resize( M*N ); B.resize( M*NRHS );
     std::generate( A.begin(), A.end(), [&](){ return dist(gen); } );
@@ -47,14 +47,14 @@ SCALAPACKPP_TEST_CASE( "Gels", "[gels]" ) {
 
   // Check correctness
   std::vector< TestType > X;
-  if( grid.ipr() == 0 and grid.ipc() == 0 ) {
+  if( grid->ipr() == 0 and grid->ipc() == 0 ) {
     X.resize( M * NRHS );
   }
 
   B_sca.gather_from( M, NRHS, X.data(), M, 0, 0 );
 
   auto tol = M*std::numeric_limits<detail::real_t<TestType>>::epsilon();
-  if( grid.ipr() == 0 and grid.ipc() == 0 ) {
+  if( grid->ipr() == 0 and grid->ipc() == 0 ) {
     lapack::gels( lapack::Op::NoTrans, M, N, NRHS, A.data(), M, B.data(), M );
     for( int i = 0; i < M*NRHS; ++i ) 
       CHECK( std::abs(X[i] - B[i]) < tol );
