@@ -6,7 +6,7 @@
  */
 #pragma once
 #include <scalapackpp/types.hpp>
-#include <scalapackpp/util/sfinae.hpp>
+#include <scalapackpp/util/type_traits.hpp>
 
 namespace scalapackpp {
 namespace wrappers    {

@@ -6,7 +6,7 @@
  */
 #pragma once
 #include <scalapackpp/block_cyclic.hpp>
-#include <scalapackpp/util/sfinae.hpp>
+#include <scalapackpp/util/type_traits.hpp>
 #include <vector>
 
 namespace scalapackpp {
