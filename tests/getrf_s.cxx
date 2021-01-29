@@ -52,11 +52,11 @@ SCALAPACKPP_TEST_CASE( "Getrf_s", "[getrf_s]" ) {
   auto info = pgetrf( A, IPIV.data() );
   REQUIRE( info == 0 );
 
-  info = pgetrs( TransposeFlag::NoTranspose, A, IPIV.data(), B );
+  info = pgetrs( Op::NoTrans, A, IPIV.data(), B );
 
   REQUIRE( info == 0 );
   // Check correctness
-  pgemm( TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, 
+  pgemm( Op::NoTrans, Op::NoTrans, 
          -1., A_copy, B, 1., B_copy );
 
   auto tol = 100*M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();

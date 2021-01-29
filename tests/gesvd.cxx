@@ -33,15 +33,15 @@ SCALAPACKPP_TEST_CASE( "Gesvd", "[svd]" ) {
   auto A_copy = A;
 
 
-  pgesvd( VectorFlag::Vectors, VectorFlag::Vectors, A, S.data(), U, VT );
+  pgesvd( Job::Vec, Job::Vec, A, S.data(), U, VT );
 
 
   // Rebuild A
   std::fill( A.begin(), A.end(), 0 );
   for( auto i = 0; i < SIZE; ++i ) {
     pgemm(
-      TransposeFlag::NoTranspose,
-      TransposeFlag::NoTranspose,
+      Op::NoTrans,
+      Op::NoTrans,
       M, N, 1, S[i], 
       U.data(),  1, i+1, U.desc(), 
       VT.data(), i+1, 1, VT.desc(),

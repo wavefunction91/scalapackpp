@@ -9,7 +9,7 @@
 #include <scalapackpp/block_cyclic.hpp>
 #include <scalapackpp/transpose.hpp>
 
-SCALAPACKPP_TEST_CASE( "Transpose", "[trans]" ) {
+SCALAPACKPP_TEST_CASE( "Trans", "[trans]" ) {
 
   using namespace scalapackpp;
 
@@ -38,7 +38,7 @@ SCALAPACKPP_TEST_CASE( "Transpose", "[trans]" ) {
 
   A_sca.scatter_to( M, N, A.data(), M, 0, 0 );
 
-  SECTION( "Transpose" ) {
+  SECTION( "Trans" ) {
 
     transpose( A_sca, B_sca );
 
@@ -58,7 +58,7 @@ SCALAPACKPP_TEST_CASE( "Transpose", "[trans]" ) {
     }
   }
 
-  SECTION( "ConjTranspose" ) {
+  SECTION( "ConjTrans" ) {
 
     conj_transpose( A_sca, B_sca );
 

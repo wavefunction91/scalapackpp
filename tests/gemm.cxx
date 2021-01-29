@@ -28,7 +28,7 @@ SCALAPACKPP_TEST_CASE( "Gemm", "[gemm]" ) {
   std::fill( B.begin(), B.end(), 3 );
   std::fill( C.begin(), C.end(), 5 );
 
-  pgemm( TransposeFlag::NoTranspose, TransposeFlag::NoTranspose,
+  pgemm( Op::NoTrans, Op::NoTrans,
          1., A, B, 2., C );
 
   const TestType val = TestType(2 * 5 + M*2*3);

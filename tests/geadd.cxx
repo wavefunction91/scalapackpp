@@ -39,7 +39,7 @@ SCALAPACKPP_TEST_CASE( "Geadd", "[geadd]" ) {
   A_sca.scatter_to( M, N, A.data(), M, 0, 0 );
 
   detail::real_t<TestType> fact = 0.5;
-  pgeadd( TransposeFlag::Transpose, fact, A_sca, 1., B_sca );
+  pgeadd( Op::Trans, fact, A_sca, 1., B_sca );
 
 
   // Gather results to A

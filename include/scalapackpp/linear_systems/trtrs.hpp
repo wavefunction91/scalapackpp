@@ -14,22 +14,22 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  ptrtrs( blacspp::Triangle uplo, TransposeFlag trans, blacspp::Diagonal diag,
+  ptrtrs( blacspp::Triangle uplo, Op trans, blacspp::Diagonal diag,
     int64_t N, int64_t NRHS, 
     const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
           T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {
 
   auto UPLO = blacspp::detail::type_string( uplo );
   auto DIAG = blacspp::detail::type_string( diag );
-  auto TRANS = scalapackpp::detail::type_string( trans );
-  return wrappers::ptrtrs( UPLO.c_str(), TRANS.c_str(), DIAG.c_str(), N, NRHS,
+  auto TRANS = char( trans );
+  return wrappers::ptrtrs( UPLO.c_str(), &TRANS, DIAG.c_str(), N, NRHS,
            A, IA, JA, DESCA, B, IB, JB, DESCB );
 
 }
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  ptrtrs( blacspp::Triangle uplo, TransposeFlag trans, blacspp::Diagonal diag,
+  ptrtrs( blacspp::Triangle uplo, Op trans, blacspp::Diagonal diag,
           const BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
 
   // TODO Sanity Check

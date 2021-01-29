@@ -14,36 +14,36 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
-  psyev( VectorFlag jobz, blacspp::Triangle uplo, int64_t N,
+  psyev( Job jobz, blacspp::Triangle uplo, int64_t N,
          T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          T* W,
          T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
 
-  auto JOBZ = detail::type_string( jobz );
+  auto JOBZ = char( jobz );
   auto UPLO = blacspp::detail::type_string( uplo );
 
   int64_t LWORK = -1;
   std::vector< T > WORK( 5 );
 
-  wrappers::psyev( JOBZ.c_str(), UPLO.c_str(), N, A, IA, JA, DESCA, 
+  wrappers::psyev( &JOBZ, UPLO.c_str(), N, A, IA, JA, DESCA, 
                    W, Z, IZ, JZ, DESCZ, WORK.data(), LWORK );
 
   LWORK = int64_t( WORK[0] );
   WORK.resize( LWORK );
 
-  return wrappers::psyev( JOBZ.c_str(), UPLO.c_str(), N, A, IA, JA, DESCA, 
+  return wrappers::psyev( &JOBZ, UPLO.c_str(), N, A, IA, JA, DESCA, 
                           W, Z, IZ, JZ, DESCZ, WORK.data(), LWORK );
 
 }
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
-  psyevd( VectorFlag jobz, blacspp::Triangle uplo, int64_t N,
+  psyevd( Job jobz, blacspp::Triangle uplo, int64_t N,
          T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          T* W,
          T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
 
-  auto JOBZ = detail::type_string( jobz );
+  auto JOBZ = char( jobz );
   auto UPLO = blacspp::detail::type_string( uplo );
 
   int64_t LWORK  = -1;
@@ -52,7 +52,7 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
   std::vector< T > WORK( 5 );
   std::vector< internal::scalapack_int > IWORK( 5 );
 
-  wrappers::psyevd( JOBZ.c_str(), UPLO.c_str(), N, A, IA, JA, DESCA, 
+  wrappers::psyevd( &JOBZ, UPLO.c_str(), N, A, IA, JA, DESCA, 
                     W, Z, IZ, JZ, DESCZ, WORK.data(), LWORK,
                     IWORK.data(), LIWORK );
 
@@ -61,7 +61,7 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
   WORK.resize( LWORK );
   IWORK.resize( LIWORK );
 
-  return wrappers::psyevd( JOBZ.c_str(), UPLO.c_str(), N, A, IA, JA, DESCA, 
+  return wrappers::psyevd( &JOBZ, UPLO.c_str(), N, A, IA, JA, DESCA, 
                            W, Z, IZ, JZ, DESCZ, WORK.data(), LWORK,
                            IWORK.data(), LIWORK );
 }
@@ -70,7 +70,7 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
-  psyev( VectorFlag jobz, blacspp::Triangle uplo, 
+  psyev( Job jobz, blacspp::Triangle uplo, 
          BlockCyclicMatrix<T>& A, T* W, BlockCyclicMatrix<T>& Z ) {
 
   // TODO Sanity check
@@ -81,7 +81,7 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
-  psyevd( VectorFlag jobz, blacspp::Triangle uplo, 
+  psyevd( Job jobz, blacspp::Triangle uplo, 
           BlockCyclicMatrix<T>& A, T* W, BlockCyclicMatrix<T>& Z ) {
 
   // TODO Sanity check

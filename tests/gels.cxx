@@ -42,7 +42,7 @@ SCALAPACKPP_TEST_CASE( "Gels", "[gels]" ) {
   B_sca.scatter_to( M, NRHS, B.data(), M, 0, 0 );
 
   // Solve linear system
-  auto info = pgels( TransposeFlag::NoTranspose, A_sca, B_sca );
+  auto info = pgels( Op::NoTrans, A_sca, B_sca );
   REQUIRE( info == 0 );
 
   // Check correctness

@@ -53,7 +53,7 @@ SCALAPACKPP_REAL_TEST_CASE( "trtri", "[trtri]" ) {
   // Check correctness
   decltype(A_local) I_approx( M_loc * N_loc );
   pgemm(
-    TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, M, M, M, 
+    Op::NoTrans, Op::NoTrans, M, M, M, 
     1., A_local.data(), 1, 1, desc, A_inv_local.data(), 1, 1, desc,
     0., I_approx.data(), 1, 1, desc
   );

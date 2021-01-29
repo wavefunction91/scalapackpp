@@ -14,7 +14,7 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  ptradd( blacspp::Triangle uplo, TransposeFlag trans, int64_t M, int64_t N, 
+  ptradd( blacspp::Triangle uplo, Op trans, int64_t M, int64_t N, 
           detail::type_identity_t<T> ALPHA,
           const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
           detail::type_identity_t<T> BETA, 
@@ -22,17 +22,17 @@ detail::enable_if_scalapack_supported_t<T>
 
   assert( A != C );
 
-  auto TRANS = detail::type_string( trans );
+  auto TRANS = char( trans );
   auto UPLO  = blacspp::detail::type_string( uplo );
 
-  wrappers::ptradd( UPLO.c_str(), TRANS.c_str(), M, N, ALPHA, A, IA, JA, DESCA, 
+  wrappers::ptradd( UPLO.c_str(), &TRANS, M, N, ALPHA, A, IA, JA, DESCA, 
                     BETA, C, IC, JC, DESCC );
 
 }
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  ptradd( blacspp::Triangle uplo, TransposeFlag trans, 
+  ptradd( blacspp::Triangle uplo, Op trans, 
           detail::type_identity_t<T> ALPHA,
           const BlockCyclicMatrix<T>& A,
           detail::type_identity_t<T> BETA, 

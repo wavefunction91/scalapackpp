@@ -37,13 +37,13 @@ SCALAPACKPP_TEST_CASE( "Trtrs", "[trtrs]" ) {
 
   // Compute reference sol with trsm
   ptrsm(
-    SideFlag::Left, blacspp::Triangle::Lower, TransposeFlag::NoTranspose,
+    Side::Left, blacspp::Triangle::Lower, Op::NoTrans,
     blacspp::Diagonal::Unit, 1., A, B_ref );
 
   // Compute with trtrs ( B <- A**-1*B )
   auto info = ptrtrs(
     blacspp::Triangle::Lower,
-    TransposeFlag::NoTranspose, blacspp::Diagonal::Unit,
+    Op::NoTrans, blacspp::Diagonal::Unit,
     A, B
   );
 

@@ -56,14 +56,14 @@ SCALAPACKPP_TEST_CASE( "SEVP Drivers", "[sevp]" ){
 
   SECTION( "HEREIG" ) {
     auto info = hereig(
-      VectorFlag::Vectors, blacspp::Triangle::Lower,
+      Job::Vec, blacspp::Triangle::Lower,
       A_sca, W.data(), Z_sca
     );
     REQUIRE( info == 0 );
   }
   SECTION( "HEREIGD" ) {
     auto info = hereigd(
-      VectorFlag::Vectors, blacspp::Triangle::Lower,
+      Job::Vec, blacspp::Triangle::Lower,
       A_sca, W.data(), Z_sca
     );
     REQUIRE( info == 0 );
@@ -73,8 +73,8 @@ SCALAPACKPP_TEST_CASE( "SEVP Drivers", "[sevp]" ){
   std::fill( A_sca.begin(), A_sca.end(), 0 );
   for( auto i = 0; i < M; ++i ) {
     pgemm(
-      TransposeFlag::NoTranspose,
-      TransposeFlag::ConjTranspose,
+      Op::NoTrans,
+      Op::ConjTrans,
       M, M, 1, W[i], Z_sca.data(), 1, i+1, Z_sca.desc(), Z_sca.data(), 1, i+1, Z_sca.desc(),
       1,  A_sca.data(), 1, 1, A_sca.desc()
     );

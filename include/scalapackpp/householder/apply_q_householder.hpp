@@ -15,7 +15,7 @@ template <
   detail::enable_if_scalapack_real_supported_t<T,bool> = true
 >
 int64_t
-  apply_q_householder( SideFlag side, TransposeFlag trans, int64_t M, int64_t N, 
+  apply_q_householder( Side side, Op trans, int64_t M, int64_t N, 
           const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA, const T* TAU,
           T* C,       int64_t IC, int64_t JC, const scalapack_desc& DESCC ) {
 
@@ -28,7 +28,7 @@ template <
   detail::enable_if_scalapack_complex_supported_t<T,bool> = true
 >
 int64_t
-  apply_q_householder( SideFlag side, TransposeFlag trans, int64_t M, int64_t N, 
+  apply_q_householder( Side side, Op trans, int64_t M, int64_t N, 
           const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA, const T* TAU,
           T* C,       int64_t IC, int64_t JC, const scalapack_desc& DESCC ) {
 

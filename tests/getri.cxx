@@ -47,7 +47,7 @@ SCALAPACKPP_TEST_CASE( "Getri", "[getri]" ) {
   // Check correctness
   BlockCyclicMatrix<TestType> I_approx( grid, M, M, mb, mb );
   pgemm(
-    TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, 
+    Op::NoTrans, Op::NoTrans, 
     1., A, A_inv, 0., I_approx
   );
 

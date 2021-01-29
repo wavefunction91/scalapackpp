@@ -49,7 +49,7 @@ SCALAPACKPP_TEST_CASE( "Geqrf", "[geqrf]" ) {
 
   // Compute R = Q**H * A
   BlockCyclicMatrix<TestType> R_sca( grid, N, N, mb, mb );
-  pgemm( TransposeFlag::ConjTranspose, TransposeFlag::NoTranspose,
+  pgemm( Op::ConjTrans, Op::NoTrans,
          1., Q_sca, A_cpy, 0., R_sca );
 
 

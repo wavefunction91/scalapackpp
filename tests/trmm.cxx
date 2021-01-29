@@ -47,15 +47,15 @@ SCALAPACKPP_TEST_CASE( "Trmm", "[trmm]" ) {
 
   // C <- A*B
   pgemm( 
-    TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, M, N, M, 
+    Op::NoTrans, Op::NoTrans, M, N, M, 
     1, A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b,
     0, C_local.data(), 1, 1, desc_b
   );
 
   // Compute with trmm ( B <- A*B )
   ptrmm(
-    SideFlag::Left, blacspp::Triangle::Lower,
-    TransposeFlag::NoTranspose, blacspp::Diagonal::Unit,
+    Side::Left, blacspp::Triangle::Lower,
+    Op::NoTrans, blacspp::Diagonal::Unit,
     M, N, 1, A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b 
   );
 

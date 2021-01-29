@@ -19,7 +19,7 @@ namespace scalapackpp {
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
   symmetric_norm( const BlockCyclicDist2D& dist, 
-                  MatrixNorm norm, blacspp::Triangle uplo,
+                  Norm norm, blacspp::Triangle uplo,
                   int64_t N, const T* A, int64_t IA, 
                   int64_t JA, const scalapack_desc& DESCA ) {
 
@@ -40,22 +40,22 @@ detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
   }
 
   int64_t LWORK = 0;
-  if( norm == OneNorm or norm == InfinityNorm )
+  if( norm == One or norm == Inf )
     LWORK = 2*(Nq0 + Np0 + LDW);
 
   LWORK = std::max( (int64_t)1, LWORK );
   std::vector< detail::real_t<T> > WORK( LWORK );
 
-  auto NORM = detail::type_string( norm );
+  auto NORM = char( norm );
   auto UPLO = blacspp::detail::type_string( uplo );
-  return wrappers::plansy( NORM.c_str(), UPLO.c_str(), N, A, IA, JA, 
+  return wrappers::plansy( &NORM, UPLO.c_str(), N, A, IA, JA, 
     DESCA, WORK.data() );
 
 }
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
-  symmetric_norm( MatrixNorm norm, blacspp::Triangle uplo, 
+  symmetric_norm( Norm norm, blacspp::Triangle uplo, 
                   const BlockCyclicMatrix<T>& A ) {
 
   return symmetric_norm( A.dist(), norm, uplo, A.m(), A.n(), A.data(), 1, 1, 

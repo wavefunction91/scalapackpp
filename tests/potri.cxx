@@ -45,7 +45,7 @@ SCALAPACKPP_TEST_CASE( "Potri", "[potri]" ) {
 
   // Make A SPD
   pgemm(
-    TransposeFlag::ConjTranspose, TransposeFlag::NoTranspose, 
+    Op::ConjTrans, Op::NoTrans, 
     1., A, A, 0., A_SPD
   );
   auto A_SPD_copy( A_SPD );
@@ -66,7 +66,7 @@ SCALAPACKPP_TEST_CASE( "Potri", "[potri]" ) {
   fill_triangle( blacspp::Triangle::Upper, A,     0. ); 
   fill_triangle( blacspp::Triangle::Upper, A_SPD, 0. ); 
 
-  pgeadd( TransposeFlag::ConjTranspose, 1., A, 1., A_SPD );
+  pgeadd( Op::ConjTrans, 1., A, 1., A_SPD );
 
   // Account for double counting of diagonals
   for( auto i = 0; i < M; ++i )
@@ -79,7 +79,7 @@ SCALAPACKPP_TEST_CASE( "Potri", "[potri]" ) {
   // Check correctness
 
   pgemm(
-    TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, 
+    Op::NoTrans, Op::NoTrans, 
     1., A_SPD, A_SPD_copy, 0., A
   );
 

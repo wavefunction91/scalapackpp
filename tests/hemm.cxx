@@ -36,7 +36,7 @@ SCALAPACKPP_REAL_TEST_CASE( "Symm", "[symm]" ) {
 
 
   psymm( 
-    SideFlag::Left, blacspp::Triangle::Lower, M, N, 
+    Side::Left, blacspp::Triangle::Lower, M, N, 
     1., A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b,
     2., C_local.data(), 1, 1, desc_b 
   );
@@ -73,7 +73,7 @@ SCALAPACKPP_TEST_CASE( "Hemm", "[hemm]" ) {
 
 
   phemm( 
-    SideFlag::Left, blacspp::Triangle::Lower, M, N,
+    Side::Left, blacspp::Triangle::Lower, M, N,
     1., A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b,
     2., C_local.data(), 1, 1, desc_b 
   );

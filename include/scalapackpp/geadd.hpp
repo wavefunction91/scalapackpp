@@ -14,16 +14,16 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  pgeadd( TransposeFlag trans, int64_t M, int64_t N, detail::type_identity_t<T> ALPHA,
+  pgeadd( Op trans, int64_t M, int64_t N, detail::type_identity_t<T> ALPHA,
         const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
         detail::type_identity_t<T> BETA, 
         T* C, int64_t IC, int64_t JC, const scalapack_desc& DESCC ) {
 
   assert( A != C );
 
-  auto TRANS = detail::type_string( trans );
+  auto TRANS = char( trans );
 
-  wrappers::pgeadd( TRANS.c_str(), M, N, ALPHA, A, IA, JA, DESCA, BETA,
+  wrappers::pgeadd( &TRANS, M, N, ALPHA, A, IA, JA, DESCA, BETA,
                     C, IC, JC, DESCC );
 
 }
@@ -31,7 +31,7 @@ detail::enable_if_scalapack_supported_t<T>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  pgeadd( TransposeFlag trans, detail::type_identity_t<T> ALPHA, const BlockCyclicMatrix<T>& A,
+  pgeadd( Op trans, detail::type_identity_t<T> ALPHA, const BlockCyclicMatrix<T>& A,
           detail::type_identity_t<T> BETA, BlockCyclicMatrix<T>& C ) {
 
   // TODO Sanity Check A/C/trans

@@ -52,7 +52,7 @@ std::pair<int64_t, detail::real_t<T>>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  hereig_gen( VectorFlag jobz, blacspp::Triangle uplo, int64_t N,
+  hereig_gen( Job jobz, blacspp::Triangle uplo, int64_t N,
               T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
               T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB,
               detail::real_t<T>* W,
@@ -65,10 +65,10 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 #if 0
     // Transform A -> L**-1 * A * L**-H
-    ptrsm( SideFlag::Left, uplo, TransposeFlag::NoTranspose, 
+    ptrsm( Side::Left, uplo, Op::NoTrans, 
            blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
            A, IA, JA, DESCA );
-    ptrsm( SideFlag::Right, uplo, TransposeFlag::ConjTranspose, 
+    ptrsm( Side::Right, uplo, Op::ConjTrans, 
            blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
            A, IA, JA, DESCA );
 #else
@@ -86,13 +86,13 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 
     // If eigenvectors requested, backtransform Z
-    if( jobz == VectorFlag::Vectors ) {
+    if( jobz == Job::Vec ) {
       if( uplo == blacspp::Triangle::Lower )
-        ptrsm( SideFlag::Left, uplo, TransposeFlag::ConjTranspose,
+        ptrsm( Side::Left, uplo, Op::ConjTrans,
                blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
                Z, IZ, JZ, DESCZ );
       else
-        ptrsm( SideFlag::Left, uplo, TransposeFlag::NoTranspose,
+        ptrsm( Side::Left, uplo, Op::NoTrans,
                blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
                Z, IZ, JZ, DESCZ );
     }
@@ -102,7 +102,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
              
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  hereigd_gen( VectorFlag jobz, blacspp::Triangle uplo, int64_t N,
+  hereigd_gen( Job jobz, blacspp::Triangle uplo, int64_t N,
               T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
               T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB,
               detail::real_t<T>* W,
@@ -115,10 +115,10 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 #if 0
     // Transform A -> L**-1 * A * L**-H
-    ptrsm( SideFlag::Left, uplo, TransposeFlag::NoTranspose, 
+    ptrsm( Side::Left, uplo, Op::NoTrans, 
            blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
            A, IA, JA, DESCA );
-    ptrsm( SideFlag::Right, uplo, TransposeFlag::ConjTranspose, 
+    ptrsm( Side::Right, uplo, Op::ConjTrans, 
            blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
            A, IA, JA, DESCA );
 #else
@@ -136,13 +136,13 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 
     // If eigenvectors requested, backtransform Z
-    if( jobz == VectorFlag::Vectors ) {
+    if( jobz == Job::Vec ) {
       if( uplo == blacspp::Triangle::Lower )
-        ptrsm( SideFlag::Left, uplo, TransposeFlag::ConjTranspose,
+        ptrsm( Side::Left, uplo, Op::ConjTrans,
                blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
                Z, IZ, JZ, DESCZ );
       else
-        ptrsm( SideFlag::Left, uplo, TransposeFlag::NoTranspose,
+        ptrsm( Side::Left, uplo, Op::NoTrans,
                blacspp::Diagonal::NonUnit, N, N, 1., B, IB, JB, DESCB,
                Z, IZ, JZ, DESCZ );
     }
@@ -152,7 +152,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  hereig_gen( VectorFlag jobz, blacspp::Triangle uplo, 
+  hereig_gen( Job jobz, blacspp::Triangle uplo, 
               BlockCyclicMatrix<T>& A, 
               BlockCyclicMatrix<T>& B, 
               detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
@@ -166,7 +166,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  hereigd_gen( VectorFlag jobz, blacspp::Triangle uplo, 
+  hereigd_gen( Job jobz, blacspp::Triangle uplo, 
                BlockCyclicMatrix<T>& A, 
                BlockCyclicMatrix<T>& B, 
                detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {

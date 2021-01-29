@@ -45,7 +45,7 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
 
   // Make A SPD
   pgemm(
-    TransposeFlag::ConjTranspose, TransposeFlag::NoTranspose, 
+    Op::ConjTrans, Op::NoTrans, 
     1., A, A, 0., A_SPD
   );
   auto A_SPD_copy( A_SPD );
@@ -60,16 +60,16 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
 
   // A_copy = L**-1 * A_copy
   ptrsm(
-    SideFlag::Left, blacspp::Triangle::Lower,
-    TransposeFlag::NoTranspose, blacspp::Diagonal::NonUnit,
+    Side::Left, blacspp::Triangle::Lower,
+    Op::NoTrans, blacspp::Diagonal::NonUnit,
     1., A_SPD, A_SPD_copy
   );
 
 
   // A_copy = A_copy * L**-H
   ptrsm(
-    SideFlag::Right, blacspp::Triangle::Lower,
-    TransposeFlag::ConjTranspose, blacspp::Diagonal::NonUnit,
+    Side::Right, blacspp::Triangle::Lower,
+    Op::ConjTrans, blacspp::Diagonal::NonUnit,
     1., A_SPD, A_SPD_copy
   );
 

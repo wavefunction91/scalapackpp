@@ -16,7 +16,7 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
-  general_norm( const BlockCyclicDist2D& dist, MatrixNorm norm, 
+  general_norm( const BlockCyclicDist2D& dist, Norm norm, 
                 int64_t M, int64_t N, const T* A, int64_t IA, 
                 int64_t JA, const scalapack_desc& DESCA ) {
 
@@ -29,20 +29,20 @@ detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
   auto Nq0 = numroc( N+ico, dist.nb(), dist.grid().ipc(), jp, dist.grid().npc() );
 
   int64_t LWORK = 0;
-  if( norm == MatrixNorm::OneNorm )           LWORK = Nq0;
-  else if( norm == MatrixNorm::InfinityNorm ) LWORK = Mp0;
+  if( norm == Norm::One )      LWORK = Nq0;
+  else if( norm == Norm::Inf ) LWORK = Mp0;
 
   LWORK = std::max( (int64_t)1, LWORK );
   std::vector< detail::real_t<T> > WORK( LWORK );
 
-  auto NORM = detail::type_string( norm );
-  return wrappers::plange( NORM.c_str(), M, N, A, IA, JA, DESCA, WORK.data() );
+  auto NORM = char( norm );
+  return wrappers::plange( &NORM, M, N, A, IA, JA, DESCA, WORK.data() );
 
 }
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
-  general_norm( MatrixNorm norm, const BlockCyclicMatrix<T>& A ) {
+  general_norm( Norm norm, const BlockCyclicMatrix<T>& A ) {
 
   return general_norm( A.dist(), norm, A.m(), A.n(), A.data(), 1, 1, A.desc() );  
 

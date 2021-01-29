@@ -64,7 +64,7 @@ SCALAPACKPP_TEST_CASE( "GEVP Drivers", "[gevp]" ){
 
   // Make B SPD
   pgemm(
-    TransposeFlag::ConjTranspose, TransposeFlag::NoTranspose, 
+    Op::ConjTrans, Op::NoTrans, 
     1., Z_sca, Z_sca, 0., B_sca
   );
 
@@ -78,7 +78,7 @@ SCALAPACKPP_TEST_CASE( "GEVP Drivers", "[gevp]" ){
     SECTION( "Upper" ) { uplo = blacspp::Triangle::Upper; }
 
     auto info = hereig_gen(
-      VectorFlag::Vectors,
+      Job::Vec,
       uplo,
       A_sca, B_sca, W.data(), Z_sca
     );
@@ -94,7 +94,7 @@ SCALAPACKPP_TEST_CASE( "GEVP Drivers", "[gevp]" ){
     SECTION( "Upper" ) { uplo = blacspp::Triangle::Upper; }
 
     auto info = hereigd_gen(
-      VectorFlag::Vectors,
+      Job::Vec,
       uplo,
       A_sca, B_sca, W.data(), Z_sca
     );
@@ -107,15 +107,15 @@ SCALAPACKPP_TEST_CASE( "GEVP Drivers", "[gevp]" ){
   std::fill( A_sca.begin(), A_sca.end(), 0 );
 
   // B_local <- B * Z
-  pgemm( TransposeFlag::NoTranspose, TransposeFlag::NoTranspose,
+  pgemm( Op::NoTrans, Op::NoTrans,
          1., B_copy, Z_sca, 0., B_sca );
 
 
   // A <- X * E * X**H
   for( auto i = 0; i < M; ++i ) {
     pgemm(
-      TransposeFlag::NoTranspose,
-      TransposeFlag::ConjTranspose,
+      Op::NoTrans,
+      Op::ConjTrans,
       M, M, 1, W[i], B_sca.data(), 1, i+1, B_sca.desc(), B_sca.data(), 1, i+1, B_sca.desc(),
       1,  A_sca.data(), 1, 1, A_sca.desc()
     );

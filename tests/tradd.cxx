@@ -39,7 +39,7 @@ SCALAPACKPP_TEST_CASE( "Tradd", "[tradd]" ) {
   A_sca.scatter_to( M, N, A.data(), M, 0, 0 );
 
   detail::real_t<TestType> fact = 0.5;
-  ptradd( blacspp::Triangle::Lower, TransposeFlag::Transpose, fact, A_sca, 1., B_sca );
+  ptradd( blacspp::Triangle::Lower, Op::Trans, fact, A_sca, 1., B_sca );
 
 
   // Gather results to A

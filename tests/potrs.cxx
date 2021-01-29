@@ -47,7 +47,7 @@ SCALAPACKPP_TEST_CASE( "Potrs", "[potrs]" ) {
 
   // Make A SPD
   pgemm(
-    TransposeFlag::ConjTranspose, TransposeFlag::NoTranspose, 
+    Op::ConjTrans, Op::NoTrans, 
     1., A, A, 0., A_SPD
   );
   auto A_SPD_copy( A_SPD );
@@ -59,7 +59,7 @@ SCALAPACKPP_TEST_CASE( "Potrs", "[potrs]" ) {
   REQUIRE( info == 0 );
 
   // Check correctness
-  pgemm( TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, 
+  pgemm( Op::NoTrans, Op::NoTrans, 
          -1., A_SPD_copy, B, 1., B_copy );
 
   auto tol = 100*M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();

@@ -9,6 +9,7 @@
 namespace scalapackpp {
 namespace detail      {
 
+/*
 std::string type_string( TransposeFlag trans ) {
   if( trans == NoTranspose )     return std::string( "N" );
   else if( trans == Transpose )  return std::string( "T" );
@@ -35,6 +36,7 @@ std::string type_string( MatrixNorm norm ) {
       throw std::runtime_error("NORM NOT RECOGNIZED");
   }
 }
+*/
 
 }
 }

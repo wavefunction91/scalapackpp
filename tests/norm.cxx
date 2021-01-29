@@ -52,10 +52,10 @@ SCALAPACKPP_TEST_CASE( "GeneralNorm", "[norm]" ) {
   MPI_Bcast( &o_ref, 1, dtype, 0, MPI_COMM_WORLD );
   MPI_Bcast( &m_ref, 1, dtype, 0, MPI_COMM_WORLD );
 
-  auto f_calc = general_norm( FrobeniusNorm, A ); 
-  auto i_calc = general_norm( InfinityNorm,  A ); 
-  auto o_calc = general_norm( OneNorm,       A ); 
-  auto m_calc = general_norm( AbsMax,        A ); 
+  auto f_calc = general_norm( Norm::Fro, A ); 
+  auto i_calc = general_norm( Norm::Inf, A ); 
+  auto o_calc = general_norm( Norm::One, A ); 
+  auto m_calc = general_norm( Norm::Max, A ); 
 
 
   CHECK( f_calc == Approx( f_ref ) );

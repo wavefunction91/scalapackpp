@@ -14,14 +14,14 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_complex_supported_t<T, int64_t>
-  pheev( VectorFlag jobz, blacspp::Triangle uplo, int64_t N,
+  pheev( Job jobz, blacspp::Triangle uplo, int64_t N,
          T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          detail::real_t<T>* W,
          T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
 
   using real_t = detail::real_t<T>;
 
-  auto JOBZ = detail::type_string( jobz );
+  auto JOBZ = char( jobz );
   auto UPLO = blacspp::detail::type_string( uplo );
 
   int64_t LWORK = -1;
@@ -29,7 +29,7 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
   std::vector< T > WORK( 5 );
   std::vector< real_t > RWORK( 5 );
 
-  wrappers::pheev( JOBZ.c_str(), UPLO.c_str(), N, A, IA, JA, DESCA, 
+  wrappers::pheev( &JOBZ, UPLO.c_str(), N, A, IA, JA, DESCA, 
                    W, Z, IZ, JZ, DESCZ, WORK.data(), LWORK,
                    RWORK.data(), LRWORK );
 
@@ -38,7 +38,7 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
   WORK.resize( LWORK );
   RWORK.resize( 2*LRWORK );
 
-  return wrappers::pheev( JOBZ.c_str(), UPLO.c_str(), N, A, IA, JA, DESCA, 
+  return wrappers::pheev( &JOBZ, UPLO.c_str(), N, A, IA, JA, DESCA, 
                           W, Z, IZ, JZ, DESCZ, WORK.data(), LWORK,
                           RWORK.data(), LRWORK );
 
@@ -46,14 +46,14 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_complex_supported_t<T, int64_t>
-  pheevd( VectorFlag jobz, blacspp::Triangle uplo, int64_t N,
+  pheevd( Job jobz, blacspp::Triangle uplo, int64_t N,
          T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          detail::real_t<T>* W,
          T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
 
   using real_t = detail::real_t<T>;
 
-  auto JOBZ = detail::type_string( jobz );
+  auto JOBZ = char( jobz );
   auto UPLO = blacspp::detail::type_string( uplo );
 
   int64_t LWORK = -1;
@@ -63,7 +63,7 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
   std::vector< real_t > RWORK( 5 );
   std::vector< internal::scalapack_int > IWORK( 5 );
 
-  wrappers::pheevd( JOBZ.c_str(), UPLO.c_str(), N, A, IA, JA, DESCA, 
+  wrappers::pheevd( &JOBZ, UPLO.c_str(), N, A, IA, JA, DESCA, 
                     W, Z, IZ, JZ, DESCZ, WORK.data(), LWORK,
                     RWORK.data(), LRWORK, IWORK.data(), LIWORK );
 
@@ -74,7 +74,7 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
   RWORK.resize( 2*LRWORK );
   IWORK.resize( LIWORK );
 
-  return wrappers::pheevd( JOBZ.c_str(), UPLO.c_str(), N, A, IA, JA, DESCA, 
+  return wrappers::pheevd( &JOBZ, UPLO.c_str(), N, A, IA, JA, DESCA, 
                            W, Z, IZ, JZ, DESCZ, WORK.data(), LWORK,
                            RWORK.data(), LRWORK, IWORK.data(), LIWORK );
 }
@@ -83,7 +83,7 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_complex_supported_t<T, int64_t>
-  pheev( VectorFlag jobz, blacspp::Triangle uplo, 
+  pheev( Job jobz, blacspp::Triangle uplo, 
          BlockCyclicMatrix<T>& A, detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
 
   // TODO Sanity check
@@ -94,7 +94,7 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_complex_supported_t<T, int64_t>
-  pheevd( VectorFlag jobz, blacspp::Triangle uplo, 
+  pheevd( Job jobz, blacspp::Triangle uplo, 
           BlockCyclicMatrix<T>& A, detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
 
   // TODO Sanity check

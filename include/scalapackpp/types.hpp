@@ -43,27 +43,37 @@ namespace internal {
   };
 
 
-  enum TransposeFlag {
-    NoTranspose,
-    Transpose,
-    ConjTranspose
+  enum class Op : char {
+    NoTrans   = 'N',
+    Trans     = 'T',
+    ConjTrans = 'C'
   };
 
-  enum SideFlag {
-    Right,
-    Left
+  enum class Side : char {
+    Right = 'R',
+    Left  = 'L'
   };
 
-  enum VectorFlag {
-    Vectors,
-    NoVectors
+  enum class Job : char {
+    Vec          = 'V',
+    NoVec        = 'N',  // xyyev
+    UpdateVec    = 'U',  // gghrd#, hbtrd, hgeqz#, hseqr#, ... (many compq or compz)
+
+    AllVec       = 'A',  // gesvd, gesdd, gejsv#
+    SomeVec      = 'S',  // gesvd, gesdd, gejsv#, gesvj#
+    OverwriteVec = 'O',  // gesvd, gesdd
+
+    CompactVec   = 'P',  // bdsdc
+    SomeVecTol   = 'C',  // gesvj
+    VecJacobi    = 'J',  // gejsv
+    Workspace    = 'W',  // gejsv
   };
 
 
-  enum MatrixNorm {
-    FrobeniusNorm,
-    InfinityNorm,
-    OneNorm,
-    AbsMax
+  enum class Norm : char {
+    Fro = 'F',
+    Inf = 'I',
+    One = '1',
+    Max = 'M'
   };
 }

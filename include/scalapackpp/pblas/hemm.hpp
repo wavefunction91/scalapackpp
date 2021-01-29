@@ -19,7 +19,7 @@ detail::enable_if_t<
   std::is_convertible<ALPHAT,T>::value and
   std::is_convertible<BETAT,T>::value
 >
-  phemm( SideFlag side, blacspp::Triangle uplo,
+  phemm( Side side, blacspp::Triangle uplo,
          int64_t M, int64_t N, ALPHAT ALPHA, 
          const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          const T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB,
@@ -29,13 +29,13 @@ detail::enable_if_t<
   assert( A != C );
   assert( B != C );
 
-  auto SIDE = detail::type_string( side );
+  auto SIDE = char( side );
   auto UPLO = blacspp::detail::type_string( uplo );
 
   const T ALPHA_t = T(ALPHA);
   const T BETA_t  = T(BETA);  
 
-  wrappers::phemm( SIDE.c_str(), UPLO.c_str(), M, N, ALPHA_t, A, IA, JA,
+  wrappers::phemm( &SIDE, UPLO.c_str(), M, N, ALPHA_t, A, IA, JA,
                    DESCA, B, IB, JB, DESCB, BETA_t, C, IC, JC, DESCC ); 
 
 }
@@ -47,7 +47,7 @@ detail::enable_if_t<
   std::is_convertible<ALPHAT,T>::value and
   std::is_convertible<BETAT,T>::value
 >
-  phemm( SideFlag side, blacspp::Triangle uplo,
+  phemm( Side side, blacspp::Triangle uplo,
          int64_t M, int64_t N, ALPHAT ALPHA, 
          const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          const T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB,
