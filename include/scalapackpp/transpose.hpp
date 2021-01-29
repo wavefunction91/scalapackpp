@@ -42,6 +42,23 @@ detail::enable_if_scalapack_complex_supported_t<T>
           0., B, IB, JB, DESCB );
 
 }
+
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T>
+  transpose( const BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
+
+  transpose( B.m(), B.n(), A.data(), 1, 1, A.desc(), B.data(), 1, 1, B.desc() );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T>
+  conj_transpose( const BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
+
+  conj_transpose( B.m(), B.n(), A.data(), 1, 1, A.desc(), B.data(), 1, 1, B.desc() );
+
+}
           
 
 } 

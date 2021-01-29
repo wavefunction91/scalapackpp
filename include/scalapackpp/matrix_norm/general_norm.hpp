@@ -10,6 +10,7 @@
 #include <scalapackpp/block_cyclic.hpp>
 #include <scalapackpp/information.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -36,6 +37,14 @@ detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
 
   auto NORM = detail::type_string( norm );
   return wrappers::plange( NORM.c_str(), M, N, A, IA, JA, DESCA, WORK.data() );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
+  general_norm( MatrixNorm norm, const BlockCyclicMatrix<T>& A ) {
+
+  return general_norm( A.dist(), norm, A.m(), A.n(), A.data(), 1, 1, A.desc() );  
 
 }
 

@@ -70,5 +70,16 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
     U, IU, JU, DESCU, VT, IVT, JVT, DESCVT, WORK.data(), LWORK, RWORK.data() );
 
 }
+
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T,int64_t>
+  pgesvd( VectorFlag jobu, VectorFlag jobvt, BlockCyclicMatrix<T>& A,
+          detail::real_t<T>* S, BlockCyclicMatrix<T>& U, BlockCyclicMatrix<T>& VT ) {
+
+  return pgesvd( jobu, jobvt, A.m(), A.n(), A.data(), 1, 1, A.desc(),
+                 S, U.data(), 1, 1, U.desc(), VT.data(), 1, 1, VT.desc() );
+
+}
            
 }

@@ -8,6 +8,7 @@
 #include <scalapackpp/wrappers/eigenvalue_problem/syev.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
 #include <blacspp/util/type_conversions.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -64,5 +65,31 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
                            W, Z, IZ, JZ, DESCZ, WORK.data(), LWORK,
                            IWORK.data(), LIWORK );
 }
+
+
+
+template <typename T>
+detail::enable_if_scalapack_real_supported_t<T, int64_t>
+  psyev( VectorFlag jobz, blacspp::Triangle uplo, 
+         BlockCyclicMatrix<T>& A, T* W, BlockCyclicMatrix<T>& Z ) {
+
+  // TODO Sanity check
+  return psyev( jobz, uplo, A.m(), A.data(), 1, 1, A.desc(), W, Z.data(), 1, 1,
+                Z.desc() );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_real_supported_t<T, int64_t>
+  psyevd( VectorFlag jobz, blacspp::Triangle uplo, 
+          BlockCyclicMatrix<T>& A, T* W, BlockCyclicMatrix<T>& Z ) {
+
+  // TODO Sanity check
+  return psyevd( jobz, uplo, A.m(), A.data(), 1, 1, A.desc(), W, Z.data(), 1, 1,
+                 Z.desc() );
+
+}
+
+
 
 }

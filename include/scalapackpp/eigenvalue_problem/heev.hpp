@@ -8,6 +8,7 @@
 #include <scalapackpp/wrappers/eigenvalue_problem/heev.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
 #include <blacspp/util/type_conversions.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -76,6 +77,30 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
   return wrappers::pheevd( JOBZ.c_str(), UPLO.c_str(), N, A, IA, JA, DESCA, 
                            W, Z, IZ, JZ, DESCZ, WORK.data(), LWORK,
                            RWORK.data(), LRWORK, IWORK.data(), LIWORK );
+}
+
+
+
+template <typename T>
+detail::enable_if_scalapack_complex_supported_t<T, int64_t>
+  pheev( VectorFlag jobz, blacspp::Triangle uplo, 
+         BlockCyclicMatrix<T>& A, detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
+
+  // TODO Sanity check
+  return pheev( jobz, uplo, A.m(), A.data(), 1, 1, A.desc(), W, Z.data(), 1, 1,
+                Z.desc() );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_complex_supported_t<T, int64_t>
+  pheevd( VectorFlag jobz, blacspp::Triangle uplo, 
+          BlockCyclicMatrix<T>& A, detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
+
+  // TODO Sanity check
+  return pheevd( jobz, uplo, A.m(), A.data(), 1, 1, A.desc(), W, Z.data(), 1, 1,
+                 Z.desc() );
+
 }
 
 }

@@ -12,7 +12,7 @@
 namespace scalapackpp {
 
 template <typename T, typename ALPHAT, typename BETAT>
-std::enable_if_t<
+detail::enable_if_t<
   detail::scalapack_real_supported<T>::value and 
   std::is_convertible<ALPHAT,T>::value and
   std::is_convertible<BETAT,T>::value

@@ -60,4 +60,28 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
 }
 
 
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  hereig( VectorFlag jobz, blacspp::Triangle uplo, 
+          BlockCyclicMatrix<T>& A, detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
+
+  // TODO Sanity check
+  return hereig( jobz, uplo, A.m(), A.data(), 1, 1, A.desc(), W, Z.data(), 1, 1,
+                 Z.desc() );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  hereigd( VectorFlag jobz, blacspp::Triangle uplo, 
+           BlockCyclicMatrix<T>& A, detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
+
+  // TODO Sanity check
+  return hereigd( jobz, uplo, A.m(), A.data(), 1, 1, A.desc(), W, Z.data(), 1, 1,
+                  Z.desc() );
+
+}
+
+
 }

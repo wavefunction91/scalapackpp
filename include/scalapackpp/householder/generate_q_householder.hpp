@@ -34,5 +34,14 @@ int64_t
 
 }
 
+template <typename T>
+detail::enable_if_scalapack_supported_t<T,int64_t>
+  generate_q_householder( int64_t K, BlockCyclicMatrix<T>& A, const T* TAU ) {
+
+  // TODO Sanity Check
+  return generate_q_householder( A.m(), A.n(), K, A.data(), 1, 1, A.desc(), TAU );
+
+}
+
 
 }

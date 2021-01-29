@@ -12,6 +12,7 @@
 #include <scalapackpp/util/type_conversions.hpp>
 #include <blacspp/util/type_conversions.hpp>
 #include <scalapackpp/util/math.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -49,6 +50,16 @@ detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
   auto UPLO = blacspp::detail::type_string( uplo );
   return wrappers::plansy( NORM.c_str(), UPLO.c_str(), N, A, IA, JA, 
     DESCA, WORK.data() );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
+  symmetric_norm( MatrixNorm norm, blacspp::Triangle uplo, 
+                  const BlockCyclicMatrix<T>& A ) {
+
+  return symmetric_norm( A.dist(), norm, uplo, A.m(), A.n(), A.data(), 1, 1, 
+                         A.desc() );  
 
 }
 

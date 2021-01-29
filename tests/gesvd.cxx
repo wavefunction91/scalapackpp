@@ -18,47 +18,38 @@ SCALAPACKPP_TEST_CASE( "Gesvd", "[svd]" ) {
 
   int64_t M = 100;
   int64_t N = 10;
-  BlockCyclicDist2D mat_dist( grid, 4, 4 );
   int64_t SIZE = std::min(M,N);
+  int64_t mb = 4;
 
-  auto [AM_loc, AN_loc]   = mat_dist.get_local_dims( M, N    );
-  auto [UM_loc, UN_loc]   = mat_dist.get_local_dims( M, SIZE );
-  auto [VTM_loc, VTN_loc] = mat_dist.get_local_dims( SIZE, N );
-
-  std::default_random_engine gen;
-  std::normal_distribution<detail::real_t<TestType>> dist( 0., 1. );
-
-  std::vector< TestType > A_local( AM_loc * AN_loc );
-  std::vector< TestType > U_local( UM_loc * UN_loc );
-  std::vector< TestType > VT_local( VTM_loc * VTN_loc );
-
+  BlockCyclicMatrix<TestType> A( grid, M, N, mb, mb ),
+                              U( grid, M, SIZE, mb, mb ),
+                              VT( grid, SIZE, N, mb, mb );
   std::vector< detail::real_t<TestType> > S( SIZE );
 
-  std::generate( A_local.begin(), A_local.end(), [&](){ return dist(gen); } );
-  auto A_copy = A_local;
 
-  auto desc_a  = mat_dist.descinit_noerror( M, N,    AM_loc  );
-  auto desc_u  = mat_dist.descinit_noerror( M, SIZE, UM_loc  );
-  auto desc_vt = mat_dist.descinit_noerror( SIZE, N, VTM_loc );
+  std::default_random_engine gen(mpi.rank());
+  std::normal_distribution<detail::real_t<TestType>> dist( 0., 1. );
+  std::generate( A.begin(), A.end(), [&](){ return dist(gen); } );
+  auto A_copy = A;
 
-  pgesvd( VectorFlag::Vectors, VectorFlag::Vectors, M, N,
-    A_local.data(), 1, 1, desc_a, S.data(),
-    U_local.data(), 1, 1, desc_u, VT_local.data(), 1, 1, desc_vt );
+
+  pgesvd( VectorFlag::Vectors, VectorFlag::Vectors, A, S.data(), U, VT );
+
 
   // Rebuild A
-  std::fill( A_local.begin(), A_local.end(), 0 );
+  std::fill( A.begin(), A.end(), 0 );
   for( auto i = 0; i < SIZE; ++i ) {
     pgemm(
       TransposeFlag::NoTranspose,
       TransposeFlag::NoTranspose,
       M, N, 1, S[i], 
-      U_local.data(),  1, i+1, desc_u, 
-      VT_local.data(), i+1, 1, desc_vt,
-      TestType(1.),  A_local.data(), 1, 1, desc_a
+      U.data(),  1, i+1, U.desc(), 
+      VT.data(), i+1, 1, VT.desc(),
+      1.,  A.data(), 1, 1, A.desc()
     );
   }
 
   auto eps = std::numeric_limits<detail::real_t<TestType>>::epsilon() * M*M*N;
-  for( auto i = 0; i < AM_loc*AN_loc; ++i ) 
-    CHECK( std::real(A_local[i]) == Approx( std::real(A_copy[i]) ).epsilon(eps) );
+  for( auto i = 0; i < A.local_size(); ++i ) 
+    CHECK( std::real(A.data()[i]) == Approx( std::real(A_copy.data()[i]) ).epsilon(eps) );
 }

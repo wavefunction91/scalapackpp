@@ -7,6 +7,7 @@
 #pragma once
 #include <scalapackpp/wrappers/linear_systems/gels.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -29,6 +30,16 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
   return wrappers::pgels( TRANS.c_str(), M, N, NRHS, A, IA, JA, DESCA, 
                           B, IB, JB, DESCB, WORK.data(), LWORK );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  pgels( TransposeFlag trans, BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
+
+  // TODO sanity check
+  return pgels( trans, A.m(), A.n(), B.n(), A.data(), 1, 1, A.desc(),
+                B.data(), 1, 1, B.desc() );
 
 }
 

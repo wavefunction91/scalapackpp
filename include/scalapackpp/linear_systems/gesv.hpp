@@ -8,6 +8,7 @@
 #include <scalapackpp/wrappers/linear_systems/gesv.hpp>
 #include <scalapackpp/information.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -28,6 +29,17 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
   for( int64_t i = 0; i < _IPIV.size(); ++i ) IPIV[i] = _IPIV[i];
 
   return INFO;
+
 }
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  pgesv( BlockCyclicMatrix<T>& A, int64_t* IPIV, BlockCyclicMatrix<T>& B ) {
           
+  // TODO sanity check
+  return pgesv( B.m(), B.n(), A.data(), 1, 1, A.desc(), IPIV,
+                B.data(), 1, 1, B.desc() );
+
+}
+
 }

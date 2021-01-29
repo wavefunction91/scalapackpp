@@ -7,6 +7,7 @@
 #pragma once
 #include <scalapackpp/wrappers/factorizations/potrf.hpp>
 #include <blacspp/util/type_conversions.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -20,6 +21,14 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 }
 
+template <typename T>
+detail::enable_if_scalapack_supported_t<T,int64_t>
+  ppotrf( blacspp::Triangle uplo, BlockCyclicMatrix<T>& A ) {
+
+  // Sanity check
+  return ppotrf( uplo, A.m(), A.data(), 1, 1, A.desc() );
+
+}
 
 
 }

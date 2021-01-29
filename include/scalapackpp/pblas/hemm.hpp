@@ -15,7 +15,7 @@ namespace scalapackpp {
 template <typename T, typename ALPHAT, typename BETAT,
   detail::enable_if_scalapack_complex_supported_t<T,bool> = true
 >
-std::enable_if_t<
+detail::enable_if_t<
   std::is_convertible<ALPHAT,T>::value and
   std::is_convertible<BETAT,T>::value
 >
@@ -43,7 +43,7 @@ std::enable_if_t<
 template <typename T, typename ALPHAT, typename BETAT,
   detail::enable_if_scalapack_real_supported_t<T,bool> = true
 >
-std::enable_if_t<
+detail::enable_if_t<
   std::is_convertible<ALPHAT,T>::value and
   std::is_convertible<BETAT,T>::value
 >

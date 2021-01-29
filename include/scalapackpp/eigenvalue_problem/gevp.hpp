@@ -75,6 +75,9 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
     detail::real_t<T> SCALE;
     std::tie( info, SCALE) = 
       gen_to_std_evp( 1, uplo, N, A, IA, JA, DESCA, B, IB, JB, DESCB );
+
+    // Check that scale is 1
+    assert( std::abs( SCALE - 1 ) < std::numeric_limits<detail::real_t<T>>::epsilon() );
 #endif
 
     // Solve SEVP
@@ -122,6 +125,9 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
     detail::real_t<T> SCALE;
     std::tie( info, SCALE) = 
       gen_to_std_evp( 1, uplo, N, A, IA, JA, DESCA, B, IB, JB, DESCB );
+
+    // Check that scale is 1
+    assert( std::abs( SCALE - 1 ) < std::numeric_limits<detail::real_t<T>>::epsilon() );
 #endif
 
     // Solve SEVP
@@ -142,6 +148,34 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
     }
      
     return info;
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  hereig_gen( VectorFlag jobz, blacspp::Triangle uplo, 
+              BlockCyclicMatrix<T>& A, 
+              BlockCyclicMatrix<T>& B, 
+              detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
+
+  // TODO Sanity check
+  return hereig_gen( jobz, uplo, A.m(), A.data(), 1, 1, A.desc(), 
+                     B.data(), 1, 1, B.desc(), W, Z.data(), 1, 1,
+                     Z.desc() );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  hereigd_gen( VectorFlag jobz, blacspp::Triangle uplo, 
+               BlockCyclicMatrix<T>& A, 
+               BlockCyclicMatrix<T>& B, 
+               detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
+
+  // TODO Sanity check
+  return hereigd_gen( jobz, uplo, A.m(), A.data(), 1, 1, A.desc(), 
+                      B.data(), 1, 1, B.desc(), W, Z.data(), 1, 1,
+                      Z.desc() );
+
 }
 
 

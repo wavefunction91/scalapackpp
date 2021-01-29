@@ -8,6 +8,7 @@
 #include <scalapackpp/wrappers/factorizations/getrf.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
 #include <scalapackpp/information.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -25,6 +26,14 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
   for( int64_t i = 0; i < _IPIV.size(); ++i ) IPIV[i] = _IPIV[i];
 
   return INFO;
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T,int64_t>
+  pgetrf( BlockCyclicMatrix<T>& A, int64_t* IPIV ) {
+
+  return pgetrf( A.m(), A.n(), A.data(), 1, 1, A.desc(), IPIV );
 
 }
 

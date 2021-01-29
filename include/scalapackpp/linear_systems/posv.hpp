@@ -7,6 +7,7 @@
 #pragma once
 #include <scalapackpp/wrappers/linear_systems/posv.hpp>
 #include <blacspp/util/type_conversions.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -21,6 +22,16 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
   return wrappers::pposv( UPLO.c_str(), N, NRHS, A, IA, JA, DESCA,
                            B, IB, JB, DESCB );
   
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  pposv( blacspp::Triangle uplo, BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
+
+  // TODO Sanity Check
+  return pposv( uplo, B.m(), B.n(), A.data(), 1, 1, A.desc(), 
+                B.data(), 1, 1, B.desc() );
+
 }
 
 }

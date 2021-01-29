@@ -8,6 +8,7 @@
 #include <scalapackpp/wrappers/linear_systems/trtrs.hpp>
 #include <blacspp/util/type_conversions.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -23,6 +24,17 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
   auto TRANS = scalapackpp::detail::type_string( trans );
   return wrappers::ptrtrs( UPLO.c_str(), TRANS.c_str(), DIAG.c_str(), N, NRHS,
            A, IA, JA, DESCA, B, IB, JB, DESCB );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  ptrtrs( blacspp::Triangle uplo, TransposeFlag trans, blacspp::Diagonal diag,
+          const BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
+
+  // TODO Sanity Check
+  return ptrtrs( uplo, trans, diag, B.m(), B.n(), A.data(), 1, 1, A.desc(), 
+                  B.data(), 1, 1, B.desc() );
 
 }
           

@@ -9,15 +9,40 @@
 #include <type_traits>
 #include <cassert>
 
-#if __cplusplus < 201402L
-namespace std {
-template <typename T, typename U>
-using enable_if_t = typename enable_if<T,U>::type;
-}
-#endif
 
 namespace scalapackpp {
 namespace detail {
+
+// Define local enable_if_t for C++11 compilation
+#if __cplusplus < 201402L
+  // < C++14
+  template <bool B, typename T = void>
+  using enable_if_t = typename std::enable_if<B,T>::type;
+#else
+  // >= C++14
+  template <bool B, typename T = void>
+  using enable_if_t = std::enable_if_t<B,T>;
+#endif
+
+// Define local type_dentity for C++11/14/17
+#if __cplusplus > 201703L
+  // >= C++20
+  template <typename T>
+  using type_identity = std::type_identity<T>;
+
+  template <typename T>
+  using type_identity_t = std::type_identity_t<T>;
+#else
+  // < C++20
+  template <typename T>
+  struct type_identity {
+    using type = T;
+  };
+
+  template <typename T>
+  using type_identity_t = typename type_identity<T>::type;
+#endif
+
 
 template <typename T>
 struct scalapack_real_supported : public std::false_type { };
@@ -41,6 +66,7 @@ struct scalapack_supported {
 };
 
 
+// Define local _v's for >= C++17
 #if __cplusplus >= 201703L
 
 template <typename T>
