@@ -56,14 +56,14 @@ SCALAPACKPP_TEST_CASE( "SEVP Drivers", "[sevp]" ){
 
   SECTION( "HEREIG" ) {
     auto info = hereig(
-      Job::Vec, blacspp::Triangle::Lower,
+      Job::Vec, blacspp::Uplo::Lower,
       A_sca, W.data(), Z_sca
     );
     REQUIRE( info == 0 );
   }
   SECTION( "HEREIGD" ) {
     auto info = hereigd(
-      Job::Vec, blacspp::Triangle::Lower,
+      Job::Vec, blacspp::Uplo::Lower,
       A_sca, W.data(), Z_sca
     );
     REQUIRE( info == 0 );

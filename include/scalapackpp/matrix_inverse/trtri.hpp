@@ -13,20 +13,20 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  ptrtri( blacspp::Triangle uplo, blacspp::Diagonal diag, int64_t N,
+  ptrtri( blacspp::Uplo uplo, blacspp::Diag diag, int64_t N,
           T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA ) {
 
-  auto UPLO = blacspp::detail::type_string( uplo );
-  auto DIAG = blacspp::detail::type_string( diag );
+  auto UPLO = char( uplo );
+  auto DIAG = char( diag );
 
-  return wrappers::ptrtri( UPLO.c_str(), DIAG.c_str(), N, A, IA, JA, DESCA );
+  return wrappers::ptrtri( &UPLO, &DIAG, N, A, IA, JA, DESCA );
 
 }
 
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  ptrtri( blacspp::Triangle uplo, blacspp::Diagonal diag, BlockCyclicMatrix<T>& A ) { 
+  ptrtri( blacspp::Uplo uplo, blacspp::Diag diag, BlockCyclicMatrix<T>& A ) { 
 
   // TODO sanity check
   return ptrtri( uplo, diag, A.m(), A.data(), 1, 1, A.desc() );

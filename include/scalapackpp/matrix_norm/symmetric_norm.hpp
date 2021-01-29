@@ -19,7 +19,7 @@ namespace scalapackpp {
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
   symmetric_norm( const BlockCyclicDist2D& dist, 
-                  Norm norm, blacspp::Triangle uplo,
+                  Norm norm, blacspp::Uplo uplo,
                   int64_t N, const T* A, int64_t IA, 
                   int64_t JA, const scalapack_desc& DESCA ) {
 
@@ -47,15 +47,15 @@ detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
   std::vector< detail::real_t<T> > WORK( LWORK );
 
   auto NORM = char( norm );
-  auto UPLO = blacspp::detail::type_string( uplo );
-  return wrappers::plansy( &NORM, UPLO.c_str(), N, A, IA, JA, 
+  auto UPLO = char( uplo );
+  return wrappers::plansy( &NORM, &UPLO, N, A, IA, JA, 
     DESCA, WORK.data() );
 
 }
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
-  symmetric_norm( Norm norm, blacspp::Triangle uplo, 
+  symmetric_norm( Norm norm, blacspp::Uplo uplo, 
                   const BlockCyclicMatrix<T>& A ) {
 
   return symmetric_norm( A.dist(), norm, uplo, A.m(), A.n(), A.data(), 1, 1, 

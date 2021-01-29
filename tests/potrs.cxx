@@ -53,9 +53,9 @@ SCALAPACKPP_TEST_CASE( "Potrs", "[potrs]" ) {
   auto A_SPD_copy( A_SPD );
 
   // Solve linear system
-  auto info = ppotrf( blacspp::Triangle::Lower, A_SPD );
+  auto info = ppotrf( blacspp::Uplo::Lower, A_SPD );
   REQUIRE( info == 0 );
-  info = ppotrs( blacspp::Triangle::Lower, A_SPD, B );
+  info = ppotrs( blacspp::Uplo::Lower, A_SPD, B );
   REQUIRE( info == 0 );
 
   // Check correctness

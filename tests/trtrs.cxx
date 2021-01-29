@@ -32,18 +32,18 @@ SCALAPACKPP_TEST_CASE( "Trtrs", "[trtrs]" ) {
 
 
   // Zero out upper triangle
-  fill_triangle( blacspp::Triangle::Upper, A, 0. ); 
+  fill_triangle( blacspp::Uplo::Upper, A, 0. ); 
 
 
   // Compute reference sol with trsm
   ptrsm(
-    Side::Left, blacspp::Triangle::Lower, Op::NoTrans,
-    blacspp::Diagonal::Unit, 1., A, B_ref );
+    Side::Left, blacspp::Uplo::Lower, Op::NoTrans,
+    blacspp::Diag::Unit, 1., A, B_ref );
 
   // Compute with trtrs ( B <- A**-1*B )
   auto info = ptrtrs(
-    blacspp::Triangle::Lower,
-    Op::NoTrans, blacspp::Diagonal::Unit,
+    blacspp::Uplo::Lower,
+    Op::NoTrans, blacspp::Diag::Unit,
     A, B
   );
 

@@ -39,13 +39,13 @@ SCALAPACKPP_REAL_TEST_CASE( "trtri", "[trtri]" ) {
   }
 
   // Zero upper triangle
-  fill_triangle( mat_dist, blacspp::Triangle::Upper, M, M,
+  fill_triangle( mat_dist, blacspp::Uplo::Upper, M, M,
     A_local.data(), M_loc, 0. );
 
   auto desc = mat_dist.descinit_noerror( M, M, M_loc );
 
   std::vector< TestType > A_inv_local( A_local );
-  auto info = ptrtri( blacspp::Triangle::Lower, blacspp::Diagonal::NonUnit, M,
+  auto info = ptrtri( blacspp::Uplo::Lower, blacspp::Diag::NonUnit, M,
     A_local.data(), 1, 1, desc );
   REQUIRE( info == 0 );
 

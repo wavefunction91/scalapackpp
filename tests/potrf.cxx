@@ -52,7 +52,7 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
 
 
   // Perform POTRF
-  auto info = ppotrf( blacspp::Triangle::Lower, A_SPD );
+  auto info = ppotrf( blacspp::Uplo::Lower, A_SPD );
 
   REQUIRE( info == 0 );
 
@@ -60,16 +60,16 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
 
   // A_copy = L**-1 * A_copy
   ptrsm(
-    Side::Left, blacspp::Triangle::Lower,
-    Op::NoTrans, blacspp::Diagonal::NonUnit,
+    Side::Left, blacspp::Uplo::Lower,
+    Op::NoTrans, blacspp::Diag::NonUnit,
     1., A_SPD, A_SPD_copy
   );
 
 
   // A_copy = A_copy * L**-H
   ptrsm(
-    Side::Right, blacspp::Triangle::Lower,
-    Op::ConjTrans, blacspp::Diagonal::NonUnit,
+    Side::Right, blacspp::Uplo::Lower,
+    Op::ConjTrans, blacspp::Diag::NonUnit,
     1., A_SPD, A_SPD_copy
   );
 

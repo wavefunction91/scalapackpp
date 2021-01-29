@@ -16,20 +16,20 @@ detail::enable_if_t<
   detail::scalapack_supported<T>::value and 
   std::is_convertible<ALPHAT,T>::value
 >
-  ptrmm( Side side, blacspp::Triangle uplo, Op trans, 
-         blacspp::Diagonal diag,
+  ptrmm( Side side, blacspp::Uplo uplo, Op trans, 
+         blacspp::Diag diag,
          int64_t M, int64_t N, ALPHAT ALPHA, 
          const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {
 
   auto SIDE = char( side );
-  auto UPLO = blacspp::detail::type_string( uplo );
+  auto UPLO = char( uplo );
   auto TRANS = char( trans );
-  auto DIAG  = blacspp::detail::type_string( diag );
+  auto DIAG  = char( diag );
 
   const T ALPHA_t = T(ALPHA);
 
-  wrappers::ptrmm( &SIDE, UPLO.c_str(), &TRANS, DIAG.c_str(),
+  wrappers::ptrmm( &SIDE, &UPLO, &TRANS, &DIAG,
                    M, N, ALPHA_t, A, IA, JA, DESCA, B, IB, JB, DESCB );
 
 }

@@ -13,11 +13,11 @@ namespace scalapackpp {
 
 template <typename T>
 void
-  fill_triangle( const BlockCyclicDist2D& mat_dist, blacspp::Triangle uplo,
+  fill_triangle( const BlockCyclicDist2D& mat_dist, blacspp::Uplo uplo,
   int64_t M, int64_t N, T* A, int64_t LDA, const detail::type_identity_t<T>& val, 
   bool include_diag = false ) {
 
-  if( uplo == blacspp::Triangle::Upper ) {
+  if( uplo == blacspp::Uplo::Upper ) {
 
     for( int64_t i = 0;                      i < M; ++i )
     for( int64_t j = include_diag ? i : i+1; j < N; ++j )
@@ -40,7 +40,7 @@ void
 }
   
 template <typename T>
-void fill_triangle( blacspp::Triangle uplo, BlockCyclicMatrix<T>& A,
+void fill_triangle( blacspp::Uplo uplo, BlockCyclicMatrix<T>& A,
                     const detail::type_identity_t<T>& val, 
                     bool include_diag = false ) {
 

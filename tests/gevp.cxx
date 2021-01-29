@@ -73,9 +73,9 @@ SCALAPACKPP_TEST_CASE( "GEVP Drivers", "[gevp]" ){
  
   SECTION( "HEREIG_GEN" ) {
 
-    blacspp::Triangle uplo;
-    SECTION( "Lower" ) { uplo = blacspp::Triangle::Lower; }
-    SECTION( "Upper" ) { uplo = blacspp::Triangle::Upper; }
+    blacspp::Uplo uplo;
+    SECTION( "Lower" ) { uplo = blacspp::Uplo::Lower; }
+    SECTION( "Upper" ) { uplo = blacspp::Uplo::Upper; }
 
     auto info = hereig_gen(
       Job::Vec,
@@ -89,9 +89,9 @@ SCALAPACKPP_TEST_CASE( "GEVP Drivers", "[gevp]" ){
 
   SECTION( "HEREIGD_GEN" ) {
 
-    blacspp::Triangle uplo;
-    SECTION( "Lower" ) { uplo = blacspp::Triangle::Lower; }
-    SECTION( "Upper" ) { uplo = blacspp::Triangle::Upper; }
+    blacspp::Uplo uplo;
+    SECTION( "Lower" ) { uplo = blacspp::Uplo::Lower; }
+    SECTION( "Upper" ) { uplo = blacspp::Uplo::Upper; }
 
     auto info = hereigd_gen(
       Job::Vec,

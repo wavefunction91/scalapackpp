@@ -123,13 +123,13 @@ SCALAPACKPP_TEST_CASE( "SymmetricNorm", "[norm]" ) {
 
 
 
-  auto f_calc = symmetric_norm( mat_dist, FrobeniusNorm, blacspp::Triangle::Lower ,M, A_local.data(), 1, 1,
+  auto f_calc = symmetric_norm( mat_dist, FrobeniusNorm, blacspp::Uplo::Lower ,M, A_local.data(), 1, 1,
     desc );                                              
- // auto i_calc = symmetric_norm( mat_dist, InfinityNorm,  blacspp::Triangle::Lower ,M, A_local.data(), 1, 1,
+ // auto i_calc = symmetric_norm( mat_dist, InfinityNorm,  blacspp::Uplo::Lower ,M, A_local.data(), 1, 1,
  //   desc );                                              
- // auto o_calc = symmetric_norm( mat_dist, OneNorm,       blacspp::Triangle::Lower ,M, A_local.data(), 1, 1,
+ // auto o_calc = symmetric_norm( mat_dist, OneNorm,       blacspp::Uplo::Lower ,M, A_local.data(), 1, 1,
  //   desc );                                              
-  auto m_calc = symmetric_norm( mat_dist, AbsMax,        blacspp::Triangle::Lower ,M, A_local.data(), 1, 1,
+  auto m_calc = symmetric_norm( mat_dist, AbsMax,        blacspp::Uplo::Lower ,M, A_local.data(), 1, 1,
     desc );
 
 

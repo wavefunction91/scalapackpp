@@ -52,10 +52,10 @@ SCALAPACKPP_TEST_CASE( "Potri", "[potri]" ) {
 
 
   // Perform POTRF
-  auto info = ppotrf( blacspp::Triangle::Lower, A_SPD );
+  auto info = ppotrf( blacspp::Uplo::Lower, A_SPD );
   REQUIRE( info == 0 );
 
-  info = ppotri( blacspp::Triangle::Lower, A_SPD );
+  info = ppotri( blacspp::Uplo::Lower, A_SPD );
 
   REQUIRE( info == 0 );
 
@@ -63,8 +63,8 @@ SCALAPACKPP_TEST_CASE( "Potri", "[potri]" ) {
   std::copy( A_SPD.begin(), A_SPD.end(), A.begin() );
 
   // Zero out upper triangle
-  fill_triangle( blacspp::Triangle::Upper, A,     0. ); 
-  fill_triangle( blacspp::Triangle::Upper, A_SPD, 0. ); 
+  fill_triangle( blacspp::Uplo::Upper, A,     0. ); 
+  fill_triangle( blacspp::Uplo::Upper, A_SPD, 0. ); 
 
   pgeadd( Op::ConjTrans, 1., A, 1., A_SPD );
 

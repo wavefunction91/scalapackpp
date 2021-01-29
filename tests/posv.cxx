@@ -52,7 +52,7 @@ SCALAPACKPP_TEST_CASE( "Posv", "[posv]" ) {
   auto A_SPD_copy( A_SPD );
 
   // Solve linear system
-  auto info = pposv( blacspp::Triangle::Lower, A_SPD, B );
+  auto info = pposv( blacspp::Uplo::Lower, A_SPD, B );
 
   REQUIRE( info == 0 );
   // Check correctness

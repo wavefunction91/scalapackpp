@@ -57,8 +57,8 @@ SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
 
   // Compute with trsm ( B <- A**-1*B )
   ptrsm(
-    Side::Left, blacspp::Triangle::Lower,
-    Op::NoTrans, blacspp::Diagonal::Unit,
+    Side::Left, blacspp::Uplo::Lower,
+    Op::NoTrans, blacspp::Diag::Unit,
     1., A, B
   );
 

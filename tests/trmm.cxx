@@ -54,8 +54,8 @@ SCALAPACKPP_TEST_CASE( "Trmm", "[trmm]" ) {
 
   // Compute with trmm ( B <- A*B )
   ptrmm(
-    Side::Left, blacspp::Triangle::Lower,
-    Op::NoTrans, blacspp::Diagonal::Unit,
+    Side::Left, blacspp::Uplo::Lower,
+    Op::NoTrans, blacspp::Diag::Unit,
     M, N, 1, A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b 
   );
 
