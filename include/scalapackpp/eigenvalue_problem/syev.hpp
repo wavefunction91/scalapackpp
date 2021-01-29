@@ -14,7 +14,7 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
-  psyev( Job jobz, blacspp::Uplo uplo, int64_t N,
+  psyev( Job jobz, Uplo uplo, int64_t N,
          T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          T* W,
          T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
@@ -38,7 +38,7 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
-  psyevd( Job jobz, blacspp::Uplo uplo, int64_t N,
+  psyevd( Job jobz, Uplo uplo, int64_t N,
          T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          T* W,
          T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
@@ -70,7 +70,7 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
-  psyev( Job jobz, blacspp::Uplo uplo, 
+  psyev( Job jobz, Uplo uplo, 
          BlockCyclicMatrix<T>& A, T* W, BlockCyclicMatrix<T>& Z ) {
 
   // TODO Sanity check
@@ -81,7 +81,7 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
-  psyevd( Job jobz, blacspp::Uplo uplo, 
+  psyevd( Job jobz, Uplo uplo, 
           BlockCyclicMatrix<T>& A, T* W, BlockCyclicMatrix<T>& Z ) {
 
   // TODO Sanity check

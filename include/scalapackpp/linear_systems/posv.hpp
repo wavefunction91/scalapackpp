@@ -13,7 +13,7 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  pposv( blacspp::Uplo uplo, int64_t N, int64_t NRHS, 
+  pposv( Uplo uplo, int64_t N, int64_t NRHS, 
     T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
     T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {
 
@@ -26,7 +26,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  pposv( blacspp::Uplo uplo, BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
+  pposv( Uplo uplo, BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
 
   // TODO Sanity Check
   return pposv( uplo, B.m(), B.n(), A.data(), 1, 1, A.desc(), 

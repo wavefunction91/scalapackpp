@@ -13,7 +13,7 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  ppotrf( blacspp::Uplo uplo, int64_t N, T* A, int64_t IA, 
+  ppotrf( Uplo uplo, int64_t N, T* A, int64_t IA, 
           int64_t JA, const scalapack_desc& DESCA ) {
 
   auto UPLO = char( uplo );
@@ -23,7 +23,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T,int64_t>
-  ppotrf( blacspp::Uplo uplo, BlockCyclicMatrix<T>& A ) {
+  ppotrf( Uplo uplo, BlockCyclicMatrix<T>& A ) {
 
   // Sanity check
   return ppotrf( uplo, A.m(), A.data(), 1, 1, A.desc() );

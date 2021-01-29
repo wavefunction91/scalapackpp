@@ -17,7 +17,7 @@ detail::enable_if_t<
   std::is_convertible<ALPHAT,T>::value and
   std::is_convertible<BETAT,T>::value
 >
-  psymm( Side side, blacspp::Uplo uplo,
+  psymm( Side side, Uplo uplo,
          int64_t M, int64_t N, ALPHAT ALPHA, 
          const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          const T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB,

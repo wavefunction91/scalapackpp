@@ -19,7 +19,7 @@ template <
   detail::enable_if_scalapack_real_supported_t<T,bool> = true
 >
 std::pair<int64_t, T>
-  gen_to_std_evp( int64_t IBTYPE, blacspp::Uplo uplo, int64_t N,
+  gen_to_std_evp( int64_t IBTYPE, Uplo uplo, int64_t N,
                         T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
                   const T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {
 
@@ -37,7 +37,7 @@ template <
   detail::enable_if_scalapack_complex_supported_t<T,bool> = true
 >
 std::pair<int64_t, detail::real_t<T>>
-  gen_to_std_evp( int64_t IBTYPE, blacspp::Uplo uplo, int64_t N,
+  gen_to_std_evp( int64_t IBTYPE, Uplo uplo, int64_t N,
                         T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
                   const T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {
 
@@ -52,7 +52,7 @@ std::pair<int64_t, detail::real_t<T>>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  hereig_gen( Job jobz, blacspp::Uplo uplo, int64_t N,
+  hereig_gen( Job jobz, Uplo uplo, int64_t N,
               T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
               T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB,
               detail::real_t<T>* W,
@@ -66,10 +66,10 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 #if 0
     // Transform A -> L**-1 * A * L**-H
     ptrsm( Side::Left, uplo, Op::NoTrans, 
-           blacspp::Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
+           Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
            A, IA, JA, DESCA );
     ptrsm( Side::Right, uplo, Op::ConjTrans, 
-           blacspp::Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
+           Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
            A, IA, JA, DESCA );
 #else
     detail::real_t<T> SCALE;
@@ -87,13 +87,13 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
     // If eigenvectors requested, backtransform Z
     if( jobz == Job::Vec ) {
-      if( uplo == blacspp::Uplo::Lower )
+      if( uplo == Uplo::Lower )
         ptrsm( Side::Left, uplo, Op::ConjTrans,
-               blacspp::Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
+               Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
                Z, IZ, JZ, DESCZ );
       else
         ptrsm( Side::Left, uplo, Op::NoTrans,
-               blacspp::Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
+               Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
                Z, IZ, JZ, DESCZ );
     }
      
@@ -102,7 +102,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
              
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  hereigd_gen( Job jobz, blacspp::Uplo uplo, int64_t N,
+  hereigd_gen( Job jobz, Uplo uplo, int64_t N,
               T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
               T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB,
               detail::real_t<T>* W,
@@ -116,10 +116,10 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 #if 0
     // Transform A -> L**-1 * A * L**-H
     ptrsm( Side::Left, uplo, Op::NoTrans, 
-           blacspp::Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
+           Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
            A, IA, JA, DESCA );
     ptrsm( Side::Right, uplo, Op::ConjTrans, 
-           blacspp::Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
+           Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
            A, IA, JA, DESCA );
 #else
     detail::real_t<T> SCALE;
@@ -137,13 +137,13 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
     // If eigenvectors requested, backtransform Z
     if( jobz == Job::Vec ) {
-      if( uplo == blacspp::Uplo::Lower )
+      if( uplo == Uplo::Lower )
         ptrsm( Side::Left, uplo, Op::ConjTrans,
-               blacspp::Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
+               Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
                Z, IZ, JZ, DESCZ );
       else
         ptrsm( Side::Left, uplo, Op::NoTrans,
-               blacspp::Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
+               Diag::NonUnit, N, N, 1., B, IB, JB, DESCB,
                Z, IZ, JZ, DESCZ );
     }
      
@@ -152,7 +152,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  hereig_gen( Job jobz, blacspp::Uplo uplo, 
+  hereig_gen( Job jobz, Uplo uplo, 
               BlockCyclicMatrix<T>& A, 
               BlockCyclicMatrix<T>& B, 
               detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
@@ -166,7 +166,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  hereigd_gen( Job jobz, blacspp::Uplo uplo, 
+  hereigd_gen( Job jobz, Uplo uplo, 
                BlockCyclicMatrix<T>& A, 
                BlockCyclicMatrix<T>& B, 
                detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {

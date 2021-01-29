@@ -14,7 +14,7 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  ptradd( blacspp::Uplo uplo, Op trans, int64_t M, int64_t N, 
+  ptradd( Uplo uplo, Op trans, int64_t M, int64_t N, 
           detail::type_identity_t<T> ALPHA,
           const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
           detail::type_identity_t<T> BETA, 
@@ -32,7 +32,7 @@ detail::enable_if_scalapack_supported_t<T>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  ptradd( blacspp::Uplo uplo, Op trans, 
+  ptradd( Uplo uplo, Op trans, 
           detail::type_identity_t<T> ALPHA,
           const BlockCyclicMatrix<T>& A,
           detail::type_identity_t<T> BETA, 

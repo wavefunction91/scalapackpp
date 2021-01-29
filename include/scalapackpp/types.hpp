@@ -76,4 +76,8 @@ namespace internal {
     One = '1',
     Max = 'M'
   };
+
+
+  using blacspp::Uplo;
+  using blacspp::Diag;
 }

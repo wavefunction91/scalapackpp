@@ -14,8 +14,8 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  ptrsm( Side side, blacspp::Uplo uplo, Op trans, 
-         blacspp::Diag diag,
+  ptrsm( Side side, Uplo uplo, Op trans, 
+         Diag diag,
          int64_t M, int64_t N, detail::type_identity_t<T> ALPHA, 
          const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {
@@ -33,8 +33,8 @@ detail::enable_if_scalapack_supported_t<T>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  ptrsm( Side side, blacspp::Uplo uplo, Op trans, 
-         blacspp::Diag diag, detail::type_identity_t<T> ALPHA, 
+  ptrsm( Side side, Uplo uplo, Op trans, 
+         Diag diag, detail::type_identity_t<T> ALPHA, 
          const BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
 
   // TODO Sanity check

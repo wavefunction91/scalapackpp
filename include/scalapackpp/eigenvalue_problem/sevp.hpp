@@ -12,7 +12,7 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
-  hereig( Job jobz, blacspp::Uplo uplo, int64_t N,
+  hereig( Job jobz, Uplo uplo, int64_t N,
           T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
           detail::real_t<T>* W,
           T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
@@ -24,7 +24,7 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_complex_supported_t<T, int64_t>
-  hereig( Job jobz, blacspp::Uplo uplo, int64_t N,
+  hereig( Job jobz, Uplo uplo, int64_t N,
           T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
           detail::real_t<T>* W,
           T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
@@ -37,7 +37,7 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_real_supported_t<T, int64_t>
-  hereigd( Job jobz, blacspp::Uplo uplo, int64_t N,
+  hereigd( Job jobz, Uplo uplo, int64_t N,
            T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
            detail::real_t<T>* W,
            T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
@@ -49,7 +49,7 @@ detail::enable_if_scalapack_real_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_complex_supported_t<T, int64_t>
-  hereigd( Job jobz, blacspp::Uplo uplo, int64_t N,
+  hereigd( Job jobz, Uplo uplo, int64_t N,
            T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
            detail::real_t<T>* W,
            T* Z, int64_t IZ, int64_t JZ, const scalapack_desc& DESCZ ) {
@@ -63,7 +63,7 @@ detail::enable_if_scalapack_complex_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  hereig( Job jobz, blacspp::Uplo uplo, 
+  hereig( Job jobz, Uplo uplo, 
           BlockCyclicMatrix<T>& A, detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
 
   // TODO Sanity check
@@ -74,7 +74,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  hereigd( Job jobz, blacspp::Uplo uplo, 
+  hereigd( Job jobz, Uplo uplo, 
            BlockCyclicMatrix<T>& A, detail::real_t<T>* W, BlockCyclicMatrix<T>& Z ) {
 
   // TODO Sanity check

@@ -13,7 +13,7 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  ppotrs( blacspp::Uplo uplo, int64_t N, int64_t NRHS, 
+  ppotrs( Uplo uplo, int64_t N, int64_t NRHS, 
     const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
           T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {
 
@@ -26,7 +26,7 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T, int64_t>
-  ppotrs( blacspp::Uplo uplo, const BlockCyclicMatrix<T>& A, 
+  ppotrs( Uplo uplo, const BlockCyclicMatrix<T>& A, 
           BlockCyclicMatrix<T>& B ) {
 
   // TODO Sanity Check
