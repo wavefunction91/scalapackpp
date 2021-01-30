@@ -40,7 +40,7 @@ detail::enable_if_scalapack_supported_t<T, detail::real_t<T>>
   }
 
   int64_t LWORK = 0;
-  if( norm == One or norm == Inf )
+  if( norm == Norm::One or norm == Norm::Inf )
     LWORK = 2*(Nq0 + Np0 + LDW);
 
   LWORK = std::max( (int64_t)1, LWORK );
