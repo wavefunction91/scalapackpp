@@ -23,8 +23,8 @@ BlockCyclicDist2D::BlockCyclicDist2D() : BlockCyclicDist2D( nullptr, 0, 0, 0, 0 
 
 BlockCyclicDist2D::BlockCyclicDist2D( const BlockCyclicDist2D& ) = default;
 BlockCyclicDist2D::BlockCyclicDist2D( BlockCyclicDist2D&& ) noexcept = default;
-BlockCyclicDist2D::BlockCyclicDist2D& BlockCyclicDist2D::operator=( const BlockCyclicDist2D& ) = default;
-BlockCyclicDist2D::BlockCyclicDist2D& BlockCyclicDist2D::operator=( BlockCyclicDist2D&& ) noexcept = default;
+BlockCyclicDist2D& BlockCyclicDist2D::operator=( const BlockCyclicDist2D& ) = default;
+BlockCyclicDist2D& BlockCyclicDist2D::operator=( BlockCyclicDist2D&& ) noexcept = default;
 
 
 bool BlockCyclicDist2D::is_valid() const {
