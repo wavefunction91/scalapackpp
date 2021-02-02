@@ -17,15 +17,11 @@ class BlockCyclicDist2D {
 
   using Grid = blacspp::Grid;
 
-  const Grid*   grid_ = nullptr;
+  Grid grid_;
   int64_t mb_;
   int64_t nb_;
   int64_t isrc_;
   int64_t jsrc_;
-
-
-  BlockCyclicDist2D( const Grid* grid, int64_t MB, int64_t NB,
-                     int64_t ISRC, int64_t JSRC);
 
 public:
 
@@ -63,7 +59,7 @@ public:
                 T* A_local, int64_t LDA_local,
                 int64_t ISRC, int64_t JSRC ) const {
 
-    scalapackpp::scatter( *grid_, M, N, mb_, nb_, A, LDA, ISRC, JSRC,
+    scalapackpp::scatter( grid_, M, N, mb_, nb_, A, LDA, ISRC, JSRC,
                           A_local, LDA_local, isrc_, jsrc_ );
 
   }
@@ -74,7 +70,7 @@ public:
                const T* A_local, int64_t LDA_local,
                int64_t IDEST, int64_t JDEST ) const {
 
-    scalapackpp::gather( *grid_, M, N, mb_, nb_, A, LDA, IDEST, JDEST,
+    scalapackpp::gather( grid_, M, N, mb_, nb_, A, LDA, IDEST, JDEST,
                           A_local, LDA_local, isrc_, jsrc_ );
 
   }
@@ -84,7 +80,7 @@ public:
   inline std::pair< int64_t, int64_t >
     owner_coordinate( int64_t I, int64_t J ) const noexcept {
 
-    return { (I / mb_) % grid_->npr(), (J / nb_) % grid_->npc() };
+    return { (I / mb_) % grid_.npr(), (J / nb_) % grid_.npc() };
 
   }
 
@@ -93,21 +89,21 @@ public:
   inline bool i_own( int64_t I, int64_t J ) const noexcept {
     int64_t pr,pc;
     std::tie( pr, pc ) = owner_coordinate( I, J );
-    return grid_->ipr() == pr and grid_->ipc() == pc;
+    return grid_.ipr() == pr and grid_.ipc() == pc;
   }
 
   inline std::pair< int64_t, int64_t >
     local_indx( int64_t I, int64_t J ) const noexcept {
 
-    auto l = I / (mb_ * grid_->npr());
-    auto m = J / (nb_ * grid_->npc());
+    auto l = I / (mb_ * grid_.npr());
+    auto m = J / (nb_ * grid_.npc());
 
     return { l * mb_ + (I % mb_), m * nb_ + (J % nb_) };
 
   }
 
 
-  inline const blacspp::Grid& grid() const { return *grid_; }
+  inline const blacspp::Grid& grid() const { return grid_; }
 
 };
 
