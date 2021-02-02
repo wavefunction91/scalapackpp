@@ -19,7 +19,7 @@
 SCALAPACKPP_TEST_CASE( "Getrf_s", "[getrf_s]" ) {
 
   using namespace scalapackpp;
-  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
+  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   int64_t M = 100, NRHS = 20;

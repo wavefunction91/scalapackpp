@@ -10,12 +10,16 @@
 
 namespace scalapackpp {
 
-BlockCyclicDist2D::BlockCyclicDist2D( std::shared_ptr<const Grid> grid,
+BlockCyclicDist2D::BlockCyclicDist2D( const blacspp::Grid* grid,
   int64_t MB, int64_t NB, int64_t ISRC, int64_t JSRC
 ) : grid_(grid), mb_(MB), nb_(NB), isrc_(ISRC), jsrc_(JSRC){ }
 
+BlockCyclicDist2D::BlockCyclicDist2D( const blacspp::Grid& grid,
+  int64_t MB, int64_t NB, int64_t ISRC, int64_t JSRC
+) : BlockCyclicDist2D( &grid, MB, NB, ISRC, JSRC ){ }
+
 BlockCyclicDist2D::BlockCyclicDist2D( 
-  std::shared_ptr<const Grid> grid, int64_t MB, int64_t NB
+  const blacspp::Grid& grid, int64_t MB, int64_t NB
 ) : BlockCyclicDist2D( grid, MB, NB, 0, 0 ){ }
 
 BlockCyclicDist2D::BlockCyclicDist2D() : BlockCyclicDist2D( nullptr, 0, 0, 0, 0 ){ }
@@ -30,9 +34,9 @@ BlockCyclicDist2D& BlockCyclicDist2D::operator=( BlockCyclicDist2D&& ) noexcept 
 bool BlockCyclicDist2D::is_valid() const {
   bool valid = grid_ and nb_ and mb_;
   if( valid ) 
-    valid = valid and grid_->is_valid() and 
-            (isrc_ < grid_->ipr()) and
-            (jsrc_ < grid_->ipc());
+    valid = valid and grid.is_valid() and 
+            (isrc_ < grid.ipr()) and
+            (jsrc_ < grid.ipc());
   return valid;
 }
 

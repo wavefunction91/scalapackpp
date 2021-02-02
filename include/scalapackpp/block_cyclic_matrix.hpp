@@ -30,7 +30,7 @@ public:
 
   constexpr BlockCyclicMatrix() noexcept : M_(0), N_(0) { };
 
-  BlockCyclicMatrix( std::shared_ptr<const Grid> grid, int64_t M, int64_t N, int64_t MB,
+  BlockCyclicMatrix( const Grid& grid, int64_t M, int64_t N, int64_t MB,
                      int64_t NB, int64_t ISRC, int64_t JSRC ) :
     M_(M), N_(N), dist_( grid, MB, NB, ISRC, JSRC ) {
 
@@ -46,7 +46,7 @@ public:
   }
 
 
-  BlockCyclicMatrix( std::shared_ptr<const Grid> grid, int64_t M, int64_t N, int64_t MB,
+  BlockCyclicMatrix( const Grid& grid, int64_t M, int64_t N, int64_t MB,
                      int64_t NB ) :
     BlockCyclicMatrix( grid, M, N, MB, NB, 0, 0 ) { }
 

@@ -13,7 +13,7 @@ SCALAPACKPP_TEST_CASE( "Trans", "[trans]" ) {
 
   using namespace scalapackpp;
 
-  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
+  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   const int64_t M = 100, N = 200;
@@ -24,7 +24,7 @@ SCALAPACKPP_TEST_CASE( "Trans", "[trans]" ) {
 
 
   std::vector< TestType > A;
-  if( grid->ipr() == 0 and grid->ipc() == 0 ) {
+  if( grid.ipr() == 0 and grid.ipc() == 0 ) {
 
     A.resize( M*N, 0 );
 
@@ -46,7 +46,7 @@ SCALAPACKPP_TEST_CASE( "Trans", "[trans]" ) {
     B_sca.gather_from( N, M, A.data(), N, 0, 0 );
 
     // Check
-    if( grid->ipr() == 0 and grid->ipc() == 0 ) {
+    if( grid.ipr() == 0 and grid.ipc() == 0 ) {
 
 
       for( int j = 0; j < M; ++j )
@@ -66,7 +66,7 @@ SCALAPACKPP_TEST_CASE( "Trans", "[trans]" ) {
     B_sca.gather_from( N, M, A.data(), N, 0, 0 );
 
     // Check
-    if( grid->ipr() == 0 and grid->ipc() == 0 ) {
+    if( grid.ipr() == 0 and grid.ipc() == 0 ) {
 
 
       for( int j = 0; j < M; ++j )

@@ -16,7 +16,7 @@ SCALAPACKPP_TEST_CASE( "Geqrf", "[geqrf]" ) {
 
   using namespace scalapackpp;
 
-  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
+  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   int64_t M = 100, N = 50;
@@ -27,7 +27,7 @@ SCALAPACKPP_TEST_CASE( "Geqrf", "[geqrf]" ) {
 
   std::vector< TestType > A;
 
-  if( grid->ipr() == 0 and grid->ipc() == 0 ) {
+  if( grid.ipr() == 0 and grid.ipc() == 0 ) {
     A.resize( M*N );
     std::generate( A.begin(), A.end(), [&](){ return dist(gen); } );
   }
@@ -56,14 +56,14 @@ SCALAPACKPP_TEST_CASE( "Geqrf", "[geqrf]" ) {
 
   // Check correctnesss
   std::vector<TestType> R;
-  if( grid->ipc() == 0 and grid->ipr() == 0 ) {
+  if( grid.ipc() == 0 and grid.ipr() == 0 ) {
     R.resize( N*N );
   }
 
   R_sca.gather_from( N, N, R.data(), N, 0, 0 );
   A_sca.gather_from( M, N, A.data(), M, 0, 0 );
 
-  if( grid->ipc() == 0 and grid->ipr() == 0 ) {
+  if( grid.ipc() == 0 and grid.ipr() == 0 ) {
 
     const auto tol = M*N*std::numeric_limits<detail::real_t<TestType>>::epsilon();
     for( int j = 0; j <  N; ++j )
@@ -81,7 +81,7 @@ SCALAPACKPP_TEST_CASE( "Geqpf", "[geqpf]" ) {
 
   using namespace scalapackpp;
 
-  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
+  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   int64_t M = 100, N = 50;
@@ -92,7 +92,7 @@ SCALAPACKPP_TEST_CASE( "Geqpf", "[geqpf]" ) {
 
   std::vector< TestType > A;
 
-  if( grid->ipr() == 0 and grid->ipc() == 0 ) {
+  if( grid.ipr() == 0 and grid.ipc() == 0 ) {
     A.resize( M*N );
     std::generate( A.begin(), A.end(), [&](){ return dist(gen); } );
   }

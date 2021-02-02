@@ -10,7 +10,6 @@
 #include <scalapackpp/scatter_gather.hpp>
 
 #include <tuple>
-#include <memory>
 
 namespace scalapackpp {
 
@@ -18,12 +17,15 @@ class BlockCyclicDist2D {
 
   using Grid = blacspp::Grid;
 
-  std::shared_ptr<const Grid> grid_ = nullptr;
-
+  const Grid*   grid_ = nullptr;
   int64_t mb_;
   int64_t nb_;
   int64_t isrc_;
   int64_t jsrc_;
+
+
+  BlockCyclicDist2D( const Grid* grid, int64_t MB, int64_t NB,
+                     int64_t ISRC, int64_t JSRC);
 
 public:
 
@@ -31,17 +33,14 @@ public:
 
   BlockCyclicDist2D();
 
-  BlockCyclicDist2D( std::shared_ptr<const Grid> grid, int64_t MB, int64_t NB,
+  BlockCyclicDist2D( const Grid& grid, int64_t MB, int64_t NB,
                      int64_t ISRC, int64_t JSRC);
 
-  BlockCyclicDist2D( std::shared_ptr<const Grid> grid, int64_t MB, int64_t NB );
+  BlockCyclicDist2D( const Grid& grid, int64_t MB, int64_t NB );
 
 
   BlockCyclicDist2D( const BlockCyclicDist2D& );
   BlockCyclicDist2D( BlockCyclicDist2D&& ) noexcept ;
-
-  BlockCyclicDist2D& operator=( const BlockCyclicDist2D& );
-  BlockCyclicDist2D& operator=( BlockCyclicDist2D&& ) noexcept;
 
   inline auto mb() const { return mb_; }
   inline auto nb() const { return nb_; }

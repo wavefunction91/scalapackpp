@@ -23,7 +23,7 @@ SCALAPACKPP_TEST_CASE( "SEVP Drivers", "[sevp]" ){
 
   using namespace scalapackpp;
 
-  std::shared_ptr<const blacspp::Grid> grid = std::make_shared<const blacspp::Grid>(blacspp::Grid::square_grid( MPI_COMM_WORLD ));
+  blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   int64_t M = 100;
@@ -39,7 +39,7 @@ SCALAPACKPP_TEST_CASE( "SEVP Drivers", "[sevp]" ){
 
   // Create a symmetric, diagonally dominant matrix
   std::vector< TestType > A;
-  if( grid->ipr() == 0 and grid->ipc() == 0 ) {
+  if( grid.ipr() == 0 and grid.ipc() == 0 ) {
     A.resize( M*M );
     for( auto i = 0; i < M ; ++i )
     for( auto j = 0; j <= i; ++j ) {
