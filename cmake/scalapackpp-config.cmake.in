@@ -9,12 +9,6 @@ if (NOT TARGET blacspp::blacspp)
     find_dependency( blacspp CONFIG REQUIRED HINTS "@blacspp_CONFIG@" )
 endif()
 
-set(scalapack_LIBRARY_DIR "@scalapack_LIBRARY_DIR@")
-if (NOT scalapack_LIBRARY_DIR)
-    set(scalapack_LIBRARIES "@scalapack_LIBRARIES@")
-endif(NOT scalapack_LIBRARY_DIR)
-find_dependency( ScaLAPACK MODULE )
-
 list(REMOVE_AT CMAKE_MODULE_PATH -1)
 
 if(NOT TARGET scalapackpp::scalapackpp)

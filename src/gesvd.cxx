@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/gesvd.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -49,72 +50,76 @@ void pzgesvd_(const char* JOBU, const char* JOBVT, const scalapack_int* M,
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
-template <>
-scalapack_int
-  pgesvd( const char* JOBU, const char* JOBVT, scalapack_int M, scalapack_int N,
-         float* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         float* S, float* U,  scalapack_int IU,  scalapack_int JU,  
-	 const scalapack_desc& DESCU, float* VT, scalapack_int IVT, 
-	 scalapack_int JVT, const scalapack_desc& DESCVT, float* WORK, 
-	 scalapack_int LWORK) {
-
-  scalapack_int INFO = 0;
-  psgesvd_(JOBU, JOBVT, &M, &N, A, &IA, &JA, DESCA.data(), S, U, &IU, &JU,
-    DESCU.data(), VT, &IVT, &JVT, DESCVT.data(), WORK, &LWORK, &INFO );
-  return INFO;
-
+#define pgesvd_real_impl(F,FNAME)                                         \
+template <>                                                               \
+int64_t                                                                   \
+  pgesvd( const char* JOBU, const char* JOBVT, int64_t M, int64_t N,      \
+         F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,       \
+         detail::real_t<F>* S, F* U,  int64_t IU,  int64_t JU,            \
+	 const scalapack_desc& DESCU, F* VT, int64_t IVT,                       \
+	 int64_t JVT, const scalapack_desc& DESCVT, F* WORK,                    \
+	 int64_t LWORK) {                                                       \
+                                                                          \
+  auto _M     = detail::to_scalapack_int( M    );                         \
+  auto _N     = detail::to_scalapack_int( N    );                         \
+  auto _IA    = detail::to_scalapack_int( IA   );                         \
+  auto _JA    = detail::to_scalapack_int( JA   );                         \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+  auto _IU    = detail::to_scalapack_int( IU   );                         \
+  auto _JU    = detail::to_scalapack_int( JU   );                         \
+  auto _DESCU = detail::to_scalapack_int( DESCU );                        \
+  auto _IVT    = detail::to_scalapack_int( IVT   );                       \
+  auto _JVT    = detail::to_scalapack_int( JVT   );                       \
+  auto _DESCVT = detail::to_scalapack_int( DESCVT );                      \
+  auto _LWORK  = detail::to_scalapack_int( LWORK  );                      \
+                                                                          \
+  scalapack_int INFO;                                                     \
+  FNAME(JOBU, JOBVT, &_M, &_N, A, &_IA, &_JA, _DESCA.data(),              \
+        S, U, &_IU, &_JU, _DESCU.data(), VT, &_IVT, &_JVT, _DESCVT.data(),\
+        WORK, &_LWORK, &INFO );                                           \
+  return INFO;                                                            \
+                                                                          \
 } 
 
-template <>
-scalapack_int
-  pgesvd( const char* JOBU, const char* JOBVT, scalapack_int M, scalapack_int N,
-         double* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         double* S, double* U,  scalapack_int IU,  scalapack_int JU,  
-	 const scalapack_desc& DESCU, double* VT, scalapack_int IVT, 
-	 scalapack_int JVT, const scalapack_desc& DESCVT, double* WORK, 
-	 scalapack_int LWORK) {
+pgesvd_real_impl( float,  psgesvd_ );
+pgesvd_real_impl( double, pdgesvd_ );
 
-  scalapack_int INFO = 0;
-  pdgesvd_(JOBU, JOBVT, &M, &N, A, &IA, &JA, DESCA.data(), S, U, &IU, &JU,
-    DESCU.data(), VT, &IVT, &JVT, DESCVT.data(), WORK, &LWORK, &INFO );
-  return INFO;
-
+#define pgesvd_complex_impl(F,FNAME)                                      \
+template <>                                                               \
+int64_t                                                                   \
+  pgesvd( const char* JOBU, const char* JOBVT, int64_t M, int64_t N,      \
+         F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,       \
+         detail::real_t<F>* S, F* U,  int64_t IU,  int64_t JU,            \
+	 const scalapack_desc& DESCU, F* VT, int64_t IVT,                       \
+	 int64_t JVT, const scalapack_desc& DESCVT, F* WORK,                    \
+	 int64_t LWORK, detail::real_t<F>* RWORK) {                             \
+                                                                          \
+  auto _M     = detail::to_scalapack_int( M    );                         \
+  auto _N     = detail::to_scalapack_int( N    );                         \
+  auto _IA    = detail::to_scalapack_int( IA   );                         \
+  auto _JA    = detail::to_scalapack_int( JA   );                         \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+  auto _IU    = detail::to_scalapack_int( IU   );                         \
+  auto _JU    = detail::to_scalapack_int( JU   );                         \
+  auto _DESCU = detail::to_scalapack_int( DESCU );                        \
+  auto _IVT    = detail::to_scalapack_int( IVT   );                       \
+  auto _JVT    = detail::to_scalapack_int( JVT   );                       \
+  auto _DESCVT = detail::to_scalapack_int( DESCVT );                      \
+  auto _LWORK  = detail::to_scalapack_int( LWORK  );                      \
+                                                                          \
+  scalapack_int INFO;                                                     \
+  FNAME(JOBU, JOBVT, &_M, &_N, A, &_IA, &_JA, _DESCA.data(),              \
+        S, U, &_IU, &_JU, _DESCU.data(), VT, &_IVT, &_JVT, _DESCVT.data(),\
+        WORK, &_LWORK, RWORK, &INFO );                                    \
+  return INFO;                                                            \
+                                                                          \
 } 
 
-template <>
-scalapack_int
-  pgesvd( const char* JOBU, const char* JOBVT, scalapack_int M, scalapack_int N,
-         scomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         float* S, scomplex* U,  scalapack_int IU,  scalapack_int JU,  
-	 const scalapack_desc& DESCU, scomplex* VT, scalapack_int IVT, 
-	 scalapack_int JVT, const scalapack_desc& DESCVT, scomplex* WORK, 
-	 scalapack_int LWORK, float* RWORK) {
+pgesvd_complex_impl( scomplex, pcgesvd_ );
+pgesvd_complex_impl( dcomplex, pzgesvd_ );
 
-  scalapack_int INFO=0;
-  pcgesvd_(JOBU, JOBVT, &M, &N, A, &IA, &JA, DESCA.data(), S, U, &IU, &JU,
-    DESCU.data(), VT, &IVT, &JVT, DESCVT.data(), WORK, &LWORK, RWORK, &INFO );
-  return INFO;
-
-} 
-
-
-template <>
-scalapack_int
-  pgesvd( const char* JOBU, const char* JOBVT, scalapack_int M, scalapack_int N,
-         dcomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         double* S, dcomplex* U,  scalapack_int IU,  scalapack_int JU,  
-	 const scalapack_desc& DESCU, dcomplex* VT, scalapack_int IVT, 
-	 scalapack_int JVT, const scalapack_desc& DESCVT, dcomplex* WORK, 
-	 scalapack_int LWORK, double* RWORK) {
-
-  scalapack_int INFO=0;
-  pzgesvd_(JOBU, JOBVT, &M, &N, A, &IA, &JA, DESCA.data(), S, U, &IU, &JU,
-    DESCU.data(), VT, &IVT, &JVT, DESCVT.data(), WORK, &LWORK, RWORK, &INFO );
-  return INFO;
-
-} 
-
-
+}
 }

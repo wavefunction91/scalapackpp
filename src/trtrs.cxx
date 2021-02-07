@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/linear_systems/trtrs.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -36,59 +37,38 @@ void pztrtrs_( const char* UPLO, const char* TRANS, const char* DIAG,
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
-template <>
-scalapack_int
-  ptrtrs( const char* UPLO, const char* TRANS, const char* DIAG,
-    scalapack_int N, scalapack_int NRHS, 
-    const float* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-          float* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  scalapack_int INFO;
-  pstrtrs_( UPLO, TRANS, DIAG, &N, &NRHS, A, &IA, &JA, DESCA.data(),
-            B, &IB, &JB, DESCB.data(), &INFO );
-  return INFO;
-
-}
-template <>
-scalapack_int
-  ptrtrs( const char* UPLO, const char* TRANS, const char* DIAG,
-    scalapack_int N, scalapack_int NRHS, 
-    const double* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-          double* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  scalapack_int INFO;
-  pdtrtrs_( UPLO, TRANS, DIAG, &N, &NRHS, A, &IA, &JA, DESCA.data(),
-            B, &IB, &JB, DESCB.data(), &INFO );
-  return INFO;
-
-}
-template <>
-scalapack_int
-  ptrtrs( const char* UPLO, const char* TRANS, const char* DIAG,
-    scalapack_int N, scalapack_int NRHS, 
-    const scomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-          scomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  scalapack_int INFO;
-  pctrtrs_( UPLO, TRANS, DIAG, &N, &NRHS, A, &IA, &JA, DESCA.data(),
-            B, &IB, &JB, DESCB.data(), &INFO );
-  return INFO;
-
-}
-template <>
-scalapack_int
-  ptrtrs( const char* UPLO, const char* TRANS, const char* DIAG,
-    scalapack_int N, scalapack_int NRHS, 
-    const dcomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-          dcomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  scalapack_int INFO;
-  pztrtrs_( UPLO, TRANS, DIAG, &N, &NRHS, A, &IA, &JA, DESCA.data(),
-            B, &IB, &JB, DESCB.data(), &INFO );
-  return INFO;
-
+#define ptrtrs_impl(F,FNAME)                                              \
+template <>                                                               \
+int64_t                                                                   \
+  ptrtrs( const char* UPLO, const char* TRANS, const char* DIAG,          \
+    int64_t N, int64_t NRHS,                                              \
+    const F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,      \
+          F* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {   \
+                                                                          \
+  auto _N     = detail::to_scalapack_int( N    );                         \
+  auto _NRHS  = detail::to_scalapack_int( NRHS );                         \
+  auto _IA    = detail::to_scalapack_int( IA   );                         \
+  auto _JA    = detail::to_scalapack_int( JA   );                         \
+  auto _IB    = detail::to_scalapack_int( IB   );                         \
+  auto _JB    = detail::to_scalapack_int( JB   );                         \
+                                                                          \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+  auto _DESCB = detail::to_scalapack_int( DESCB );                        \
+                                                                          \
+  scalapack_int INFO;                                                     \
+  FNAME( UPLO, TRANS, DIAG, &_N, &_NRHS, A, &_IA, &_JA, _DESCA.data(),    \
+         B, &_IB, &_JB, _DESCB.data(), &INFO );                           \
+  return INFO;                                                            \
+                                                                          \
 }
           
+ptrtrs_impl( float,    pstrtrs_ );
+ptrtrs_impl( double,   pdtrtrs_ );
+ptrtrs_impl( scomplex, pctrtrs_ );
+ptrtrs_impl( dcomplex, pztrtrs_ );
+
+}
 }

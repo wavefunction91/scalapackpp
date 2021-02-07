@@ -17,44 +17,38 @@ SCALAPACKPP_TEST_CASE( "Getri", "[getri]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  scalapack_int M = 100;
+  int64_t M = 100, mb = 4;
 
-  BlockCyclicDist2D mat_dist( grid, 4, 4 );
 
-  auto [M_loc, N_loc] = mat_dist.get_local_dims( M, M );
-
-  std::default_random_engine gen;
+  std::default_random_engine gen(mpi.rank());
   std::normal_distribution<detail::real_t<TestType>> dist( 0., 1. );
 
-  std::vector< TestType > A_local( M_loc * N_loc );
+  BlockCyclicMatrix<TestType> A( grid, M, M, mb, mb );
 
-  std::generate( A_local.begin(), A_local.end(), [&](){ return dist(gen); } );
+  std::generate( A.begin(), A.end(), [&](){ return dist(gen); } );
 
   for( auto i = 0; i < M; ++i ) 
-  if( mat_dist.i_own( i, i ) ) {
+  if( A.dist().i_own( i, i ) ) {
 
-    auto [ row_idx, col_idx ] = mat_dist.local_indx(i, i);
-    A_local[ row_idx + col_idx * M_loc ] += 10.;
+    auto [ row_idx, col_idx ] = A.dist().local_indx(i, i);
+    A.data()[ row_idx + col_idx * A.m_local() ] += 10.;
 
   }
 
-  auto desc = mat_dist.descinit_noerror( M, M, M_loc );
-
-  std::vector<scalapack_int> IPIV( M_loc + mat_dist.mb() );
-  std::vector< TestType >    A_inv_local( A_local );
-  auto info = pgetrf( M, M, A_inv_local.data(), 1, 1, desc, IPIV.data() );
+  auto A_inv( A );
+  std::vector<int64_t> IPIV( A.m_local() + A.dist().mb() );
+  auto info = pgetrf( A_inv, IPIV.data() );
   REQUIRE( info == 0 );
 
-  info = pgetri( M, A_inv_local.data(), 1, 1, desc, IPIV.data() );
+  info = pgetri( A_inv, IPIV.data() );
   REQUIRE( info == 0 );
 
 
   // Check correctness
-  decltype(A_local) I_approx( M_loc * N_loc );
+  BlockCyclicMatrix<TestType> I_approx( grid, M, M, mb, mb );
   pgemm(
-    TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, M, M, M, 
-    1., A_local.data(), 1, 1, desc, A_inv_local.data(), 1, 1, desc,
-    0., I_approx.data(), 1, 1, desc
+    Op::NoTrans, Op::NoTrans, 
+    1., A, A_inv, 0., I_approx
   );
 
 
@@ -62,10 +56,10 @@ SCALAPACKPP_TEST_CASE( "Getri", "[getri]" ) {
   const detail::real_t<TestType> one = 1.;
   for( auto i = 0; i < M; ++i )
   for( auto j = 0; j < M; ++j )
-  if( mat_dist.i_own( i, j ) ) {
+  if( A.dist().i_own( i, j ) ) {
 
-    auto [ I, J ] = mat_dist.local_indx( i, j );
-    auto x = std::real( I_approx[ I + J * M_loc ] );
+    auto [ I, J ] = A.dist().local_indx( i, j );
+    auto x = std::real( I_approx.data()[ I + J * A.m_local() ] );
 
     if( i == j ) CHECK( x == Approx( one ).epsilon(tol) );
     else         CHECK( std::abs(x) < tol );

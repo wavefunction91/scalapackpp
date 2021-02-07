@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/pblas/gemm.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -58,65 +59,45 @@ void pzgemm_( const char* TRANSA, const char* TRANSB,
 
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
-template <>
-void 
-  pgemm( const char* TRANSA, const char* TRANSB,
-         scalapack_int M, scalapack_int N, scalapack_int K, float ALPHA, 
-         const float* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         const float* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB,
-         float BETA,
-         float* C, scalapack_int IC, scalapack_int JC, const scalapack_desc& DESCC ) {
-
-  psgemm_( TRANSA, TRANSB, &M, &N, &K, &ALPHA, A, &IA, &JA, DESCA.data(), 
-           B, &IB, &JB, DESCB.data(), &BETA, C, &IC, &JC, DESCC.data() );
-
+#define pgemm_impl(F,FNAME)                                               \
+template <>                                                               \
+void                                                                      \
+  pgemm( const char* TRANSA, const char* TRANSB,                          \
+         int64_t M, int64_t N, int64_t K, F ALPHA,                        \
+         const F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA, \
+         const F* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB, \
+         F BETA,                                                          \
+         F* C, int64_t IC, int64_t JC, const scalapack_desc& DESCC ) {    \
+                                                                          \
+  auto _M     = detail::to_scalapack_int( M  );                           \
+  auto _N     = detail::to_scalapack_int( N  );                           \
+  auto _K     = detail::to_scalapack_int( K  );                           \
+  auto _IA    = detail::to_scalapack_int( IA );                           \
+  auto _JA    = detail::to_scalapack_int( JA );                           \
+  auto _IB    = detail::to_scalapack_int( IB );                           \
+  auto _JB    = detail::to_scalapack_int( JB );                           \
+  auto _IC    = detail::to_scalapack_int( IC );                           \
+  auto _JC    = detail::to_scalapack_int( JC );                           \
+                                                                          \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+  auto _DESCB = detail::to_scalapack_int( DESCB );                        \
+  auto _DESCC = detail::to_scalapack_int( DESCC );                        \
+                                                                          \
+  FNAME( TRANSA, TRANSB, &_M, &_N, &_K, &ALPHA,                           \
+         A, &_IA, &_JA, _DESCA.data(),                                    \
+         B, &_IB, &_JB, _DESCB.data(), &BETA,                             \
+         C, &_IC, &_JC, _DESCC.data() );                                  \
+                                                                          \
 }
 
-template <>
-void 
-  pgemm( const char* TRANSA, const char* TRANSB,
-         scalapack_int M, scalapack_int N, scalapack_int K, double ALPHA, 
-         const double* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         const double* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB,
-         double BETA,
-         double* C, scalapack_int IC, scalapack_int JC, const scalapack_desc& DESCC ) {
-
-  pdgemm_( TRANSA, TRANSB, &M, &N, &K, &ALPHA, A, &IA, &JA, DESCA.data(), 
-           B, &IB, &JB, DESCB.data(), &BETA, C, &IC, &JC, DESCC.data() );
+pgemm_impl( float,    psgemm_ );
+pgemm_impl( double,   pdgemm_ );
+pgemm_impl( scomplex, pcgemm_ );
+pgemm_impl( dcomplex, pzgemm_ );
 
 }
-
-template <>
-void 
-  pgemm( const char* TRANSA, const char* TRANSB,
-         scalapack_int M, scalapack_int N, scalapack_int K, scomplex ALPHA, 
-         const scomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         const scomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB,
-         scomplex BETA,
-         scomplex* C, scalapack_int IC, scalapack_int JC, const scalapack_desc& DESCC ) {
-
-  pcgemm_( TRANSA, TRANSB, &M, &N, &K, &ALPHA, A, &IA, &JA, DESCA.data(), 
-           B, &IB, &JB, DESCB.data(), &BETA, C, &IC, &JC, DESCC.data() );
-
-}
-
-
-
-template <>
-void 
-  pgemm( const char* TRANSA, const char* TRANSB,
-         scalapack_int M, scalapack_int N, scalapack_int K, dcomplex ALPHA, 
-         const dcomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         const dcomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB,
-         dcomplex BETA,
-         dcomplex* C, scalapack_int IC, scalapack_int JC, const scalapack_desc& DESCC ) {
-
-  pzgemm_( TRANSA, TRANSB, &M, &N, &K, &ALPHA, A, &IA, &JA, DESCA.data(), 
-           B, &IB, &JB, DESCB.data(), &BETA, C, &IC, &JC, DESCC.data() );
-
-}
-
 }
 

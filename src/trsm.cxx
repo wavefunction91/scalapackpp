@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/pblas/trsm.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -32,51 +33,37 @@ void pztrsm_( const char* SIDE, const char* UPLO, const char* TRANS, const char*
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
-template <>
-void ptrsm( const char* SIDE, const char* UPLO, const char* TRANS, const char* DIAG,
-         scalapack_int M, scalapack_int N, float ALPHA, 
-         const float* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         float* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  pstrsm_( SIDE, UPLO, TRANS, DIAG, &M, &N, &ALPHA, A, &IA, &JA, DESCA.data(),
-           B, &IB, &JB, DESCB.data() );
-
+#define ptrsm_impl(F,FNAME)                                               \
+template <>                                                               \
+void ptrsm(                                                               \
+  const char* SIDE, const char* UPLO, const char* TRANS, const char* DIAG,\
+  int64_t M, int64_t N, F ALPHA,                                          \
+  const F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,        \
+  F* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {           \
+                                                                          \
+  auto _M     = detail::to_scalapack_int( M  );                           \
+  auto _N     = detail::to_scalapack_int( N  );                           \
+  auto _IA    = detail::to_scalapack_int( IA );                           \
+  auto _JA    = detail::to_scalapack_int( JA );                           \
+  auto _IB    = detail::to_scalapack_int( IB );                           \
+  auto _JB    = detail::to_scalapack_int( JB );                           \
+                                                                          \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+  auto _DESCB = detail::to_scalapack_int( DESCB );                        \
+                                                                          \
+  FNAME( SIDE, UPLO, TRANS, DIAG, &_M, &_N, &ALPHA,                       \
+         A, &_IA, &_JA, _DESCA.data(),                                    \
+         B, &_IB, &_JB, _DESCB.data() );                                  \
+                                                                          \
 }
 
-template <>
-void ptrsm( const char* SIDE, const char* UPLO, const char* TRANS, const char* DIAG,
-         scalapack_int M, scalapack_int N, double ALPHA, 
-         const double* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         double* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  pdtrsm_( SIDE, UPLO, TRANS, DIAG, &M, &N, &ALPHA, A, &IA, &JA, DESCA.data(),
-           B, &IB, &JB, DESCB.data() );
+ptrsm_impl( float,    pstrsm_ );
+ptrsm_impl( double,   pdtrsm_ );
+ptrsm_impl( scomplex, pctrsm_ );
+ptrsm_impl( dcomplex, pztrsm_ );
 
 }
-
-template <>
-void ptrsm( const char* SIDE, const char* UPLO, const char* TRANS, const char* DIAG,
-         scalapack_int M, scalapack_int N, scomplex ALPHA, 
-         const scomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         scomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  pctrsm_( SIDE, UPLO, TRANS, DIAG, &M, &N, &ALPHA, A, &IA, &JA, DESCA.data(),
-           B, &IB, &JB, DESCB.data() );
-
-}
-
-
-template <>
-void ptrsm( const char* SIDE, const char* UPLO, const char* TRANS, const char* DIAG,
-         scalapack_int M, scalapack_int N, dcomplex ALPHA, 
-         const dcomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         dcomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  pztrsm_( SIDE, UPLO, TRANS, DIAG, &M, &N, &ALPHA, A, &IA, &JA, DESCA.data(),
-           B, &IB, &JB, DESCB.data() );
-
-}
-
 }

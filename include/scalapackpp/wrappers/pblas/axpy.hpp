@@ -7,12 +7,14 @@
 #pragma once
 #include <scalapackpp/types.hpp>
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  paxpy( scalapack_int N, T ALPHA,
-    const T* X, scalapack_int IX, scalapack_int JX, const scalapack_desc& DESCX,
-          T* Y, scalapack_int IY, scalapack_int JY, const scalapack_desc& DESCY );
+  paxpy( int64_t N, T ALPHA,
+    const T* X, int64_t IX, int64_t JX, const scalapack_desc& DESCX,
+          T* Y, int64_t IY, int64_t JY, const scalapack_desc& DESCY );
 
+}
 }

@@ -6,9 +6,9 @@
  */
 #include <scalapackpp/wrappers/pblas/axpy.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -33,39 +33,35 @@ void pzaxpy_( const scalapack_int* N, const dcomplex* ALPHA, const dcomplex* X,
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
-template <>
-void paxpy( scalapack_int N, float ALPHA,
-    const float * X, scalapack_int IX, scalapack_int JX, const scalapack_desc& DESCX,
-          float * Y, scalapack_int IY, scalapack_int JY, const scalapack_desc& DESCY ){
-
-  psaxpy_( &N, &ALPHA, X, &IX, &JX, DESCX.data(), Y, &IY, &JY, DESCY.data() );
-
-}
-template <>
-void paxpy( scalapack_int N, double ALPHA,
-    const double * X, scalapack_int IX, scalapack_int JX, const scalapack_desc& DESCX,
-          double * Y, scalapack_int IY, scalapack_int JY, const scalapack_desc& DESCY ){
-
-  pdaxpy_( &N, &ALPHA, X, &IX, &JX, DESCX.data(), Y, &IY, &JY, DESCY.data() );
-
-}
-template <>
-void paxpy( scalapack_int N, scomplex ALPHA,
-    const scomplex * X, scalapack_int IX, scalapack_int JX, const scalapack_desc& DESCX,
-          scomplex * Y, scalapack_int IY, scalapack_int JY, const scalapack_desc& DESCY ){
-
-  pcaxpy_( &N, &ALPHA, X, &IX, &JX, DESCX.data(), Y, &IY, &JY, DESCY.data() );
-
-}
-template <>
-void paxpy( scalapack_int N, dcomplex ALPHA,
-    const dcomplex * X, scalapack_int IX, scalapack_int JX, const scalapack_desc& DESCX,
-          dcomplex * Y, scalapack_int IY, scalapack_int JY, const scalapack_desc& DESCY ){
-
-  pzaxpy_( &N, &ALPHA, X, &IX, &JX, DESCX.data(), Y, &IY, &JY, DESCY.data() );
-
+#define paxpy_impl(F,FNAME)\
+template <>                                                              \
+void paxpy( int64_t N, float ALPHA,                                      \
+    const F * X, int64_t IX, int64_t JX, const scalapack_desc& DESCX,    \
+          F * Y, int64_t IY, int64_t JY, const scalapack_desc& DESCY ) { \
+                                                                         \
+  auto _N  = detail::to_scalapack_int( N  );                             \
+  auto _IX = detail::to_scalapack_int( IX );                             \
+  auto _JX = detail::to_scalapack_int( JX );                             \
+  auto _IY = detail::to_scalapack_int( IY );                             \
+  auto _JY = detail::to_scalapack_int( JY );                             \
+                                                                         \
+  auto _DESCX = detail::to_scalapack_int( DESCX );                       \
+  auto _DESCY = detail::to_scalapack_int( DESCY );                       \
+                                                                         \
+  FNAME( &_N, &ALPHA, X, &_IX, &_JX, _DESCX.data(),                      \
+                      Y, &_IY, &_JY, _DESCY.data() );                    \
+                                                                         \
 }
 
+paxpy_impl( float,    psaxpy_ );
+paxpy_impl( double,   pdaxpy_ );
+paxpy_impl( scomplex, pcaxpy_ );
+paxpy_impl( dcomplex, pzaxpy_ );
+
+
+
+}
 }

@@ -1,18 +1,49 @@
 if( NOT TARGET blacspp::blacspp )
-  find_package( blacspp REQUIRED )
+
+  find_package( blacspp QUIET ) # blacspp links to ScaLAPACK
+  if( NOT blacspp_FOUND )
+
+    set( BLACSPP_ENABLE_ILP64 ${SCALAPACKPP_ENABLE_ILP64} CACHE BOOL "" )
+    set( BLACSPP_FORCE_ILP64  ${SCALAPACKPP_FORCE_ILP64}  CACHE BOOL "" )
+    include( FetchContent )
+    FetchContent_Declare( blacspp
+      GIT_REPOSITORY https://github.com/wavefunction91/blacspp.git
+      GIT_TAG        7a6ebae71216973c3f535d8559a76a68e5e2a481 
+    )
+    FetchContent_MakeAvailable( blacspp )
+
+  else()
+
+    if( SCALAPACKPP_FORCE_ILP64 AND ScaLAPACK_IS_LP64 )
+      message( FATAL_ERROR 
+               "ScaLAPACK++ Forced ILP64 - ScaLAPACK in BLACS++ is LP64" )
+    endif()
+
+  endif()
+
 endif()
-find_package( ScaLAPACK REQUIRED )
 
 set( ScaLAPACKPP_SRC
      syev.cxx 
      heev.cxx 
+     sygst.cxx 
+     hegst.cxx 
      gemm.cxx 
+     symm.cxx 
+     hemm.cxx 
      descinit.cxx 
      gemr2d.cxx 
      gesv.cxx
+     gels.cxx
      getrf.cxx
+     geqrf.cxx
+     geqpf.cxx
      getrs.cxx
      getri.cxx
+     orgqr.cxx
+     ungqr.cxx
+     ormqr.cxx
+     unmqr.cxx
      gesvd.cxx
      type_conversions.cxx 
      trmm.cxx 
@@ -26,6 +57,7 @@ set( ScaLAPACKPP_SRC
      potri.cxx
      block_cyclic.cxx
      geadd.cxx
+     tradd.cxx
      lange.cxx
      lansy.cxx
      lanhe.cxx
@@ -34,7 +66,7 @@ set( ScaLAPACKPP_SRC
 
 
 add_library( scalapackpp ${ScaLAPACKPP_SRC})
-target_link_libraries( scalapackpp PUBLIC blacspp::blacspp ScaLAPACK::scalapack )
+target_link_libraries( scalapackpp PUBLIC blacspp::blacspp )
 
 target_include_directories( scalapackpp PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -67,6 +99,11 @@ install( TARGETS scalapackpp ${BLACSPP_EXPORT_TARGET}
 )
 
 set_target_properties( scalapackpp PROPERTIES EXPORT_NAME scalapackpp )
+
+# Export build tree
+export(EXPORT scalapackpp-targets
+      NAMESPACE scalapackpp::
+      FILE "${PROJECT_BINARY_DIR}/scalapackpp-targets.cmake")
 
 # Install Headers
 install( 
@@ -104,23 +141,9 @@ configure_package_config_file(
 
 # Install misc cmake modules
 install( FILES
-  ${PROJECT_SOURCE_DIR}/cmake/modules/CommonFunctions.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/FindBLACS.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/FindBLAS.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/FindLAPACK.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/FindScaLAPACK.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/scalapackpp-config.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/scalapackpp-config-version.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
-)
-install( FILES  
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindBLIS.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindIBMESSL.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindIntelMKL.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindOpenBLAS.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindReferenceBLAS.cmake
-  ${PROJECT_SOURCE_DIR}/cmake/modules/linalg-modules/FindReferenceLAPACK.cmake
-  DESTINATION ${INSTALL_CONFIGDIR}/linalg-modules
 )
 
 

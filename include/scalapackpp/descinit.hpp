@@ -8,14 +8,16 @@
 #include <scalapackpp/wrappers/descinit.hpp>
 #include <blacspp/grid.hpp>
 
+#include <tuple>
+
 namespace scalapackpp {
 
 
-std::pair< scalapack_desc, scalapack_int > 
+std::pair< scalapack_desc, int64_t > 
 inline descinit( 
   const blacspp::Grid& grid,
-  scalapack_int M, scalapack_int N, scalapack_int MB, scalapack_int NB,
-  scalapack_int ISRC, scalapack_int JSRC, scalapack_int LDD 
+  int64_t M, int64_t N, int64_t MB, int64_t NB,
+  int64_t ISRC, int64_t JSRC, int64_t LDD 
 ) {
 
   return wrappers::descinit( M, N, MB, NB, ISRC, JSRC, grid.context(), LDD );
@@ -25,11 +27,14 @@ inline descinit(
 scalapack_desc
 inline descinit_noerror(
   const blacspp::Grid& grid,
-  scalapack_int M, scalapack_int N, scalapack_int MB, scalapack_int NB,
-  scalapack_int ISRC, scalapack_int JSRC, scalapack_int LDD 
+  int64_t M, int64_t N, int64_t MB, int64_t NB,
+  int64_t ISRC, int64_t JSRC, int64_t LDD 
 ) {
 
-  auto [ desc, info ] = descinit( grid, M, N, MB, NB, ISRC, JSRC, LDD );
+  scalapack_desc desc;
+  int64_t        info;
+  std::tie(desc,info) = descinit( grid, M, N, MB, NB, ISRC, JSRC, LDD );
+  (void)info;
   return desc;
 
 }

@@ -16,9 +16,9 @@ namespace scalapackpp {
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
   scatter( const blacspp::Grid& grid, 
-    scalapack_int M, scalapack_int N, scalapack_int MB, scalapack_int NB,
-    const T* A, scalapack_int LDA, scalapack_int ILOC, scalapack_int JLOC,  
-    T* A_local, scalapack_int LDLOCA, scalapack_int ISRC, scalapack_int JSRC ) {
+    int64_t M, int64_t N, int64_t MB, int64_t NB,
+    const T* A, int64_t LDA, int64_t ILOC, int64_t JLOC,  
+    T* A_local, int64_t LDLOCA, int64_t ISRC, int64_t JSRC ) {
 
   auto desc_a     = descinit_noerror( grid, M, N, M,  N,  ILOC, JLOC, LDA    );
   auto desc_loc_a = descinit_noerror( grid, M, N, MB, NB, ISRC, JSRC, LDLOCA );
@@ -31,9 +31,9 @@ detail::enable_if_scalapack_supported_t<T>
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
   gather( const blacspp::Grid& grid, 
-    scalapack_int M, scalapack_int N, scalapack_int MB, scalapack_int NB,
-    T* A, scalapack_int LDA, scalapack_int ILOC, scalapack_int JLOC,  
-    const T* A_local, scalapack_int LDLOCA, scalapack_int ISRC, scalapack_int JSRC 
+    int64_t M, int64_t N, int64_t MB, int64_t NB,
+    T* A, int64_t LDA, int64_t ILOC, int64_t JLOC,  
+    const T* A_local, int64_t LDLOCA, int64_t ISRC, int64_t JSRC 
   ) {
 
   auto desc_a     = descinit_noerror( grid, M, N, M,  N,  ILOC, JLOC, LDA    );

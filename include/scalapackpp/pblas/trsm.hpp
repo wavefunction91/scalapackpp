@@ -8,30 +8,38 @@
 #include <scalapackpp/wrappers/pblas/trsm.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
 #include <blacspp/util/type_conversions.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
-template <typename T, typename ALPHAT>
-std::enable_if_t<
-  detail::scalapack_supported_v<T> and 
-  std::is_convertible_v<ALPHAT,T>
->
-  ptrsm( SideFlag side, blacspp::Triangle uplo, TransposeFlag trans, 
-         blacspp::Diagonal diag,
-         scalapack_int M, scalapack_int N, ALPHAT ALPHA, 
-         const T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-         T* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
+template <typename T>
+detail::enable_if_scalapack_supported_t<T>
+  ptrsm( Side side, Uplo uplo, Op trans, 
+         Diag diag,
+         int64_t M, int64_t N, detail::type_identity_t<T> ALPHA, 
+         const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
+         T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {
 
-  auto SIDE = detail::type_string( side );
-  auto UPLO = blacspp::detail::type_string( uplo );
-  auto TRANS = detail::type_string( trans );
-  auto DIAG  = blacspp::detail::type_string( diag );
+  auto SIDE = char( side );
+  auto UPLO = char( uplo );
+  auto TRANS = char( trans );
+  auto DIAG  = char( diag );
 
-  const T ALPHA_t = T(ALPHA);
 
-  wrappers::ptrsm( SIDE.c_str(), UPLO.c_str(), TRANS.c_str(), DIAG.c_str(),
-                   M, N, ALPHA_t, A, IA, JA, DESCA, B, IB, JB, DESCB );
+  wrappers::ptrsm( &SIDE, &UPLO, &TRANS, &DIAG,
+                   M, N, ALPHA, A, IA, JA, DESCA, B, IB, JB, DESCB );
 
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T>
+  ptrsm( Side side, Uplo uplo, Op trans, 
+         Diag diag, detail::type_identity_t<T> ALPHA, 
+         const BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
+
+  // TODO Sanity check
+  ptrsm( side, uplo, trans, diag, B.m(), B.n(), ALPHA, A.data(), 1, 1, A.desc(),
+         B.data(), 1, 1, B.desc() );
 }
 
 }

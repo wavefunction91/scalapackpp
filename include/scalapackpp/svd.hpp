@@ -12,27 +12,27 @@
 namespace scalapackpp {
 
 template <typename T>
-detail::enable_if_scalapack_real_supported_t<T, scalapack_int>
-  pgesvd( VectorFlag jobu, VectorFlag jobvt, scalapack_int M, scalapack_int N,
-         T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
+detail::enable_if_scalapack_real_supported_t<T, int64_t>
+  pgesvd( Job jobu, Job jobvt, int64_t M, int64_t N,
+         T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          T* S,
-         T* U,  scalapack_int IU,  scalapack_int JU,  const scalapack_desc& DESCU, 
-         T* VT, scalapack_int IVT, scalapack_int JVT, const scalapack_desc& DESCVT
+         T* U,  int64_t IU,  int64_t JU,  const scalapack_desc& DESCU, 
+         T* VT, int64_t IVT, int64_t JVT, const scalapack_desc& DESCVT
   ) {
 
-  auto JOBU  = detail::type_string( jobu  );
-  auto JOBVT = detail::type_string( jobvt );
+  auto JOBU  = char( jobu  );
+  auto JOBVT = char( jobvt );
 
-  scalapack_int LWORK = -1;
+  int64_t LWORK = -1;
   std::vector< T > WORK( 5 );
 
-  wrappers::pgesvd( JOBU.c_str(), JOBVT.c_str(), M, N, A, IA, JA, DESCA, S,
+  wrappers::pgesvd( &JOBU, &JOBVT, M, N, A, IA, JA, DESCA, S,
     U, IU, JU, DESCU, VT, IVT, JVT, DESCVT, WORK.data(), LWORK );
 
-  LWORK = scalapack_int( WORK[0] );
+  LWORK = int64_t( WORK[0] );
   WORK.resize( LWORK );
 
-  return wrappers::pgesvd( JOBU.c_str(), JOBVT.c_str(), M, N, A, IA, JA, DESCA, S,
+  return wrappers::pgesvd( &JOBU, &JOBVT, M, N, A, IA, JA, DESCA, S,
     U, IU, JU, DESCU, VT, IVT, JVT, DESCVT, WORK.data(), LWORK );
 
 }
@@ -40,34 +40,45 @@ detail::enable_if_scalapack_real_supported_t<T, scalapack_int>
 
 
 template <typename T>
-detail::enable_if_scalapack_complex_supported_t<T, scalapack_int>
-  pgesvd( VectorFlag jobu, VectorFlag jobvt, scalapack_int M, scalapack_int N,
-         T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
+detail::enable_if_scalapack_complex_supported_t<T, int64_t>
+  pgesvd( Job jobu, Job jobvt, int64_t M, int64_t N,
+         T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
          detail::real_t<T>* S,
-         T* U,  scalapack_int IU,  scalapack_int JU,  const scalapack_desc& DESCU, 
-         T* VT, scalapack_int IVT, scalapack_int JVT, const scalapack_desc& DESCVT
+         T* U,  int64_t IU,  int64_t JU,  const scalapack_desc& DESCU, 
+         T* VT, int64_t IVT, int64_t JVT, const scalapack_desc& DESCVT
   ) {
 
      
-  auto JOBU  = detail::type_string( jobu  );
-  auto JOBVT = detail::type_string( jobvt );
+  auto JOBU  = char( jobu  );
+  auto JOBVT = char( jobvt );
 
-  scalapack_int LWORK = -1;
+  int64_t LWORK = -1;
   std::vector< T > WORK( 5 );
 
-  scalapack_int LRWORK = 1 + 4 * std::min(M,N);
+  int64_t LRWORK = 1 + 4 * std::min(M,N);
   std::vector< detail::real_t<T> > RWORK( LRWORK );
 
-  wrappers::pgesvd( JOBU.c_str(), JOBVT.c_str(), M, N, A, IA, JA, DESCA, S,
+  wrappers::pgesvd( &JOBU, &JOBVT, M, N, A, IA, JA, DESCA, S,
     U, IU, JU, DESCU, VT, IVT, JVT, DESCVT, WORK.data(), LWORK, RWORK.data() );
 
-  LWORK  = scalapack_int(std::real(WORK[0]));
-  LRWORK = scalapack_int(RWORK[0]); 
+  LWORK  = int64_t(std::real(WORK[0]));
+  LRWORK = int64_t(RWORK[0]); 
   WORK.resize( LWORK );
   RWORK.resize(LRWORK);
 
-  return wrappers::pgesvd( JOBU.c_str(), JOBVT.c_str(), M, N, A, IA, JA, DESCA, S,
+  return wrappers::pgesvd( &JOBU, &JOBVT, M, N, A, IA, JA, DESCA, S,
     U, IU, JU, DESCU, VT, IVT, JVT, DESCVT, WORK.data(), LWORK, RWORK.data() );
+
+}
+
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T,int64_t>
+  pgesvd( Job jobu, Job jobvt, BlockCyclicMatrix<T>& A,
+          detail::real_t<T>* S, BlockCyclicMatrix<T>& U, BlockCyclicMatrix<T>& VT ) {
+
+  return pgesvd( jobu, jobvt, A.m(), A.n(), A.data(), 1, 1, A.desc(),
+                 S, U.data(), 1, 1, U.desc(), VT.data(), 1, 1, VT.desc() );
 
 }
            

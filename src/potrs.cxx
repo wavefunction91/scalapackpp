@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/linear_systems/potrs.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -39,57 +40,37 @@ void pzpotrs_( const char* UPLO, const scalapack_int* N, const scalapack_int* NR
 
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
-template <>
-scalapack_int
-  ppotrs( const char* UPLO, scalapack_int N, scalapack_int NRHS, 
-    const float* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    float* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  scalapack_int INFO;
-  pspotrs_( UPLO, &N, &NRHS, A, &IA, &JA, DESCA.data(), B, &IB, &JB, DESCB.data(),
-            &INFO );
-  return INFO;
-
-}
-template <>
-scalapack_int
-  ppotrs( const char* UPLO, scalapack_int N, scalapack_int NRHS, 
-    const double* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    double* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  scalapack_int INFO;
-  pdpotrs_( UPLO, &N, &NRHS, A, &IA, &JA, DESCA.data(), B, &IB, &JB, DESCB.data(),
-            &INFO );
-  return INFO;
-
-}
-
-template <>
-scalapack_int
-  ppotrs( const char* UPLO, scalapack_int N, scalapack_int NRHS, 
-    const scomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    scomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  scalapack_int INFO;
-  pcpotrs_( UPLO, &N, &NRHS, A, &IA, &JA, DESCA.data(), B, &IB, &JB, DESCB.data(),
-            &INFO );
-  return INFO;
-
+#define ppotrs_impl(F,FNAME)                                               \
+template <>                                                               \
+int64_t                                                                   \
+  ppotrs( const char* UPLO, int64_t N, int64_t NRHS,                       \
+    const F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,      \
+    F* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {         \
+                                                                          \
+  auto _N     = detail::to_scalapack_int( N    );                         \
+  auto _NRHS  = detail::to_scalapack_int( NRHS );                         \
+  auto _IA    = detail::to_scalapack_int( IA   );                         \
+  auto _JA    = detail::to_scalapack_int( JA   );                         \
+  auto _IB    = detail::to_scalapack_int( IB   );                         \
+  auto _JB    = detail::to_scalapack_int( JB   );                         \
+                                                                          \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+  auto _DESCB = detail::to_scalapack_int( DESCB );                        \
+                                                                          \
+  scalapack_int INFO;                                                     \
+  FNAME( UPLO, &_N, &_NRHS, A, &_IA, &_JA, _DESCA.data(),                 \
+    B, &_IB, &_JB, _DESCB.data(), &INFO );                                \
+  return INFO;                                                            \
+                                                                          \
 }
 
-template <>
-scalapack_int
-  ppotrs( const char* UPLO, scalapack_int N, scalapack_int NRHS, 
-    const dcomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    dcomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-  scalapack_int INFO;
-  pzpotrs_( UPLO, &N, &NRHS, A, &IA, &JA, DESCA.data(), B, &IB, &JB, DESCB.data(),
-            &INFO );
-  return INFO;
+ppotrs_impl( float,    pspotrs_ );
+ppotrs_impl( double,   pdpotrs_ );
+ppotrs_impl( scomplex, pcpotrs_ );
+ppotrs_impl( dcomplex, pzpotrs_ );
 
 }
-
 }

@@ -10,31 +10,27 @@
 
 namespace scalapackpp {
 
-BlockCyclicDist2D::BlockCyclicDist2D( const blacspp::Grid* grid,
-  scalapack_int MB, scalapack_int NB, scalapack_int ISRC, scalapack_int JSRC
+BlockCyclicDist2D::BlockCyclicDist2D( const blacspp::Grid& grid,
+  int64_t MB, int64_t NB, int64_t ISRC, int64_t JSRC
 ) : grid_(grid), mb_(MB), nb_(NB), isrc_(ISRC), jsrc_(JSRC){ }
 
-BlockCyclicDist2D::BlockCyclicDist2D( const blacspp::Grid& grid,
-  scalapack_int MB, scalapack_int NB, scalapack_int ISRC, scalapack_int JSRC
-) : BlockCyclicDist2D( &grid, MB, NB, ISRC, JSRC ){ }
-
 BlockCyclicDist2D::BlockCyclicDist2D( 
-  const blacspp::Grid& grid, scalapack_int MB, scalapack_int NB
+  const blacspp::Grid& grid, int64_t MB, int64_t NB
 ) : BlockCyclicDist2D( grid, MB, NB, 0, 0 ){ }
 
-BlockCyclicDist2D::BlockCyclicDist2D() : BlockCyclicDist2D( nullptr, 0, 0, 0, 0 ){ }
-
-
+BlockCyclicDist2D::BlockCyclicDist2D() = default; 
 BlockCyclicDist2D::BlockCyclicDist2D( const BlockCyclicDist2D& ) = default;
 BlockCyclicDist2D::BlockCyclicDist2D( BlockCyclicDist2D&& ) noexcept = default;
+//BlockCyclicDist2D& BlockCyclicDist2D::operator=( const BlockCyclicDist2D& ) = default;
+//BlockCyclicDist2D& BlockCyclicDist2D::operator=( BlockCyclicDist2D&& ) noexcept = default;
 
 
 bool BlockCyclicDist2D::is_valid() const {
-  bool valid = grid_ and nb_ and mb_;
+  bool valid = grid_.is_valid() and nb_ and mb_;
   if( valid ) 
-    valid = valid and grid_->is_valid() and 
-            (isrc_ < grid_->ipr()) and
-            (jsrc_ < grid_->ipc());
+    valid = valid and 
+            (isrc_ < grid_.ipr()) and
+            (jsrc_ < grid_.ipc());
   return valid;
 }
 
@@ -48,25 +44,25 @@ bool BlockCyclicDist2D::is_valid() const {
 
 
 
-std::pair< scalapack_int, scalapack_int > 
-  BlockCyclicDist2D::get_local_dims( scalapack_int M, scalapack_int N ) const {
+std::pair< int64_t, int64_t > 
+  BlockCyclicDist2D::get_local_dims( int64_t M, int64_t N ) const {
 
-  return scalapackpp::get_local_dims( *grid_, M, N, mb_, nb_, isrc_, jsrc_ );
+  return scalapackpp::get_local_dims( grid_, M, N, mb_, nb_, isrc_, jsrc_ );
 
 }
 
 
-std::pair< scalapack_desc, scalapack_int >
-  BlockCyclicDist2D::descinit( scalapack_int M, scalapack_int N, scalapack_int LDD ) const {
+std::pair< scalapack_desc, int64_t >
+  BlockCyclicDist2D::descinit( int64_t M, int64_t N, int64_t LDD ) const {
 
-  return scalapackpp::descinit( *grid_, M, N, mb_, nb_, isrc_, jsrc_, LDD );
+  return scalapackpp::descinit( grid_, M, N, mb_, nb_, isrc_, jsrc_, LDD );
 
 }
 
 scalapack_desc
-  BlockCyclicDist2D::descinit_noerror( scalapack_int M, scalapack_int N, scalapack_int LDD ) const {
+  BlockCyclicDist2D::descinit_noerror( int64_t M, int64_t N, int64_t LDD ) const {
 
-  return scalapackpp::descinit_noerror( *grid_, M, N, mb_, nb_, isrc_, jsrc_, LDD );
+  return scalapackpp::descinit_noerror( grid_, M, N, mb_, nb_, isrc_, jsrc_, LDD );
 
 }
 

@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/linear_systems/getrs.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -37,55 +38,38 @@ void pzgetrs_( const char* TRANS, const scalapack_int* N, const scalapack_int* N
 }
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
-template <>
-scalapack_int
-  pgetrs( const char* TRANS, scalapack_int N, scalapack_int NRHS, 
-    const float* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    const scalapack_int* IPIV,
-    float* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-    scalapack_int INFO;
-    psgetrs_( TRANS, &N, &NRHS, A, &IA, &JA, DESCA.data(), IPIV, B, &IB, &JB, 
-      DESCB.data(), &INFO );
-    return INFO;
+#define pgetrs_impl(F,FNAME)                                              \
+template <>                                                               \
+int64_t                                                                   \
+  pgetrs( const char* TRANS, int64_t N, int64_t NRHS,                     \
+    const F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,      \
+    const scalapack_int* IPIV,                                            \
+    F* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB ) {         \
+                                                                          \
+  auto _N     = detail::to_scalapack_int( N    );                         \
+  auto _NRHS  = detail::to_scalapack_int( NRHS );                         \
+  auto _IA    = detail::to_scalapack_int( IA   );                         \
+  auto _JA    = detail::to_scalapack_int( JA   );                         \
+  auto _IB    = detail::to_scalapack_int( IB   );                         \
+  auto _JB    = detail::to_scalapack_int( JB   );                         \
+                                                                          \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+  auto _DESCB = detail::to_scalapack_int( DESCB );                        \
+                                                                          \
+  scalapack_int INFO;                                                     \
+  FNAME( TRANS, &_N, &_NRHS, A, &_IA, &_JA, _DESCA.data(), IPIV,          \
+    B, &_IB, &_JB, _DESCB.data(), &INFO );                                \
+  return INFO;                                                            \
+                                                                          \
 }
-template <>
-scalapack_int
-  pgetrs( const char* TRANS, scalapack_int N, scalapack_int NRHS, 
-    const double* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    const scalapack_int* IPIV,
-    double* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
 
-    scalapack_int INFO;
-    pdgetrs_( TRANS, &N, &NRHS, A, &IA, &JA, DESCA.data(), IPIV, B, &IB, &JB, 
-      DESCB.data(), &INFO );
-    return INFO;
-}
-template <>
-scalapack_int
-  pgetrs( const char* TRANS, scalapack_int N, scalapack_int NRHS, 
-    const scomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    const scalapack_int* IPIV,
-    scomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-    scalapack_int INFO;
-    pcgetrs_( TRANS, &N, &NRHS, A, &IA, &JA, DESCA.data(), IPIV, B, &IB, &JB, 
-      DESCB.data(), &INFO );
-    return INFO;
-}
-template <>
-scalapack_int
-  pgetrs( const char* TRANS, scalapack_int N, scalapack_int NRHS, 
-    const dcomplex* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    const scalapack_int* IPIV,
-    dcomplex* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB ) {
-
-    scalapack_int INFO;
-    pzgetrs_( TRANS, &N, &NRHS, A, &IA, &JA, DESCA.data(), IPIV, B, &IB, &JB, 
-      DESCB.data(), &INFO );
-    return INFO;
-}
+pgetrs_impl( float,    psgetrs_ );
+pgetrs_impl( double,   pdgetrs_ );
+pgetrs_impl( scomplex, pcgetrs_ );
+pgetrs_impl( dcomplex, pzgetrs_ );
           
+}
 }

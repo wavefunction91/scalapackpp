@@ -5,10 +5,12 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/matrix_norm/lange.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
+
 
 // Prototypes
 extern "C" {
@@ -28,42 +30,29 @@ double pzlange_( const char* NORM, const scalapack_int* M, const scalapack_int* 
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
-template <>
-float plange( const char* NORM, scalapack_int M, scalapack_int N, const float* A, 
-              scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-              float* WORK ) {
-
-  return pslange_( NORM, &M, &N, A, &IA, &JA, DESCA.data(), WORK );
-
+#define plange_impl(F,FNAME)                                              \
+template <>                                                               \
+detail::real_t<F> plange( const char* NORM, int64_t M, int64_t N,         \
+          const F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,\
+          detail::real_t<F>* WORK ) {                                     \
+                                                                          \
+  auto _M     = detail::to_scalapack_int( M  );                           \
+  auto _N     = detail::to_scalapack_int( N  );                           \
+  auto _IA    = detail::to_scalapack_int( IA );                           \
+  auto _JA    = detail::to_scalapack_int( JA );                           \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+                                                                          \
+  return FNAME( NORM, &_M, &_N, A, &_IA, &_JA, _DESCA.data(), WORK );     \
+                                                                          \
 }
 
-template <>
-double plange( const char* NORM, scalapack_int M, scalapack_int N, const double* A, 
-               scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-               double* WORK ) {
-
-  return pdlange_( NORM, &M, &N, A, &IA, &JA, DESCA.data(), WORK );
+plange_impl( float,    pslange_ );
+plange_impl( double,   pdlange_ );
+plange_impl( scomplex, pclange_ );
+plange_impl( dcomplex, pzlange_ );
 
 }
-
-template <>
-float plange( const char* NORM, scalapack_int M, scalapack_int N, const scomplex* A, 
-              scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-              float* WORK ) {
-
-  return pclange_( NORM, &M, &N, A, &IA, &JA, DESCA.data(), WORK );
-
-}
-
-template <>
-double plange( const char* NORM, scalapack_int M, scalapack_int N, const dcomplex* A, 
-               scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-               double* WORK ) {
-
-  return pzlange_( NORM, &M, &N, A, &IA, &JA, DESCA.data(), WORK );
-
-}
-
 }

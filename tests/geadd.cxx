@@ -17,22 +17,11 @@ SCALAPACKPP_TEST_CASE( "Geadd", "[geadd]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  const scalapack_int M = 100, N = 200;
+  const int64_t M = 100, N = 200;
+  const int64_t mb = 2, nb = 4;
 
-  BlockCyclicDist2D mat_dist( grid, 2, 4 );
-
-
-  auto [M_loc1, N_loc1] = mat_dist.get_local_dims( M, N ); // Untranspose
-  auto [M_loc2, N_loc2] = mat_dist.get_local_dims( N, M ); // Transpose
-
-
-  auto desc_a = mat_dist.descinit_noerror( M, N, M_loc1 );
-  auto desc_b = mat_dist.descinit_noerror( N, M, M_loc2 );
-
-
-  std::vector< TestType > A_local( M_loc1 * N_loc1 );
-  std::vector< TestType > B_local( M_loc2 * N_loc2 );
-
+  BlockCyclicMatrix<TestType> A_sca( grid, M, N, mb, nb ),
+                              B_sca( grid, N, M, mb, nb );
 
   std::vector< TestType > A;
   if( grid.ipr() == 0 and grid.ipc() == 0 ) {
@@ -47,19 +36,17 @@ SCALAPACKPP_TEST_CASE( "Geadd", "[geadd]" ) {
 
   }
 
-  mat_dist.scatter( M, N, A.data(), M, A_local.data(), M_loc1, 0, 0 );
+  A_sca.scatter_to( M, N, A.data(), M, 0, 0 );
 
   detail::real_t<TestType> fact = 0.5;
-  pgeadd( TransposeFlag::Transpose, N, M, fact, A_local.data(), 1, 1, desc_a,
-          1., B_local.data(), 1, 1, desc_b );
+  pgeadd( Op::Trans, fact, A_sca, 1., B_sca );
 
 
   // Gather results to A
-  mat_dist.gather( N, M, A.data(), N, B_local.data(), M_loc2, 0, 0 );
+  B_sca.gather_from( N, M, A.data(), N, 0, 0 );
 
   // Check
   if( grid.ipr() == 0 and grid.ipc() == 0 ) {
-
 
     for( int j = 0; j < M; ++j )
     for( int i = 0; i < N; ++i )

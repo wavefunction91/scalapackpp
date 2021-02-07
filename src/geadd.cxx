@@ -5,10 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/geadd.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -38,62 +39,39 @@ void pzgeadd_( const char* TRANS, const scalapack_int* M, const scalapack_int* N
 
 
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
-template <>
-void pgeadd( const char* TRANS, scalapack_int M, scalapack_int N, float ALPHA,
-             const float* A, scalapack_int IA, scalapack_int JA, 
-             const scalapack_desc& DESCA,
-             float BETA, 
-             float* C, scalapack_int IC, scalapack_int JC, 
-             const scalapack_desc& DESCC ) {
-
-
-  psgeadd_( TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA.data(), &BETA, C, &IC, &JC,
-            DESCC.data() );
-
+#define pgeadd_impl(F,FNAME)                                              \
+template <>                                                               \
+void                                                                      \
+  pgeadd( const char* TRANS,                                              \
+         int64_t M, int64_t N,  F ALPHA,                                  \
+         const F* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA, \
+         F BETA,                                                          \
+         F* C, int64_t IC, int64_t JC, const scalapack_desc& DESCC ) {    \
+                                                                          \
+  auto _M     = detail::to_scalapack_int( M  );                           \
+  auto _N     = detail::to_scalapack_int( N  );                           \
+  auto _IA    = detail::to_scalapack_int( IA );                           \
+  auto _JA    = detail::to_scalapack_int( JA );                           \
+  auto _IC    = detail::to_scalapack_int( IC );                           \
+  auto _JC    = detail::to_scalapack_int( JC );                           \
+                                                                          \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+  auto _DESCC = detail::to_scalapack_int( DESCC );                        \
+                                                                          \
+  FNAME( TRANS, &_M, &_N, &ALPHA,                                         \
+         A, &_IA, &_JA, _DESCA.data(),                                    \
+         &BETA,                                                           \
+         C, &_IC, &_JC, _DESCC.data() );                                  \
+                                                                          \
 }
 
-template <>
-void pgeadd( const char* TRANS, scalapack_int M, scalapack_int N, double ALPHA,
-             const double* A, scalapack_int IA, scalapack_int JA, 
-             const scalapack_desc& DESCA,
-             double BETA, 
-             double* C, scalapack_int IC, scalapack_int JC, 
-             const scalapack_desc& DESCC ) {
-
-
-  pdgeadd_( TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA.data(), &BETA, C, &IC, &JC,
-            DESCC.data() );
+pgeadd_impl( float,    psgeadd_ );
+pgeadd_impl( double,   pdgeadd_ );
+pgeadd_impl( scomplex, pcgeadd_ );
+pgeadd_impl( dcomplex, pzgeadd_ );
 
 }
-
-template <>
-void pgeadd( const char* TRANS, scalapack_int M, scalapack_int N, scomplex ALPHA,
-             const scomplex* A, scalapack_int IA, scalapack_int JA, 
-             const scalapack_desc& DESCA,
-             scomplex BETA, 
-             scomplex* C, scalapack_int IC, scalapack_int JC, 
-             const scalapack_desc& DESCC ) {
-
-
-  pcgeadd_( TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA.data(), &BETA, C, &IC, &JC,
-            DESCC.data() );
-
-}
-
-template <>
-void pgeadd( const char* TRANS, scalapack_int M, scalapack_int N, dcomplex ALPHA,
-             const dcomplex* A, scalapack_int IA, scalapack_int JA, 
-             const scalapack_desc& DESCA,
-             dcomplex BETA, 
-             dcomplex* C, scalapack_int IC, scalapack_int JC, 
-             const scalapack_desc& DESCC ) {
-
-
-  pzgeadd_( TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA.data(), &BETA, C, &IC, &JC,
-            DESCC.data() );
-
-}
-
 }
