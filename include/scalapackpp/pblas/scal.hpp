@@ -11,12 +11,12 @@
 namespace scalapackpp {
 
 template <typename T, typename ALPHAT>
-std::enable_if_t<
+detail::enable_if_t<
   detail::scalapack_supported_v<T> and 
   std::is_convertible_v<ALPHAT,T>
 >
-  pscal( scalapack_int N, ALPHAT ALPHA, T* X, scalapack_int IX, scalapack_int JX, 
-         const scalapack_desc& DESCX, scalapack_int INCX ) {
+  pscal( int64_t N, ALPHAT ALPHA, T* X, int64_t IX, int64_t JX, 
+         const scalapack_desc& DESCX, int64_t INCX ) {
 
   const T ALPHA_t = T(ALPHA);
   wrappers::pscal( N, ALPHA_t, X, IX, JX, DESCX, INCX );

@@ -6,15 +6,17 @@
  */
 #pragma once
 #include <scalapackpp/types.hpp>
-#include <scalapackpp/util/sfinae.hpp>
+#include <scalapackpp/util/type_traits.hpp>
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  pgemr2d( scalapack_int M, scalapack_int N, 
-    const T* A, scalapack_int IA, scalapack_int JA, const scalapack_desc& DESCA,
-    T* B, scalapack_int IB, scalapack_int JB, const scalapack_desc& DESCB,
-    scalapack_int ICONTEXT );
+  pgemr2d( int64_t M, int64_t N, 
+    const T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA,
+    T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB,
+    int64_t ICONTEXT );
 
+}
 }

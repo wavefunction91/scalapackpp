@@ -5,11 +5,11 @@
  *  All rights reserved
  */
 #include <scalapackpp/wrappers/matrix_inverse/potri.hpp>
+#include <scalapackpp/util/type_conversions.hpp>
 
-
-using scalapackpp::scalapack_int;
-using scalapackpp::dcomplex;
-using scalapackpp::scomplex;
+using scalapackpp::internal::scalapack_int;
+using scalapackpp::internal::dcomplex;
+using scalapackpp::internal::scomplex;
 
 // Prototypes
 extern "C" {
@@ -25,48 +25,30 @@ void pzpotri_( const char* UPLO, const scalapack_int* N, dcomplex* A, const scal
 
 }
 
-namespace scalapackpp::wrappers {
+namespace scalapackpp {
+namespace wrappers    {
 
-template <>
-scalapack_int
-  ppotri( const char* UPLO, scalapack_int N, float* A, scalapack_int IA, 
-          scalapack_int JA, const scalapack_desc& DESCA ) {
-
-  scalapack_int INFO;
-  pspotri_( UPLO, &N, A, &IA, &JA, DESCA.data(), &INFO );
-  return INFO;
-
-}
-template <>
-scalapack_int
-  ppotri( const char* UPLO, scalapack_int N, double* A, scalapack_int IA, 
-          scalapack_int JA, const scalapack_desc& DESCA ) {
-
-  scalapack_int INFO;
-  pdpotri_( UPLO, &N, A, &IA, &JA, DESCA.data(), &INFO );
-  return INFO;
-
-}
-template <>
-scalapack_int
-  ppotri( const char* UPLO, scalapack_int N, scomplex* A, scalapack_int IA, 
-          scalapack_int JA, const scalapack_desc& DESCA ) {
-
-  scalapack_int INFO;
-  pcpotri_( UPLO, &N, A, &IA, &JA, DESCA.data(), &INFO );
-  return INFO;
-
-}
-template <>
-scalapack_int
-  ppotri( const char* UPLO, scalapack_int N, dcomplex* A, scalapack_int IA, 
-          scalapack_int JA, const scalapack_desc& DESCA ) {
-
-  scalapack_int INFO;
-  pzpotri_( UPLO, &N, A, &IA, &JA, DESCA.data(), &INFO );
-  return INFO;
-
+#define ppotri_impl(F,FNAME)                                              \
+template <>                                                               \
+int64_t                                                                   \
+  ppotri( const char* UPLO, int64_t N, F* A, int64_t IA, int64_t JA,      \
+          const scalapack_desc& DESCA ) {                                 \
+                                                                          \
+  auto _N     = detail::to_scalapack_int( N    );                         \
+  auto _IA    = detail::to_scalapack_int( IA   );                         \
+  auto _JA    = detail::to_scalapack_int( JA   );                         \
+  auto _DESCA = detail::to_scalapack_int( DESCA );                        \
+                                                                          \
+  scalapack_int INFO;                                                     \
+  FNAME( UPLO, &_N, A, &_IA, &_JA, _DESCA.data(), &INFO );                \
+  return INFO;                                                            \
+                                                                          \
 }
 
+ppotri_impl( float,    pspotri_ );
+ppotri_impl( double,   pdpotri_ );
+ppotri_impl( scomplex, pcpotri_ );
+ppotri_impl( dcomplex, pzpotri_ );
 
+}
 }

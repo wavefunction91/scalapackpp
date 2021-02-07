@@ -1,26 +1,49 @@
 if( NOT TARGET blacspp::blacspp )
-  #find_package( blacspp REQUIRED ) # blacspp links to ScaLAPACK
+
   find_package( blacspp QUIET ) # blacspp links to ScaLAPACK
   if( NOT blacspp_FOUND )
+
+    set( BLACSPP_ENABLE_ILP64 ${SCALAPACKPP_ENABLE_ILP64} CACHE BOOL "" )
+    set( BLACSPP_FORCE_ILP64  ${SCALAPACKPP_FORCE_ILP64}  CACHE BOOL "" )
     include( FetchContent )
     FetchContent_Declare( blacspp
       GIT_REPOSITORY https://github.com/wavefunction91/blacspp.git
-      GIT_TAG        feature/ci-new-cmake
+      GIT_TAG        feature/cxx11_compatible 
     )
     FetchContent_MakeAvailable( blacspp )
+
+  else()
+
+    if( SCALAPACKPP_FORCE_ILP64 AND ScaLAPACK_IS_LP64 )
+      message( FATAL_ERROR 
+               "ScaLAPACK++ Forced ILP64 - ScaLAPACK in BLACS++ is LP64" )
+    endif()
+
   endif()
+
 endif()
 
 set( ScaLAPACKPP_SRC
      syev.cxx 
      heev.cxx 
+     sygst.cxx 
+     hegst.cxx 
      gemm.cxx 
+     symm.cxx 
+     hemm.cxx 
      descinit.cxx 
      gemr2d.cxx 
      gesv.cxx
+     gels.cxx
      getrf.cxx
+     geqrf.cxx
+     geqpf.cxx
      getrs.cxx
      getri.cxx
+     orgqr.cxx
+     ungqr.cxx
+     ormqr.cxx
+     unmqr.cxx
      gesvd.cxx
      type_conversions.cxx 
      trmm.cxx 
@@ -34,6 +57,7 @@ set( ScaLAPACKPP_SRC
      potri.cxx
      block_cyclic.cxx
      geadd.cxx
+     tradd.cxx
      lange.cxx
      lansy.cxx
      lanhe.cxx

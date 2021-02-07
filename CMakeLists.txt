@@ -14,6 +14,13 @@ else()
   set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 endif()
 
+
+# Configure Options
+include( CMakeDependentOption )
+option( SCALAPACKPP_ENABLE_ILP64 "Enable search for ILP64 ScaLAPACK bindings" OFF )
+cmake_dependent_option( SCALAPACKPP_FORCE_ILP64 "Force ILP64 - Fail if not found" OFF
+                        "SCALAPACKPP_ENABLE_ILP64" OFF )
+
 add_subdirectory( src )
 
 if(NOT DEFINED SCALAPACKPP_ENABLE_TESTS )

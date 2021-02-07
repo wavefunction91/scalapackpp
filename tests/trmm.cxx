@@ -17,7 +17,7 @@ SCALAPACKPP_TEST_CASE( "Trmm", "[trmm]" ) {
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
-  const scalapack_int M = 100, N = 200;
+  const int64_t M = 100, N = 200;
 
   BlockCyclicDist2D mat_dist( grid, 2, 4 );
 
@@ -47,15 +47,15 @@ SCALAPACKPP_TEST_CASE( "Trmm", "[trmm]" ) {
 
   // C <- A*B
   pgemm( 
-    TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, M, N, M, 
+    Op::NoTrans, Op::NoTrans, M, N, M, 
     1, A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b,
     0, C_local.data(), 1, 1, desc_b
   );
 
   // Compute with trmm ( B <- A*B )
   ptrmm(
-    SideFlag::Left, blacspp::Triangle::Lower,
-    TransposeFlag::NoTranspose, blacspp::Diagonal::Unit,
+    Side::Left, blacspp::Uplo::Lower,
+    Op::NoTrans, blacspp::Diag::Unit,
     M, N, 1, A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b 
   );
 
