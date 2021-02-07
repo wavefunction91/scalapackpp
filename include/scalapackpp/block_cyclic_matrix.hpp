@@ -6,6 +6,7 @@
  */
 #pragma once
 #include <scalapackpp/block_cyclic.hpp>
+#include <scalapackpp/util/type_traits.hpp>
 #include <vector>
 
 namespace scalapackpp {
@@ -40,12 +41,21 @@ public:
     if( desc_info )
       throw std::runtime_error("DESCINIT FAILED");
 
+    local_data_.resize( M_local_ * N_local_ );
+
   }
 
 
   BlockCyclicMatrix( const Grid& grid, int64_t M, int64_t N, int64_t MB,
                      int64_t NB ) :
     BlockCyclicMatrix( grid, M, N, MB, NB, 0, 0 ) { }
+
+
+  BlockCyclicMatrix( const BlockCyclicMatrix& )     = default;
+  BlockCyclicMatrix( BlockCyclicMatrix&& ) noexcept = default;
+
+  BlockCyclicMatrix& operator=( const BlockCyclicMatrix& )     = default;
+  BlockCyclicMatrix& operator=( BlockCyclicMatrix&& ) noexcept = default;
 
 
 
@@ -61,6 +71,9 @@ public:
   inline auto& desc() const { return desc_; }
   inline auto  data() const { return local_data_.data(); }
   inline auto  data()       { return local_data_.data(); }
+  inline auto  local_size() const { return local_data_.size(); }
+
+  inline auto& dist() const { return dist_; }
 
 
   inline void scatter_to( int64_t M, int64_t N, const T* A, int64_t LDA, 
@@ -71,18 +84,27 @@ public:
   }
 
   inline void gather_from( int64_t M, int64_t N, T* A, int64_t LDA, 
-                           int64_t IDEST, int64_t JSRC ) const {
+                           int64_t IDEST, int64_t JDEST ) const {
     // TODO: Check M/N
     dist_.gather( M_, N_, A, LDA, data(), M_local_, IDEST, JDEST );
 
   }
+
+
+
+  inline auto begin()        { return local_data_.begin(); };
+  inline auto end()          { return local_data_.end();   };
+  inline auto begin()  const { return local_data_.begin(); };
+  inline auto end()    const { return local_data_.end();   };
+  inline auto cbegin() const { return local_data_.cbegin(); };
+  inline auto cend()   const { return local_data_.cend();   };
 
 };
 
 
 
 template <typename T>
-inline detail::enable_if_scalapack_supported<T> 
+inline detail::enable_if_scalapack_supported_t<T> 
   redistribute( const BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
 
   // TODO Sanity check on A/B

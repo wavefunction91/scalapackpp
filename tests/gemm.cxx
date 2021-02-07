@@ -18,31 +18,22 @@ SCALAPACKPP_TEST_CASE( "Gemm", "[gemm]" ) {
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   const int64_t M = 100, N = 200;
+  const int64_t mb = 2, nb = 4;
 
-  BlockCyclicDist2D mat_dist( grid, 2, 4 );
+  BlockCyclicMatrix<TestType> A( grid, M, M, mb, nb ),
+                              B( grid, M, N, mb, nb ),
+                              C( grid, M, N, mb, nb );
 
-  auto [M_loc1, N_loc1] = mat_dist.get_local_dims( M, M );
-  auto [M_loc2, N_loc2] = mat_dist.get_local_dims( M, N );
+  std::fill( A.begin(), A.end(), 2 );
+  std::fill( B.begin(), B.end(), 3 );
+  std::fill( C.begin(), C.end(), 5 );
 
-
-  std::vector< TestType > A_local( M_loc1 * N_loc1, TestType(2) );
-  std::vector< TestType > B_local( M_loc2 * N_loc2, TestType(3) );
-  std::vector< TestType > C_local( M_loc2 * N_loc2, TestType(5) );
-
-
-  auto desc_a = mat_dist.descinit_noerror( M, M, M_loc1 );
-  auto desc_b = mat_dist.descinit_noerror( M, N, M_loc2 );
-
-
-  pgemm( 
-    TransposeFlag::NoTranspose, TransposeFlag::NoTranspose, M, N, M, 
-    1., A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b,
-    2., C_local.data(), 1, 1, desc_b 
-  );
-
+  pgemm( Op::NoTrans, Op::NoTrans,
+         1., A, B, 2., C );
 
   const TestType val = TestType(2 * 5 + M*2*3);
-  for( auto x : C_local )
+  for( auto x : C )
     CHECK( std::real(x) == Approx( std::real(val) ) );
+
 
 }

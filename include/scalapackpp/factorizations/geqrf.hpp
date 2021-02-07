@@ -6,6 +6,7 @@
  */
 #pragma once
 #include <scalapackpp/wrappers/factorizations/geqrf.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -23,6 +24,14 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
   WORK.resize( LWORK );
 
   return wrappers::pgeqrf( M, N, A, IA, JA, DESCA, TAU, WORK.data(), LWORK );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T,int64_t>
+  pgeqrf( BlockCyclicMatrix<T>& A, T* TAU ) {
+
+  return pgeqrf( A.m(), A.n(), A.data(), 1, 1, A.desc(), TAU );
 
 }
 

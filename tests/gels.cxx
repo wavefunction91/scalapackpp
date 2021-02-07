@@ -20,12 +20,7 @@ SCALAPACKPP_TEST_CASE( "Gels", "[gels]" ) {
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   int64_t M = 100, N = 50, NRHS = 20;
-
-
-  BlockCyclicDist2D mat_dist( grid, 4, 4 );
-
-  auto [M_loc, N_loc]     = mat_dist.get_local_dims( M, N );
-  auto [xxxxx, NRHS_loc ] = mat_dist.get_local_dims( M, NRHS );
+  int64_t mb = 4;
 
   std::default_random_engine gen;
   std::normal_distribution<detail::real_t<TestType>> dist( 0., 1. );
@@ -40,27 +35,23 @@ SCALAPACKPP_TEST_CASE( "Gels", "[gels]" ) {
 
   }
 
-  std::vector< TestType > A_local( M_loc * N_loc );
-  std::vector< TestType > B_local( M_loc * NRHS_loc );
+  BlockCyclicMatrix<TestType> A_sca( grid, M, N,    mb, mb ),
+                              B_sca( grid, M, NRHS, mb, mb );
 
-  mat_dist.scatter( M, N,    A.data(), M, A_local.data(), M_loc, 0, 0 );
-  mat_dist.scatter( M, NRHS, B.data(), M, B_local.data(), M_loc, 0, 0 );
+  A_sca.scatter_to( M, N,    A.data(), M, 0, 0 );
+  B_sca.scatter_to( M, NRHS, B.data(), M, 0, 0 );
 
   // Solve linear system
-  auto desc_a = mat_dist.descinit_noerror( M, N,    M_loc );
-  auto desc_b = mat_dist.descinit_noerror( M, NRHS, M_loc );
-  auto info = pgels( TransposeFlag::NoTranspose, M, N, NRHS, 
-                     A_local.data(), 1, 1, desc_a,
-                     B_local.data(), 1, 1, desc_b );
-
+  auto info = pgels( Op::NoTrans, A_sca, B_sca );
   REQUIRE( info == 0 );
+
   // Check correctness
   std::vector< TestType > X;
   if( grid.ipr() == 0 and grid.ipc() == 0 ) {
     X.resize( M * NRHS );
   }
 
-  mat_dist.gather( M, NRHS, X.data(), M, B_local.data(), M_loc, 0, 0 );
+  B_sca.gather_from( M, NRHS, X.data(), M, 0, 0 );
 
   auto tol = M*std::numeric_limits<detail::real_t<TestType>>::epsilon();
   if( grid.ipr() == 0 and grid.ipc() == 0 ) {

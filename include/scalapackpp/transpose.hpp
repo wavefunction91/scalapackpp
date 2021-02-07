@@ -16,7 +16,7 @@ detail::enable_if_scalapack_supported_t<T>
           T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB 
   ) {
 
-  pgeadd( TransposeFlag::Transpose, M, N, 1., A, IA, JA, DESCA, 
+  pgeadd( Op::Trans, M, N, 1., A, IA, JA, DESCA, 
           0., B, IB, JB, DESCB );
 
 }
@@ -38,8 +38,25 @@ detail::enable_if_scalapack_complex_supported_t<T>
           T* B, int64_t IB, int64_t JB, const scalapack_desc& DESCB 
   ) {
 
-  pgeadd( TransposeFlag::ConjTranspose, M, N, 1., A, IA, JA, DESCA, 
+  pgeadd( Op::ConjTrans, M, N, 1., A, IA, JA, DESCA, 
           0., B, IB, JB, DESCB );
+
+}
+
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T>
+  transpose( const BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
+
+  transpose( B.m(), B.n(), A.data(), 1, 1, A.desc(), B.data(), 1, 1, B.desc() );
+
+}
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T>
+  conj_transpose( const BlockCyclicMatrix<T>& A, BlockCyclicMatrix<T>& B ) {
+
+  conj_transpose( B.m(), B.n(), A.data(), 1, 1, A.desc(), B.data(), 1, 1, B.desc() );
 
 }
           

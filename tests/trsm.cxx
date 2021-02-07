@@ -25,12 +25,7 @@ SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
   blacspp::mpi_info mpi( MPI_COMM_WORLD );
 
   const int64_t M = 100, N = 200;
-
-  BlockCyclicDist2D mat_dist( grid, 2, 4 );
-
-  auto [M_loc1, N_loc1] = mat_dist.get_local_dims( M, M );
-  auto [M_loc2, N_loc2] = mat_dist.get_local_dims( M, N );
-
+  int64_t mb = 2, nb = 4;
 
   std::vector< TestType > A_root, B_ref_root;
   if( grid.ipr() == 0 and grid.ipc() == 0 ) {
@@ -49,29 +44,27 @@ SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
     );
   }
 
-  std::vector< TestType > A_local( M_loc1*N_loc1 );
-  std::vector< TestType > B_local( M_loc2*N_loc2, 2 );
-  std::vector< TestType > B_ref_local( M_loc2*N_loc2 );
+  BlockCyclicMatrix<TestType> A( grid, M, M, mb, nb ),
+                              B( grid, M, N, mb, nb ),
+                              B_ref( grid, M, N, mb, nb );
+
+  std::fill( B.begin(), B.end(), 2. );
 
   // Scatter triangular matrix and reference
-  mat_dist.scatter( M, M, A_root.data(), M, A_local.data(), M_loc1, 0, 0 );
-  mat_dist.scatter( M, N, B_ref_root.data(), M, B_ref_local.data(), M_loc2, 0, 0 );
+  A.scatter_to( M, M, A_root.data(), M, 0, 0 );
+  B_ref.scatter_to( M, N, B_ref_root.data(), M, 0, 0 );
 
-
-  // Compute reference solution with GEMM
-  auto desc_a = mat_dist.descinit_noerror( M, M, M_loc1 );
-  auto desc_b = mat_dist.descinit_noerror( M, N, M_loc2 );
 
   // Compute with trsm ( B <- A**-1*B )
   ptrsm(
-    SideFlag::Left, blacspp::Triangle::Lower,
-    TransposeFlag::NoTranspose, blacspp::Diagonal::Unit,
-    M, N, 1, A_local.data(), 1, 1, desc_a, B_local.data(), 1, 1, desc_b 
+    Side::Left, blacspp::Uplo::Lower,
+    Op::NoTrans, blacspp::Diag::Unit,
+    1., A, B
   );
 
   // Check B = C
-  for( auto i = 0; i < B_local.size(); ++i )
-    CHECK( std::real(B_local[i]) == Approx( std::real(B_ref_local[i]) ) );
+  for( auto i = 0; i < B.local_size(); ++i )
+    CHECK( std::real(B.data()[i]) == Approx( std::real(B_ref.data()[i]) ) );
 
 }
 

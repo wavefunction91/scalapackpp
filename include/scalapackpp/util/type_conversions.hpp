@@ -12,10 +12,12 @@
 namespace scalapackpp {
 namespace detail      {
 
-  extern std::string type_string( TransposeFlag );
-  extern std::string type_string( SideFlag );
-  extern std::string type_string( VectorFlag );
+/*
+  extern std::string type_string( Op );
+  extern std::string type_string( Side );
+  extern std::string type_string( Job );
   extern std::string type_string( MatrixNorm );
+*/
 
   inline internal::scalapack_int to_scalapack_int( int64_t i ) {
     return blacspp::detail::to_blacs_int( i );

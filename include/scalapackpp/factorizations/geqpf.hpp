@@ -8,6 +8,7 @@
 #include <scalapackpp/wrappers/factorizations/geqpf.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
 #include <scalapackpp/information.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -72,6 +73,19 @@ int64_t
   return INFO;
 
 }
+
+
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T,int64_t>
+  pgeqpf( BlockCyclicMatrix<T>& A, int64_t* IPIV, T* TAU ) {
+
+  return pgeqpf( A.m(), A.n(), A.data(), 1, 1, A.desc(), IPIV, TAU );
+
+}
+
+
+
 
 }
 

@@ -8,6 +8,7 @@
 #include <scalapackpp/wrappers/matrix_inverse/getri.hpp>
 #include <scalapackpp/information.hpp>
 #include <scalapackpp/util/type_conversions.hpp>
+#include <scalapackpp/block_cyclic_matrix.hpp>
 
 namespace scalapackpp {
 
@@ -40,6 +41,17 @@ detail::enable_if_scalapack_supported_t<T, int64_t>
   }
 
   return info;
+}
+
+
+
+template <typename T>
+detail::enable_if_scalapack_supported_t<T, int64_t>
+  pgetri( BlockCyclicMatrix<T>& A, int64_t* IPIV ) { 
+
+  // TODO sanity check
+  return pgetri( A.m(), A.data(), 1, 1, A.desc(), IPIV );
+
 }
 
 
