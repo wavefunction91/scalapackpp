@@ -43,7 +43,7 @@ int64_t local_row_from_desc( int64_t M, const scalapack_desc& desc ) {
   const auto RSRC_A = desc[internal::_RSRC_A];
 
   auto grid_dim = blacspp::wrappers::grid_info( ICXT_A );
-  return numroc( M, MB_A, RSRC_A, grid_dim.my_row, grid_dim.np_row );
+  return numroc( M, MB_A, grid_dim.my_row, RSRC_A, grid_dim.np_row );
 }
 
 int64_t local_col_from_desc( int64_t N, const scalapack_desc& desc ) {
@@ -53,7 +53,7 @@ int64_t local_col_from_desc( int64_t N, const scalapack_desc& desc ) {
   const auto CSRC_A = desc[internal::_CSRC_A];
 
   auto grid_dim = blacspp::wrappers::grid_info( ICXT_A );
-  return numroc( N, NB_A, CSRC_A, grid_dim.my_col, grid_dim.np_col );
+  return numroc( N, NB_A, grid_dim.my_col, CSRC_A, grid_dim.np_col );
 }
 
 
