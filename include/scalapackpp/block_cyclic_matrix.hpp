@@ -65,8 +65,8 @@ public:
   inline auto n_local() const { return N_local_;    }
   inline auto mb()      const { return dist_.mb();  }
   inline auto nb()      const { return dist_.nb();  }
-  inline auto isrc()    const { return dist_.isrc_; }
-  inline auto jsrc()    const { return dist_.jsrc_; }
+  inline auto isrc()    const { return dist_.isrc(); }
+  inline auto jsrc()    const { return dist_.jsrc(); }
 
   inline auto& desc() const { return desc_; }
   inline auto  data() const { return local_data_.data(); }
