@@ -8,7 +8,7 @@ if( NOT TARGET blacspp::blacspp )
     include( FetchContent )
     FetchContent_Declare( blacspp
       GIT_REPOSITORY https://github.com/wavefunction91/blacspp.git
-      GIT_TAG        b87b02bc2cb5ba86b3df690dd89bf0df695a3437 
+      GIT_TAG        b6de5b172738981ec84adcc517432c7b34c7ae60 
     )
     FetchContent_MakeAvailable( blacspp )
 
