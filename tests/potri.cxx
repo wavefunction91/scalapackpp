@@ -84,7 +84,7 @@ SCALAPACKPP_TEST_CASE( "Potri", "[potri]" ) {
   );
 
 
-  auto tol = 10*M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();
+  auto tol = 100*M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();
   const detail::real_t<TestType> one = 1.;
   for( auto i = 0; i < M; ++i )
   for( auto j = 0; j < M; ++j )

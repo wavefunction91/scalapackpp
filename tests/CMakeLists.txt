@@ -64,6 +64,7 @@ add_executable( test_scalapackpp
   getri.cxx
   trtri.cxx
   norm.cxx
+  lacpy.cxx
 )
 target_link_libraries( test_scalapackpp PUBLIC ut_framework )
 
