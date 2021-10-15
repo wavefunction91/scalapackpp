@@ -82,7 +82,7 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
 
   if( grid.ipr() == 0 and grid.ipc() == 0 ) {
 
-    auto tol = M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();
+    auto tol = 100*M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();
     for( auto i = 0; i < M; ++i )
     for( auto j = 0; j < M; ++j ) {
       auto x = std::real( gathered[ i + j*M ] );

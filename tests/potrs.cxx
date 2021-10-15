@@ -62,7 +62,7 @@ SCALAPACKPP_TEST_CASE( "Potrs", "[potrs]" ) {
   pgemm( Op::NoTrans, Op::NoTrans, 
          -1., A_SPD_copy, B, 1., B_copy );
 
-  auto tol = 100*M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();
+  auto tol = 1000*M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();
   for( auto x : B_copy ) CHECK( std::abs(x) < tol );
 
 }
