@@ -27,7 +27,7 @@ namespace detail      {
     to_scalapack_int( const scalapack_desc& DESC ) {
 
     internal::scalapack_desc<internal::scalapack_int> _DESC;
-    for( int64_t i = 0; i < internal::scalapack_desc_size; ++i )
+    for( size_t i = 0; i < internal::scalapack_desc_size; ++i )
       _DESC[i] = to_scalapack_int(DESC[i]);
 
     return _DESC;
@@ -38,7 +38,7 @@ namespace detail      {
     to_interface_int( const internal::scalapack_desc<internal::scalapack_int> DESC ) {
 
     scalapack_desc _DESC;
-    for( int64_t i = 0; i < internal::scalapack_desc_size; ++i )
+    for( size_t i = 0; i < internal::scalapack_desc_size; ++i )
       _DESC[i] = DESC[i];
    
     return _DESC;
