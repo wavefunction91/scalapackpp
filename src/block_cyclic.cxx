@@ -18,6 +18,14 @@ BlockCyclicDist2D::BlockCyclicDist2D(
   const blacspp::Grid& grid, int64_t MB, int64_t NB
 ) : BlockCyclicDist2D( grid, MB, NB, 0, 0 ){ }
 
+BlockCyclicDist2D::BlockCyclicDist2D( blacspp::Grid&& grid,
+  int64_t MB, int64_t NB, int64_t ISRC, int64_t JSRC
+) : grid_(std::move(grid)), mb_(MB), nb_(NB), isrc_(ISRC), jsrc_(JSRC){ }
+
+BlockCyclicDist2D::BlockCyclicDist2D( 
+  blacspp::Grid&& grid, int64_t MB, int64_t NB
+) : BlockCyclicDist2D( std::move(grid), MB, NB, 0, 0 ){ }
+
 BlockCyclicDist2D::BlockCyclicDist2D() = default; 
 BlockCyclicDist2D::BlockCyclicDist2D( const BlockCyclicDist2D& ) = default;
 BlockCyclicDist2D::BlockCyclicDist2D( BlockCyclicDist2D&& ) noexcept = default;

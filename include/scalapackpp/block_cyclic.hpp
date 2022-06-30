@@ -34,6 +34,10 @@ public:
 
   BlockCyclicDist2D( const Grid& grid, int64_t MB, int64_t NB );
 
+  BlockCyclicDist2D( Grid&& grid, int64_t MB, int64_t NB,
+                     int64_t ISRC, int64_t JSRC);
+
+  BlockCyclicDist2D( Grid&& grid, int64_t MB, int64_t NB );
 
   BlockCyclicDist2D( const BlockCyclicDist2D& );
   BlockCyclicDist2D( BlockCyclicDist2D&& ) noexcept ;
@@ -100,6 +104,16 @@ public:
 
     return { l * mb_ + (I % mb_), m * nb_ + (J % nb_) };
 
+  }
+
+  inline std::pair<int64_t,int64_t> 
+    global_idx( int64_t i, int64_t j ) const noexcept {
+
+    auto l = i / mb_;
+    auto m = j / nb_;
+
+    return { (l * (grid_.npr() - 1) + grid_.ipr()) * mb_ + i,
+             (m * (grid_.npc() - 1) + grid_.ipc()) * nb_ + j };
   }
 
 

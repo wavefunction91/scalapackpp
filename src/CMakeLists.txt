@@ -63,6 +63,7 @@ set( ScaLAPACKPP_SRC
      lanhe.cxx
      scal.cxx
      lacpy.cxx
+     lascl.cxx
 )
 
 
