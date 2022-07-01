@@ -46,7 +46,7 @@ SCALAPACKPP_TEST_CASE( "Lascl", "[lascl]" ) {
   if( grid.ipr() == 0 and grid.ipc() == 0 ) {
 
     const auto tol = std::numeric_limits<detail::real_t<TestType>>::epsilon(); 
-    for( auto i = 0; i < N*N; ++i ) CHECK( std::abs(B[i] - TestType(2.) * A[i]) < tol );
+    for( auto i = 0; i < M*N; ++i ) CHECK( std::abs(B[i] - TestType(2.) * A[i]) < tol );
 
   }
 }

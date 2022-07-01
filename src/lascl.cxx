@@ -16,19 +16,23 @@ extern "C" {
 
 void pslascl_( const char*, const float*, const float*, const scalapack_int* M, 
                const scalapack_int* N, float* A, const scalapack_int* IA, 
-               const scalapack_int* JA, const scalapack_int* DESCA ); 
+               const scalapack_int* JA, const scalapack_int* DESCA,
+               scalapack_int* INFO ); 
 
 void pdlascl_( const char*, const double*, const double*, const scalapack_int* M, 
                const scalapack_int* N, double* A, const scalapack_int* IA, 
-               const scalapack_int* JA, const scalapack_int* DESCA ); 
+               const scalapack_int* JA, const scalapack_int* DESCA, 
+               scalapack_int* INFO ); 
 
 void pclascl_( const char*, const float*, const float*, const scalapack_int* M, 
                const scalapack_int* N, scomplex* A, const scalapack_int* IA, 
-               const scalapack_int* JA, const scalapack_int* DESCA ); 
+               const scalapack_int* JA, const scalapack_int* DESCA, 
+               scalapack_int* INFO ); 
 
 void pzlascl_( const char*, const double*, const double*, const scalapack_int* M, 
                const scalapack_int* N, dcomplex* A, const scalapack_int* IA, 
-               const scalapack_int* JA, const scalapack_int* DESCA ); 
+               const scalapack_int* JA, const scalapack_int* DESCA, 
+               scalapack_int* INFO ); 
 
 }
 
@@ -37,7 +41,7 @@ namespace wrappers    {
 
 #define plascl_impl(F, FNAME)                                                  \
 template <>                                                                    \
-void plascl( const char* TYPE, detail::real_t<F> CTO, detail::real_t<F> CFROM, \
+void plascl( const char* TYPE, detail::real_t<F> CFROM, detail::real_t<F> CTO, \
              int64_t M, int64_t N, F* A, int64_t IA, int64_t JA,               \
              const scalapack_desc& DESCA) {                                    \
                                                                                \
@@ -47,8 +51,9 @@ void plascl( const char* TYPE, detail::real_t<F> CTO, detail::real_t<F> CFROM, \
   auto _JA    = detail::to_scalapack_int( JA );                                \
                                                                                \
   auto _DESCA = detail::to_scalapack_int( DESCA );                             \
+  scalapack_int INFO;                                                          \
                                                                                \
-  FNAME( TYPE, &CTO, &CFROM, &_M, &_N, A, &_IA, &_JA, _DESCA.data());          \
+  FNAME( TYPE, &CFROM, &CTO, &_M, &_N, A, &_IA, &_JA, _DESCA.data(),&INFO);    \
 }
 
 plascl_impl( float,    pslascl_ );

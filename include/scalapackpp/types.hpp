@@ -78,7 +78,7 @@ namespace internal {
   };
 
   enum class MatrixType : char {
-    Full       = 'F',
+    Full       = 'G',
     Lower      = 'L',
     Upper      = 'U',
     Hessenberg = 'H'

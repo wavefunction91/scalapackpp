@@ -14,12 +14,12 @@ namespace scalapackpp {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  plascl( MatrixType type, detail::real_t<T> CTO, 
-          detail::real_t<T> CFROM, int64_t M, int64_t N, 
+  plascl( MatrixType type, detail::real_t<T> CFROM, 
+          detail::real_t<T> CTO, int64_t M, int64_t N, 
           T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA ) {
 
   auto TYPE = char( type );
-  wrappers::plascl( &TYPE, CTO, CFROM, M, N, A, IA, JA, DESCA );
+  wrappers::plascl( &TYPE, CFROM, CTO, M, N, A, IA, JA, DESCA );
 
 }
 
@@ -28,16 +28,16 @@ detail::enable_if_scalapack_supported_t<T>
   plascl( MatrixType type, detail::real_t<T> ALPHA, int64_t M, int64_t N, 
           T* A, int64_t IA, int64_t JA, const scalapack_desc& DESCA ) {
 
-  plascl( type, ALPHA, 1.,  M, N, A, IA, JA, DESCA );
+  plascl( type, 1., ALPHA,  M, N, A, IA, JA, DESCA );
 
 }
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  plascl( MatrixType type, detail::real_t<T> CTO, 
-    detail::real_t<T> CFROM, BlockCyclicMatrix<T>& A ) {
+  plascl( MatrixType type, detail::real_t<T> CFROM, 
+    detail::real_t<T> CTO, BlockCyclicMatrix<T>& A ) {
 
-  plascl( type, CTO, CFROM, A.m(), A.n(), A.data(), 1, 1, A.desc() );
+  plascl( type, CFROM, CTO, A.m(), A.n(), A.data(), 1, 1, A.desc() );
 
 }
 
@@ -45,7 +45,7 @@ template <typename T>
 detail::enable_if_scalapack_supported_t<T>
   plascl( MatrixType type, detail::real_t<T> ALPHA, BlockCyclicMatrix<T>& A ) {
 
-  plascl( type, ALPHA, 1., A );
+  plascl( type, 1., ALPHA, A );
 
 }
 

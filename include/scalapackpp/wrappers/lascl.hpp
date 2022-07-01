@@ -13,7 +13,7 @@ namespace wrappers {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  plascl( const char* TYPE, detail::real_t<T> CTO, detail::real_t<T> CFROM, 
+  plascl( const char* TYPE, detail::real_t<T> CFROM, detail::real_t<T> CTO, 
           int64_t M, int64_t N, T* A, int64_t IA, int64_t JA, 
           const scalapack_desc& DESCA );
 
