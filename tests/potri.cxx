@@ -18,7 +18,7 @@
 
 
 
-SCALAPACKPP_COMPLEX_TEST_CASE( "Potri", "[potri]" ) {
+SCALAPACKPP_REAL_TEST_CASE( "Potri", "[potri]" ) {
 
   using namespace scalapackpp;
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
