@@ -36,4 +36,5 @@ SCALAPACKPP_TEST_CASE( "Gemm", "[gemm]" ) {
     CHECK( std::real(x) == Approx( std::real(val) ) );
 
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }

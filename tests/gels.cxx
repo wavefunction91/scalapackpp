@@ -60,4 +60,5 @@ SCALAPACKPP_TEST_CASE( "Gels", "[gels]" ) {
       CHECK( std::abs(X[i] - B[i]) < tol );
   }
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }

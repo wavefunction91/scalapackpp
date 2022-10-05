@@ -77,6 +77,12 @@ namespace internal {
     Max = 'M'
   };
 
+  enum class MatrixType : char {
+    Full       = 'G',
+    Lower      = 'L',
+    Upper      = 'U',
+    Hessenberg = 'H'
+  };
 
   using blacspp::Uplo;
   using blacspp::Diag;

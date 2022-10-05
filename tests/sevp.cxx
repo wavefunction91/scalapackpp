@@ -83,4 +83,5 @@ SCALAPACKPP_TEST_CASE( "SEVP Drivers", "[sevp]" ){
   auto eps = std::numeric_limits<detail::real_t<TestType>>::epsilon() * 1000;
   for( auto i = 0; i < A_sca.local_size(); ++i ) 
     CHECK( std::real(A_sca.data()[i]) == Approx( std::real(A_copy.data()[i]) ).epsilon(eps) );
+  MPI_Barrier(MPI_COMM_WORLD);
 }

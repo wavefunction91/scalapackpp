@@ -7,9 +7,10 @@
 #include "ut.hpp"
 #include <scalapackpp/scatter_gather.hpp>
 #include <scalapackpp/block_cyclic.hpp>
-#include <scalapackpp/lacpy.hpp>
+#include <scalapackpp/lascl.hpp>
 
-SCALAPACKPP_TEST_CASE( "Lacpy", "[lacpy]" ) {
+SCALAPACKPP_TEST_CASE( "Lascl", "[lascl]" ) {
+
   using namespace scalapackpp;
 
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
@@ -18,41 +19,38 @@ SCALAPACKPP_TEST_CASE( "Lacpy", "[lacpy]" ) {
   const int64_t M = 100, N = 200;
   const int64_t mb = 2, nb = 4;
 
-  BlockCyclicMatrix<TestType> A_sca( grid, M, N, mb, nb ),
-                              B_sca( grid, M, N, mb, nb );
+  BlockCyclicMatrix<TestType> A_sca( grid, M, N, mb, nb );
 
-  std::vector< TestType > A;
+  std::vector< TestType > A, B;
   if( grid.ipr() == 0 and grid.ipc() == 0 ) {
 
     A.resize( M*N, 0 );
+    B.resize( M*N, 0 );
 
     for( int j = 0; j < N; ++j )
-    for( int i = 0; i < M; ++i )
+    for( int i = 0; i < M; ++i ) {
       if( i == j )      A[ i + j*M ] = 1.;
       else if( i < j )  A[ i + j*M ] = 2.;
       else              A[ i + j*M ] = 3.;
+    }
 
   }
 
   A_sca.scatter_to( M, N, A.data(), M, 0, 0 );
 
-  std::fill( B_sca.begin(), B_sca.end(), 0. );
-  placpy( Uplo::Upper, A_sca, B_sca );
+  plascl( MatrixType::Full, 2., A_sca );
 
-  // Gather results to A
-  B_sca.gather_from( M, N, A.data(), M, 0, 0 );
+  // Gather results to B
+  A_sca.gather_from( M, N, B.data(), M, 0, 0 );
 
   // Check
   if( grid.ipr() == 0 and grid.ipc() == 0 ) {
 
-    for( int j = 0; j < N; ++j )
-    for( int i = 0; i < M; ++i ) {
-      if( i == j )      CHECK( std::real(A[ i + j*M ]) == Approx(1.) );
-      else if( i < j )  CHECK( std::real(A[ i + j*M ]) == Approx(2.) );
-      else              CHECK( std::real(A[ i + j*M ]) == Approx(0.) );
-    }
+    const auto tol = std::numeric_limits<detail::real_t<TestType>>::epsilon(); 
+    for( auto i = 0; i < M*N; ++i ) CHECK( std::abs(B[i] - TestType(2.) * A[i]) < tol );
 
   }
+      
   MPI_Barrier(MPI_COMM_WORLD);
 }
 

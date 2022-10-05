@@ -51,4 +51,5 @@ TEST_CASE( "Index Conversion", "[index]" ) {
   }
 
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }

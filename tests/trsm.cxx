@@ -66,5 +66,6 @@ SCALAPACKPP_TEST_CASE( "Trsm", "[trsm]" ) {
   for( auto i = 0; i < B.local_size(); ++i )
     CHECK( std::real(B.data()[i]) == Approx( std::real(B_ref.data()[i]) ) );
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 

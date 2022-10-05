@@ -66,4 +66,5 @@ SCALAPACKPP_TEST_CASE( "Getri", "[getri]" ) {
 
   }
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }

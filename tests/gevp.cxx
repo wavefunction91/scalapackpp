@@ -124,8 +124,9 @@ SCALAPACKPP_TEST_CASE( "GEVP Drivers", "[gevp]" ){
 
 
 
-  auto eps = std::numeric_limits<real_t>::epsilon() * 10000;
+  auto eps = std::numeric_limits<real_t>::epsilon() * 100000;
   for( auto i = 0; i < A_sca.local_size(); ++i ) 
     CHECK( std::real(A_sca.data()[i]) == Approx( std::real(A_copy.data()[i]) ).epsilon(eps) );
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 

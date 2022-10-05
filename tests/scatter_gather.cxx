@@ -48,6 +48,7 @@ SCALAPACKPP_TEST_CASE( "Gather", "[scatter-gather]" ) {
 
   grid.barrier( blacspp::Scope::All );
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 
 
@@ -84,4 +85,5 @@ SCALAPACKPP_TEST_CASE( "Scatter", "[scatter-gather]" ) {
 
   for( auto x : data_local ) CHECK( x == TestType( mpi.rank() ) );
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }

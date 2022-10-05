@@ -45,5 +45,15 @@ namespace detail      {
 
   }
 
+  inline Op to_op( char c ) {
+    switch(c) {
+      case 'N': return Op::NoTrans;
+      case 'T': return Op::Trans;
+      case 'C': return Op::ConjTrans;
+      default: 
+        throw std::runtime_error("Op Not Defined");
+        abort();
+    }
+  }
 }
 }

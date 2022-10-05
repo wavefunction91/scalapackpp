@@ -52,4 +52,5 @@ SCALAPACKPP_TEST_CASE( "Gesvd", "[svd]" ) {
   auto eps = std::numeric_limits<detail::real_t<TestType>>::epsilon() * M*M*N;
   for( auto i = 0; i < A.local_size(); ++i ) 
     CHECK( std::real(A.data()[i]) == Approx( std::real(A_copy.data()[i]) ).epsilon(eps) );
+  MPI_Barrier(MPI_COMM_WORLD);
 }

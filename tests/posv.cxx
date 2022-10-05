@@ -62,4 +62,5 @@ SCALAPACKPP_TEST_CASE( "Posv", "[posv]" ) {
   auto tol = 1000*M*M*std::numeric_limits<detail::real_t<TestType>>::epsilon();
   for( auto x : B_copy ) CHECK( std::abs(x) < tol );
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }

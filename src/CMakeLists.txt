@@ -8,7 +8,7 @@ if( NOT TARGET blacspp::blacspp )
     include( FetchContent )
     FetchContent_Declare( blacspp
       GIT_REPOSITORY https://github.com/wavefunction91/blacspp.git
-      GIT_TAG        b6de5b172738981ec84adcc517432c7b34c7ae60 
+      GIT_TAG        f5cd6150d9b18790a17a5de667c44e300eafb3ad
     )
     FetchContent_MakeAvailable( blacspp )
 
@@ -63,6 +63,7 @@ set( ScaLAPACKPP_SRC
      lanhe.cxx
      scal.cxx
      lacpy.cxx
+     lascl.cxx
 )
 
 

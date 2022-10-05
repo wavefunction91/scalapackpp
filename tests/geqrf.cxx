@@ -74,6 +74,7 @@ SCALAPACKPP_TEST_CASE( "Geqrf", "[geqrf]" ) {
   }
 
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 
 
@@ -109,4 +110,5 @@ SCALAPACKPP_TEST_CASE( "Geqpf", "[geqpf]" ) {
   REQUIRE( info == 0 );
 
   // TODO: check for correctness
+  MPI_Barrier(MPI_COMM_WORLD);
 }
