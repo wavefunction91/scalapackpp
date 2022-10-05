@@ -56,4 +56,5 @@ SCALAPACKPP_TEST_CASE( "Geadd", "[geadd]" ) {
 
   }
   
+  MPI_Barrier(MPI_COMM_WORLD);
 }

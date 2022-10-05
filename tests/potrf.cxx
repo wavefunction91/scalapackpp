@@ -91,4 +91,5 @@ SCALAPACKPP_TEST_CASE( "Potrf", "[potrf]" ) {
     } 
 
   }
+  MPI_Barrier(MPI_COMM_WORLD);
 }

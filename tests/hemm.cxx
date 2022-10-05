@@ -46,6 +46,7 @@ SCALAPACKPP_REAL_TEST_CASE( "Symm", "[symm]" ) {
   for( auto x : C_local )
     CHECK( std::real(x) == Approx( std::real(val) ) );
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 
 SCALAPACKPP_TEST_CASE( "Hemm", "[hemm]" ) {
@@ -83,4 +84,5 @@ SCALAPACKPP_TEST_CASE( "Hemm", "[hemm]" ) {
   for( auto x : C_local )
     CHECK( std::real(x) == Approx( std::real(val) ) );
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }

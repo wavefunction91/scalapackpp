@@ -28,10 +28,11 @@ SCALAPACKPP_TEST_CASE( "Lascl", "[lascl]" ) {
     B.resize( M*N, 0 );
 
     for( int j = 0; j < N; ++j )
-    for( int i = 0; i < M; ++i )
+    for( int i = 0; i < M; ++i ) {
       if( i == j )      A[ i + j*M ] = 1.;
       else if( i < j )  A[ i + j*M ] = 2.;
       else              A[ i + j*M ] = 3.;
+    }
 
   }
 
@@ -49,5 +50,7 @@ SCALAPACKPP_TEST_CASE( "Lascl", "[lascl]" ) {
     for( auto i = 0; i < M*N; ++i ) CHECK( std::abs(B[i] - TestType(2.) * A[i]) < tol );
 
   }
+      
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 

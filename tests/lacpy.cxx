@@ -10,7 +10,6 @@
 #include <scalapackpp/lacpy.hpp>
 
 SCALAPACKPP_TEST_CASE( "Lacpy", "[lacpy]" ) {
-
   using namespace scalapackpp;
 
   blacspp::Grid grid = blacspp::Grid::square_grid( MPI_COMM_WORLD );
@@ -54,5 +53,6 @@ SCALAPACKPP_TEST_CASE( "Lacpy", "[lacpy]" ) {
     }
 
   }
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 

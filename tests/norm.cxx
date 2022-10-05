@@ -138,5 +138,6 @@ SCALAPACKPP_TEST_CASE( "SymmetricNorm", "[norm]" ) {
  // CHECK( o_calc == Approx( o_ref ) );
   CHECK( m_calc == Approx( m_ref ) );
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 #endif

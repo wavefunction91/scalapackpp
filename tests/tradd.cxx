@@ -58,4 +58,5 @@ SCALAPACKPP_TEST_CASE( "Tradd", "[tradd]" ) {
 
   }
   
+  MPI_Barrier(MPI_COMM_WORLD);
 }

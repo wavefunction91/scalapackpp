@@ -79,5 +79,6 @@ SCALAPACKPP_TEST_CASE( "Trans", "[trans]" ) {
 
   }
         
+  MPI_Barrier(MPI_COMM_WORLD);
 }
 

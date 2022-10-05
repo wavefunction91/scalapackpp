@@ -98,4 +98,5 @@ SCALAPACKPP_REAL_TEST_CASE( "Potri", "[potri]" ) {
 
   }
 
+  MPI_Barrier(MPI_COMM_WORLD);
 }
