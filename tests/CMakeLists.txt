@@ -66,6 +66,7 @@ add_executable( test_scalapackpp
   norm.cxx
   lacpy.cxx
   lascl.cxx
+  inner_product.cxx
 )
 target_link_libraries( test_scalapackpp PUBLIC ut_framework )
 
