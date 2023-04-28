@@ -29,6 +29,7 @@ set( ScaLAPACKPP_SRC
      sygst.cxx 
      hegst.cxx 
      gemm.cxx 
+     gemv.cxx 
      symm.cxx 
      hemm.cxx 
      descinit.cxx 
