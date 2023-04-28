@@ -68,6 +68,7 @@ set( ScaLAPACKPP_SRC
      axpy.cxx
      copy.cxx
      dot.cxx
+     nrm2.cxx
      lacpy.cxx
      lascl.cxx
 )
