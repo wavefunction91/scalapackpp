@@ -44,6 +44,7 @@ add_executable( test_scalapackpp
   gemm.cxx 
   gemv.cxx 
   hemm.cxx 
+  hemv.cxx 
   trmm.cxx 
   trsm.cxx 
   potrf.cxx 
