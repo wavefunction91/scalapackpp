@@ -6,15 +6,18 @@
  */
 #pragma once
 #include <scalapackpp/types.hpp>
+#include <scalapackpp/util/type_traits.hpp>
 
 namespace scalapackpp {
 namespace wrappers    {
 
 template <typename T>
 detail::enable_if_scalapack_supported_t<T>
-  paxpy( int64_t N, T ALPHA,
-    const T* X, int64_t IX, int64_t JX, const scalapack_desc& DESCX,
-          T* Y, int64_t IY, int64_t JY, const scalapack_desc& DESCY );
+  paxpy( int64_t N, T ALPHA, const T* X, int64_t IX, int64_t JX, 
+         const scalapack_desc& DESCX, int64_t INCX, T* Y, int64_t IY,
+         int64_t JY, const scalapack_desc& DESCY, int64_t INCY );
+         
 
 }
 }
+
