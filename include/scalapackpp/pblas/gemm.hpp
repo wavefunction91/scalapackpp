@@ -21,8 +21,8 @@ detail::enable_if_scalapack_supported_t<T>
          detail::type_identity_t<T> BETA,
          T* C, int64_t IC, int64_t JC, const scalapack_desc& DESCC ) {
 
-  assert( A != C );
-  assert( B != C );
+  if(A or C) assert(A != C);
+  if(B or C) assert(B != C);
 
   auto TRANSA = char( transa );
   auto TRANSB = char( transb );
