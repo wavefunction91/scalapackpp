@@ -26,8 +26,8 @@ detail::enable_if_t<
          BETAT BETA,
          T* C, int64_t IC, int64_t JC, const scalapack_desc& DESCC ) {
 
-  assert( A != C );
-  assert( B != C );
+  if(A or C) assert( A != C );
+  if(B or C) assert( B != C );
 
   auto SIDE = char( side );
   auto UPLO = char( uplo );
